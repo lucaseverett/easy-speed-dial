@@ -13,4 +13,5 @@ Nested folders are not displayed, but will be added in a future update.
 ## Feedback
 
 Please report any bugs or other feedback to the Github repository for Toolbar Dial.
+
 https://github.com/lucaseverett/Firefox-Toolbar-Dial
