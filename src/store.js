@@ -1,20 +1,23 @@
 const data = () => {
   let bookmarks = [];
-  function onFulfilled(children) {
-    for (let child of children) {
-      if (!/^place:sort=/.test(child.url) && child.type !== "folder") {
-        bookmarks.push({ title: child.title, url: child.url });
-      }
+
+  const getBookmarks = async () => {
+    let bookmarks = await browser.bookmarks.getChildren("toolbar_____");
+
+    try {
+      bookmarks = bookmarks.map(({ title, url, type }) => {
+        if (!/^place:sort=/.test(url) && type !== "folder") {
+          return { title, url };
+        }
+      });
+    } catch (e) {
+      console.log(`Error: ${e}`);
     }
+
     return bookmarks;
-  }
+  };
 
-  function onRejected(error) {
-    console.log(`An error: ${error}`);
-  }
-
-  var gettingChildren = browser.bookmarks.getChildren("toolbar_____");
-  return gettingChildren.then(onFulfilled, onRejected);
+  return getBookmarks();
 };
 
 export { data };
