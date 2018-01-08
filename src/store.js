@@ -2,7 +2,7 @@ const data = () => {
   let bookmarks = [];
 
   const getBookmarks = async () => {
-    let bookmarks = await browser.bookmarks.getChildren("toolbar_____");
+    bookmarks = await browser.bookmarks.getChildren("toolbar_____");
 
     try {
       bookmarks = bookmarks.map(({ title, url, type }) => {
