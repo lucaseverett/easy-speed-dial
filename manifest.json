@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Toolbar Dial",
-  "version": "1.0",
+  "version": "1.0.1",
   "permissions": ["bookmarks"],
   "description":
     "Uses bookmarks in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
