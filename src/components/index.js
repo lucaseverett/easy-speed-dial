@@ -17,14 +17,21 @@ const display = bookmarks => {
       shades: ["700"],
       text: name.join(".")
     });
-    if (name.length < 4) {
+    if (name.length === 3) {
       name = name.map((n, i) => {
-        if (name.length > 2 && i === 0) {
+        if (i === 0) {
           return `<div class="small align-left">${n}</div>`;
         } else if (i + 1 === name.length) {
           return `<div class="small align-right">${n}</div>`;
         }
         return `<div>${n}</div>`;
+      });
+    } else if (name.length === 2) {
+      name = name.map((n, i) => {
+        if (i === 0) {
+          return `<div class="two">${n}</div>`;
+        }
+        return `<div class="small align-right">${n}</div>`;
       });
     } else {
       name = html`<div class="small align-left">${name[0]}</div><div>${
