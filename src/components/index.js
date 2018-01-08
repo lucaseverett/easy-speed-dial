@@ -43,7 +43,7 @@ const display = bookmarks => {
     }
     return html`
       <div class="bookmark">
-        <a href=${url} rel="noreferrer" target="_blank">
+        <a href=${url} rel="noreferrer">
         <div class="urlBox" style=${{
           backgroundColor: color
         }}>
