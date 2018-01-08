@@ -1,0 +1,27 @@
+{
+  "name": "firefox-toolbar-dial",
+  "author": {
+    "name": "Lucas Everett",
+    "email": "lucas@lucaseverett.codes",
+    "url": "http://lucaseverett.codes"
+  },
+  "verion": "1.0",
+  "description":
+    "Uses bookmarks in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
+  "homepage": "https://github.com/lucaseverett/Firefox-Toolbar-Dial",
+  "keywords": ["firefox", "speed dial"],
+  "license": "MIT",
+  "dependencies": {
+    "hyperhtml": "^2.4.3",
+    "random-material-color": "^1.0.3"
+  },
+  "scripts": {
+    "build": "parcel build ./src/index.html --public-url ./ --no-minify"
+  },
+  "devDependencies": {
+    "autoprefixer": "^7.2.4",
+    "babel-preset-env": "^1.6.1",
+    "normalize.css": "^7.0.0",
+    "parcel-bundler": "^1.3.1"
+  }
+}
