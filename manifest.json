@@ -7,5 +7,9 @@
     "Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks in the \"Bookmarks Toolbar\" folder will be shown in a grid that is similar to the Speed Dial in Opera browser.",
   "chrome_url_overrides": {
     "newtab": "dist/index.html"
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "256": "icons/icon.png"
   }
 }
