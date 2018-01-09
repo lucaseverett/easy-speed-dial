@@ -40,13 +40,17 @@ body {
 
 .url {
   margin: 0 auto;
+}
+
+.domain {
   font-size: 24px;
-  line-height: 20px;
+  line-height: 16px;
+  padding-bottom: 3px;
 }
 
 .small {
   font-size: 12px;
-  line-height: 15px;
+  line-height: 12px;
   font-weight: normal;
 }
 
