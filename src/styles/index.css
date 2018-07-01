@@ -36,6 +36,7 @@ body {
   margin: 8px;
   color: #fff;
   font-weight: bold;
+  overflow: hidden;
 }
 
 .url {
@@ -46,6 +47,14 @@ body {
   font-size: 24px;
   line-height: 16px;
   padding-bottom: 3px;
+  white-space: nowrap;
+}
+
+.domainSmall {
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 3px;
+  white-space: nowrap;
 }
 
 .small {

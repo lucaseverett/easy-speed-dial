@@ -1,9 +1,9 @@
+import { h, app } from "hyperapp";
 import "./styles/index.css";
-import App from "./components/index.js";
-import { data } from "./store.js";
+import view from "./view.js";
+import state from "./state.js";
+import actions from "./actions.js";
 
-data().then(bookmarks => {
-  App(bookmarks);
+state().then(bookmarks => {
+  app(bookmarks, actions, view, document.body);
 });
-
-document.title = "Toolbar Dial";

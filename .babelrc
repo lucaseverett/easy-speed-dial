@@ -1,0 +1,18 @@
+{
+  "presets": ["env"],
+  "plugins": [
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "h"
+      }
+    ],
+    [
+      "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true
+      }
+    ]
+  ]
+}
