@@ -5,7 +5,7 @@
     "email": "lucas@lucaseverett.codes",
     "url": "http://lucaseverett.codes"
   },
-  "verion": "1.0.6",
+  "verion": "1.0.7",
   "description": "Uses bookmarks in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
   "homepage": "https://github.com/lucaseverett/Firefox-Toolbar-Dial",
   "keywords": [
@@ -14,20 +14,28 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "hyperapp": "^1.2.6",
+    "emotion": "^9.2.6",
+    "fontawesome": "^4.7.2",
+    "preact": "^8.2.9",
+    "preact-emotion": "^9.2.6",
     "random-material-color": "^1.0.3"
   },
   "scripts": {
-    "start": "parcel ./src/index.html --open",
-    "build": "rimraf dist && parcel build ./src/index.html --public-url ./"
+    "start": "parcel ./src/index.html --open --no-cache",
+    "build": "rimraf dist && parcel build ./src/index.html --no-cache --public-url ./"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.1.0",
+    "babel-plugin-emotion": "^9.2.6",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
-    "babel-runtime": "^6.26.0",
     "normalize.css": "^8.0.0",
-    "parcel-bundler": "^1.9.3",
+    "parcel-bundler": "^1.9.7",
+    "prop-types": "^15.6.2",
     "rimraf": "^2.6.2"
-  }
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ]
 }

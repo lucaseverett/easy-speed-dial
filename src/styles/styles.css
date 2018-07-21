@@ -1,0 +1,18 @@
+@import "normalize.css";
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
