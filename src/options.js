@@ -1,6 +1,5 @@
 import { h, Component, render } from "preact";
 import "./options.css";
-import { css } from "preact-emotion";
 
 class Options extends Component {
   state = {
