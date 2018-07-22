@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "parcel ./src/index.html --open --no-cache",
-    "build": "rimraf dist && parcel build ./src/index.html --no-cache --public-url ./"
+    "build": "rimraf dist && parcel build ./src/*.html --no-cache --public-url ./"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.1.0",

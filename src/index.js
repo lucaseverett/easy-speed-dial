@@ -1,5 +1,5 @@
 import { h, Component, render } from "preact";
-import "./styles/styles.css";
+import "./index.css";
 import { css } from "preact-emotion";
 import DefaultTheme from "./themes/default/index.js";
 import filter from "./filter.js";
@@ -46,12 +46,24 @@ class App extends Component {
     );
   };
 
-  changeTheme = ({ storageArea: { theme = "" } }) => {
+  changeTheme = ({ theme }) => {
     if (theme) {
       this.setState({
         theme
       });
     }
+  };
+
+  receiveTheme = ({ theme }) => {
+    this.changeTheme({ theme: theme.newValue });
+  };
+
+  receiveBookmarks = () => {
+    this.getBookmarks(rootFolder.id).then(bookmarks => {
+      if (bookmarks) {
+        this.setState({ bookmarks, currentFolder: rootFolder, path: [] });
+      }
+    });
   };
 
   getBookmarks = async folder => {
@@ -65,13 +77,27 @@ class App extends Component {
     return filter(bookmarks).sort(sort);
   };
 
+  getTheme = async () => {
+    return await browser.storage.local.get({ theme: "" });
+  };
+
   componentDidMount() {
-    this.getBookmarks(rootFolder.id).then(bookmarks =>
-      this.setState({ bookmarks })
-    );
+    this.receiveBookmarks();
+    this.getTheme().then(theme => this.changeTheme(theme));
+    browser.storage.onChanged.addListener(this.receiveTheme);
+    browser.bookmarks.onChanged.addListener(this.receiveBookmarks);
+    browser.bookmarks.onCreated.addListener(this.receiveBookmarks);
+    browser.bookmarks.onMoved.addListener(this.receiveBookmarks);
+    browser.bookmarks.onRemoved.addListener(this.receiveBookmarks);
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    browser.storage.onChanged.removeListener(this.receiveTheme);
+    browser.bookmarks.onChanged.removeListener(this.receiveBookmarks);
+    browser.bookmarks.onCreated.removeListener(this.receiveBookmarks);
+    browser.bookmarks.onMoved.removeListener(this.receiveBookmarks);
+    browser.bookmarks.onRemoved.removeListener(this.receiveBookmarks);
+  }
 
   focusRef = null;
 

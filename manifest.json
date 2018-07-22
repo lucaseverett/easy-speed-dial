@@ -2,11 +2,14 @@
   "manifest_version": 2,
   "name": "Toolbar Dial",
   "version": "1.0.6",
-  "permissions": ["bookmarks"],
+  "permissions": ["bookmarks", "storage"],
   "description":
     "Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks in the \"Bookmarks Toolbar\" folder will be shown in a grid that is similar to the Speed Dial in Opera browser.",
   "chrome_url_overrides": {
     "newtab": "dist/index.html"
+  },
+  "options_ui": {
+    "page": "dist/options.html"
   },
   "icons": {
     "32": "icons/icon-32.png",
