@@ -6,8 +6,8 @@ class Options extends Component {
   state = {
     theme: "DefaultLight",
     themes: [
-      { id: "DefaultLight", title: "Default Light" },
-      { id: "DefaultDark", title: "Default Dark" }
+      { id: "DefaultLight", title: "Default (Light)" },
+      { id: "DefaultDark", title: "Default (Dark)" }
     ]
   };
 
