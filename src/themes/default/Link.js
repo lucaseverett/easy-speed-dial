@@ -7,7 +7,7 @@ let style = css({
   outline: "none"
 });
 
-let FileLink = ({ url, title, children, isRoot, currentFolder }) => (
+let FileLink = ({ url, title, children, isRoot }) => (
   <a
     href={url}
     rel="noreferrer"

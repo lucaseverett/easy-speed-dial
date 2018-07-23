@@ -15,6 +15,7 @@ let Box = styled.div(
     color: "#fff",
     fontWeight: "bold",
     overflow: "hidden",
+    textShadow: "0 0 2px #212121",
     "& .fa-folder": {
       textAlign: "center",
       fontSize: "70px"
