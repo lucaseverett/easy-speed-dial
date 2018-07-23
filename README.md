@@ -5,3 +5,5 @@ Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks 
 ## No Configuration
 
 Place bookmarks and folders that you would like to be shown in the Toolbar Dial grid in the "Bookmarks Toolbar" folder. They will be show in the same order they are in the folder. To change the order of bookmarks or folders in the Toolbar Dial grid, rearrange their order in the "Bookmarks Toolbar" folder.
+
+A dark theme is available in Options.
