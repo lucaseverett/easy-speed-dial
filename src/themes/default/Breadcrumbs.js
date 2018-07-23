@@ -5,7 +5,7 @@ let Nav = styled.div(
   {
     fontSize: "20px",
     lineHeight: "62px",
-    paddingTop: "2px",
+    paddingTop: "8px",
     textAlign: "center",
     cursor: "default"
   },

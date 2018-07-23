@@ -127,7 +127,7 @@ class App extends Component {
             path,
             theme,
             changeFolder: this.changeFolder,
-            rootFolder: rootFolder.id
+            isRoot: currentFolder.id === rootFolder.id
           }}
         />
       </div>

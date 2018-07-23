@@ -27,7 +27,7 @@ export default styled.div(
       gridTemplateColumns: "repeat(7, 210px)"
     }
   },
-  ({ currentFolder, rootFolder }) => ({
-    padding: currentFolder.id === rootFolder ? "64px 0" : "0 0 100px"
+  ({ isRoot }) => ({
+    padding: isRoot ? "70px 0" : "0 0 70px"
   })
 );

@@ -23,17 +23,19 @@ let Domain = styled.div(
   },
   ({ children, padding = false }) => ({
     fontSize:
-      children[0].length < 15
+      children[0].length < 14
         ? "24px"
-        : children[0].length > 13 && children[0].length < 25
-          ? `${((25 - children[0].length) / 11) * 24}px`
+        : children[0].length > 12 &&
+          children[0].length < 25 &&
+          ((24 - children[0].length) / 10) * 23 > 13
+          ? `${((24 - children[0].length) / 10) * 23}px`
           : "14px",
     paddingTop: padding ? "13px" : "0"
   })
 );
 
 let shorten = name => {
-  return name.length > 24 ? `${name.substr(0, 23)}..` : name;
+  return name.length > 24 ? `${name.substr(0, 22)}..` : name;
 };
 
 let Name = styled.div({
@@ -68,7 +70,7 @@ export default ({ name, type }) => {
         <Domain padding={true}>{shorten(name[0])}</Domain>
         <Small align="right">
           {name
-            .splice(1)
+            .slice(1)
             .map(n => n)
             .join(".")}
         </Small>
@@ -81,7 +83,7 @@ export default ({ name, type }) => {
         <Domain>{shorten(name[1])}</Domain>
         <Small align="right">
           {name
-            .splice(2)
+            .slice(2)
             .map(n => n)
             .join(".")}
         </Small>

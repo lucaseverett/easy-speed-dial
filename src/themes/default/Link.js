@@ -7,13 +7,13 @@ let style = css({
   outline: "none"
 });
 
-let FileLink = ({ url, title, children, rootFolder, currentFolder }) => (
+let FileLink = ({ url, title, children, isRoot, currentFolder }) => (
   <a
     href={url}
     rel="noreferrer"
     class={style}
     title={title}
-    target={currentFolder.id === rootFolder ? "_self" : "_blank"}
+    target={isRoot ? "_self" : "_blank"}
   >
     {children}
   </a>
@@ -43,10 +43,10 @@ export default ({
   title,
   changeFolder,
   currentFolder,
-  rootFolder
+  isRoot
 }) =>
   type.match(/(file|link)/) ? (
-    <FileLink {...{ url, children, title, rootFolder, currentFolder }} />
+    <FileLink {...{ url, children, title, isRoot, currentFolder }} />
   ) : (
     <FolderLink {...{ children, id, title, changeFolder, currentFolder }} />
   );

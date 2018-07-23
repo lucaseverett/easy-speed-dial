@@ -14,14 +14,14 @@ export default ({
   currentFolder,
   path,
   theme,
-  rootFolder,
+  isRoot,
   changeFolder
 }) => (
   <Theme {...{ theme }}>
-    {currentFolder.id !== rootFolder && (
+    {!isRoot && (
       <Breadcrumbs {...{ theme, path, currentFolder, changeFolder }} />
     )}
-    <Grid {...{ currentFolder, rootFolder }}>
+    <Grid {...{ currentFolder, isRoot }}>
       {bookmarks.map(({ title, url, type, name, id }) => (
         <Bookmark>
           <Link
@@ -32,7 +32,7 @@ export default ({
               title,
               changeFolder,
               currentFolder,
-              rootFolder
+              isRoot
             }}
           >
             <Box {...{ name, type, theme }} />
