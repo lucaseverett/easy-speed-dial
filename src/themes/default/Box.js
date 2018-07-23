@@ -15,7 +15,6 @@ let Box = styled.div(
     color: "#fff",
     fontWeight: "bold",
     overflow: "hidden",
-    textShadow: "0 0 2px #212121",
     "& .fa-folder": {
       textAlign: "center",
       fontSize: "70px"
@@ -27,10 +26,11 @@ let Box = styled.div(
       border: "5px solid #01579B"
     }
   },
-  ({ backgroundColor, theme }) => ({
+  ({ backgroundColor, theme, type }) => ({
     backgroundColor,
     boxShadow:
-      theme === "DefaultLight" ? "0 6px 8px #9e9e9e" : "0 6px 8px #1C1C1C"
+      theme === "DefaultLight" ? "0 6px 8px #9e9e9e" : "0 6px 8px #1C1C1C",
+    textShadow: type !== "folder" ? "0 0 2px #212121" : "none"
   })
 );
 
@@ -41,11 +41,11 @@ export default ({ name, theme, type }) => {
   });
 
   return type.match(/(file|link)/) ? (
-    <Box {...{ backgroundColor, theme }}>
+    <Box {...{ backgroundColor, theme, type }}>
       <Name {...{ name, type }} />
     </Box>
   ) : (
-    <Box {...{ backgroundColor, theme }}>
+    <Box {...{ backgroundColor, theme, type }}>
       <i class="far fa-folder" />
     </Box>
   );
