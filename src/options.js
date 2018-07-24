@@ -1,5 +1,13 @@
 import { h, Component, render } from "preact";
+import { css } from "preact-emotion";
 import "./options.css";
+
+let options = css({
+  padding: "20px",
+  "& label": {
+    paddingRight: "5px"
+  }
+});
 
 class Options extends Component {
   state = {
@@ -35,7 +43,7 @@ class Options extends Component {
 
   render({}, { theme, themes }) {
     return (
-      <div>
+      <div class={options}>
         <label>Theme: </label>
         <select value={theme} onChange={this.handleChange}>
           {themes.map(({ id, title }) => <option value={id}>{title}</option>)}
