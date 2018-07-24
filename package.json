@@ -6,7 +6,7 @@
     "url": "http://lucaseverett.codes"
   },
   "verion": "1.0.7",
-  "description": "Uses bookmarks in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
+  "description": "Uses bookmarks and folders in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
   "homepage": "https://github.com/lucaseverett/Firefox-Toolbar-Dial",
   "keywords": [
     "firefox",
