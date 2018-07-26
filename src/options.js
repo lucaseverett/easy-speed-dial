@@ -3,7 +3,7 @@ import { css } from "preact-emotion";
 import "./options.css";
 
 let options = css({
-  padding: "20px",
+  fontSize: "14px",
   "& label": {
     paddingRight: "5px"
   }

@@ -32,10 +32,7 @@ class App extends Component {
             path: [...path, currentFolder]
           };
         } else {
-          path = path.splice(
-            0,
-            path.map(({ id }) => id).indexOf(nextFolder.id)
-          );
+          path = path.slice(0, path.map(({ id }) => id).indexOf(nextFolder.id));
           return {
             bookmarks,
             currentFolder: nextFolder,
