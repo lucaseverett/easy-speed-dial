@@ -28,8 +28,8 @@ let Domain = styled.div(
         : children[0].length > 12 &&
           children[0].length < 25 &&
           ((24 - children[0].length) / 10) * 23 > 13
-          ? `${((24 - children[0].length) / 10) * 23}px`
-          : "14px",
+        ? `${((24 - children[0].length) / 10) * 23}px`
+        : "14px",
     paddingTop: padding ? "13px" : "0"
   })
 );
@@ -43,7 +43,7 @@ let Name = styled.div({
 });
 
 export default ({ name, type }) => {
-  if (type === "file") {
+  if (type === "file" || name.length === 1) {
     name = <Domain>{shorten(name.join("."))}</Domain>;
   } else if (name.length === 3 && name[0].length < name[1].length) {
     name = name.map((n, i) => {
