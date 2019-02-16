@@ -3,13 +3,13 @@
   "name": "Toolbar Dial",
   "version": "1.0.9",
   "permissions": ["bookmarks", "storage"],
-  "description":
-    "Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks and folders in the \"Bookmarks Toolbar\" folder will be shown in a grid that is similar to the Speed Dial in Opera browser.",
+  "description": "Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks and folders in the \"Bookmarks Toolbar\" folder will be shown in a grid that is similar to the Speed Dial in Opera browser.",
   "chrome_url_overrides": {
     "newtab": "dist/index.html"
   },
   "options_ui": {
-    "page": "dist/options.html"
+    "page": "dist/options.html",
+    "open_in_tab": true
   },
   "icons": {
     "32": "icons/icon-32.png",
