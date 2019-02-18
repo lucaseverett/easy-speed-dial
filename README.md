@@ -10,4 +10,4 @@ Place bookmarks and folders that you would like to be shown in the Toolbar Dial 
 
 ## Options
 
-The Toolbar Dial Options page offers a Dark mode and offer the ability to change the default folder.
+The Toolbar Dial Options page offers a Dark mode and offers the ability to change the default folder.
