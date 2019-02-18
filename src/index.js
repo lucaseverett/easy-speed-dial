@@ -76,9 +76,7 @@ class App extends React.Component {
   };
 
   receiveBookmarks = () => {
-    let getChildren = browser.bookmarks.getChildren(
-      this.state.currentFolder.id
-    );
+    let getChildren = browser.bookmarks.get(this.state.currentFolder.id);
     getChildren.then(this.updateBookmarks, this.initialBookmarks);
   };
 
@@ -94,11 +92,11 @@ class App extends React.Component {
   };
 
   getTheme = async () => {
-    return await browser.storage.local.get({ theme: "" });
+    return await browser.storage.local.get({ theme: this.state.DefaultTheme });
   };
 
   getDefaultFolder = async () => {
-    return await browser.storage.local.get({ folder: "toolbar_____" });
+    return await browser.storage.local.get({ folder: rootFolder.id });
   };
 
   componentDidMount() {
