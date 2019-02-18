@@ -1,3 +1,5 @@
+<div style="text-align:center"><img src ="https://github.com/lucaseverett/toolbar-dial-firefox/blob/master/DefaultLight.png" /></div>
+
 # Toolbar Dial
 
 Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks and folders in the "Bookmarks Toolbar" folder will be shown in a grid that is similar to the Speed Dial in Opera browser.

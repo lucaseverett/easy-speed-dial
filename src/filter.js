@@ -18,7 +18,7 @@ const getType = url => {
 
 export default bookmarks => {
   return bookmarks
-    .filter(({ url = "" }) => !url.match(/^(javascript:\/\/|place:)/i))
+    .filter(({ url = "" }) => !url.match(/^(javascript:|place:)/i))
     .map(({ title, url, id, parentID, index }) => {
       if (url) {
         let type = getType(url);
