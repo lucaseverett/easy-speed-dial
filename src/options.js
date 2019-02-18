@@ -56,7 +56,6 @@ function init() {
     function logTree(bookmarkItems) {
       logItems(bookmarkItems[0], 0);
       selectFolder.innerHTML = folders;
-      console.log(folders);
     }
 
     function onRejected(error) {
