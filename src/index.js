@@ -49,16 +49,37 @@ class App extends React.Component {
     }
   };
 
-  receiveTheme = ({ theme }) => {
-    this.changeTheme({ theme: theme.newValue });
+  receiveOptions = change => {
+    if (change["theme"]) {
+      this.changeTheme({ theme: change["theme"]["newValue"] });
+    }
+    if (change["folder"]) {
+      rootFolder.id = change["folder"]["newValue"];
+      this.initialBookmarks();
+    }
   };
 
-  receiveBookmarks = () => {
+  initialBookmarks = () => {
     this.getBookmarks(rootFolder.id).then(bookmarks => {
       if (bookmarks) {
         this.setState({ bookmarks, currentFolder: rootFolder, path: [] });
       }
     });
+  };
+
+  updateBookmarks = () => {
+    this.getBookmarks(this.state.currentFolder.id).then(bookmarks => {
+      if (bookmarks) {
+        this.setState({ bookmarks });
+      }
+    });
+  };
+
+  receiveBookmarks = () => {
+    let getChildren = browser.bookmarks.getChildren(
+      this.state.currentFolder.id
+    );
+    getChildren.then(this.updateBookmarks, this.initialBookmarks);
   };
 
   getBookmarks = async folder => {
@@ -67,7 +88,7 @@ class App extends React.Component {
     try {
       bookmarks = await browser.bookmarks.getChildren(folder);
     } catch (e) {
-      console.log(`Error: ${e}`);
+      console.log(e);
     }
     return filter(bookmarks).sort(sort);
   };
@@ -76,10 +97,17 @@ class App extends React.Component {
     return await browser.storage.local.get({ theme: "" });
   };
 
+  getDefaultFolder = async () => {
+    return await browser.storage.local.get({ folder: "toolbar_____" });
+  };
+
   componentDidMount() {
-    this.receiveBookmarks();
+    this.getDefaultFolder().then(({ folder }) => {
+      rootFolder.id = folder;
+      this.initialBookmarks();
+    });
     this.getTheme().then(theme => this.changeTheme(theme));
-    browser.storage.onChanged.addListener(this.receiveTheme);
+    browser.storage.onChanged.addListener(this.receiveOptions);
     browser.bookmarks.onChanged.addListener(this.receiveBookmarks);
     browser.bookmarks.onCreated.addListener(this.receiveBookmarks);
     browser.bookmarks.onMoved.addListener(this.receiveBookmarks);
@@ -87,7 +115,7 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    browser.storage.onChanged.removeListener(this.receiveTheme);
+    browser.storage.onChanged.removeListener(this.receiveOptions);
     browser.bookmarks.onChanged.removeListener(this.receiveBookmarks);
     browser.bookmarks.onCreated.removeListener(this.receiveBookmarks);
     browser.bookmarks.onMoved.removeListener(this.receiveBookmarks);
