@@ -1,13 +1,10 @@
-import { h } from "preact";
+import React, { Fragment } from "react";
 import Box from "./Box.js";
 import Title from "./Title.js";
 import Grid from "./Grid.js";
 import Link from "./Link.js";
 import Theme from "./Theme.js";
-import styled from "preact-emotion";
 import Breadcrumbs from "./Breadcrumbs.js";
-
-let Bookmark = styled.div({});
 
 export default ({
   bookmarks,
@@ -23,7 +20,7 @@ export default ({
     )}
     <Grid {...{ currentFolder, isRoot }}>
       {bookmarks.map(({ title, url, type, name, id }) => (
-        <Bookmark>
+        <Fragment key={id}>
           <Link
             {...{
               url,
@@ -38,7 +35,7 @@ export default ({
             <Box {...{ name, type, theme }} />
             <Title {...{ title, theme }} />
           </Link>
-        </Bookmark>
+        </Fragment>
       ))}
     </Grid>
   </Theme>

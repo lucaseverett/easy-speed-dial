@@ -1,5 +1,5 @@
-import { h } from "preact";
-import styled from "preact-emotion";
+import React from "react";
+import styled from "@emotion/styled";
 
 let Nav = styled.div(
   {
@@ -29,7 +29,7 @@ export default ({ theme, path, currentFolder, changeFolder }) => {
   return (
     <Nav {...{ theme }}>
       {path.map(({ id, title }, index) => (
-        <span>
+        <span key={id}>
           {index !== 0 && " / "}
           <a
             href={id}

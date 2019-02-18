@@ -1,13 +1,9 @@
 {
-  "presets": ["env"],
+  "presets": ["@babel/env"],
   "plugins": [
+    "transform-inline-environment-variables",
     "emotion",
-    "transform-class-properties",
-    [
-      "transform-react-jsx",
-      {
-        "pragma": "h"
-      }
-    ]
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-transform-react-jsx"
   ]
 }

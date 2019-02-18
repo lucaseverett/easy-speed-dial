@@ -1,5 +1,5 @@
-import { h } from "preact";
-import styled, { css } from "preact-emotion";
+import React from "react";
+import styled from "@emotion/styled";
 import randomMC from "random-material-color";
 import Name from "./Name.js";
 

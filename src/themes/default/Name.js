@@ -1,5 +1,5 @@
-import { h } from "preact";
-import styled from "preact-emotion";
+import React from "react";
+import styled from "@emotion/styled";
 
 let Small = styled.div(
   {
@@ -23,12 +23,12 @@ let Domain = styled.div(
   },
   ({ children, padding = false }) => ({
     fontSize:
-      children[0].length < 14
+      children.length < 14
         ? "24px"
-        : children[0].length > 12 &&
-          children[0].length < 25 &&
-          ((24 - children[0].length) / 10) * 23 > 13
-        ? `${((24 - children[0].length) / 10) * 23}px`
+        : children.length > 12 &&
+          children.length < 25 &&
+          ((24 - children.length) / 10) * 23 > 13
+        ? `${((24 - children.length) / 10) * 23}px`
         : "14px",
     paddingTop: padding ? "13px" : "0"
   })
@@ -48,18 +48,34 @@ export default ({ name, type }) => {
   } else if (name.length === 3 && name[0].length < name[1].length) {
     name = name.map((n, i) => {
       if (i === 0) {
-        return <Small align="left">{n}</Small>;
+        return (
+          <Small align="left" key={n}>
+            {n}
+          </Small>
+        );
       } else if (i + 1 === name.length) {
-        return <Small align="right">{n}</Small>;
+        return (
+          <Small align="right" key={n}>
+            {n}
+          </Small>
+        );
       }
-      return <Domain>{shorten(n)}</Domain>;
+      return <Domain key={n}>{shorten(n)}</Domain>;
     });
   } else if (name.length === 2) {
     name = name.map((n, i) => {
       if (i === 0) {
-        return <Domain padding={true}>{shorten(n)}</Domain>;
+        return (
+          <Domain padding={true} key={n}>
+            {shorten(n)}
+          </Domain>
+        );
       }
-      return <Small align="right">{n}</Small>;
+      return (
+        <Small align="right" key={n}>
+          {n}
+        </Small>
+      );
     });
   } else if (
     name[0].length > name[1].length ||

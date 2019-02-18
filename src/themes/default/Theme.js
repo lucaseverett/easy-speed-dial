@@ -1,5 +1,5 @@
-import { h } from "preact";
-import styled from "preact-emotion";
+import React from "react";
+import styled from "@emotion/styled";
 
 export default styled.div(
   {

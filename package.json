@@ -1,5 +1,5 @@
 {
-  "name": "firefox-toolbar-dial",
+  "name": "toolbar-dial-firefox",
   "author": {
     "name": "Lucas Everett",
     "email": "lucas@lucaseverett.codes",
@@ -14,28 +14,31 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "emotion": "^9.2.6",
-    "fontawesome": "^4.7.2",
-    "preact": "^8.2.9",
-    "preact-emotion": "^9.2.6",
-    "random-material-color": "^1.0.3"
+    "@emotion/core": "^10.0.7",
+    "@emotion/styled": "^10.0.7",
+    "emotion": "^10.0.7",
+    "fontawesome": "^5.6.3",
+    "normalize.css": "^8.0.1",
+    "random-material-color": "^1.0.3",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2"
   },
   "scripts": {
     "start": "parcel ./src/index.html --open --no-cache",
     "build": "rimraf dist && parcel build ./src/*.html --no-cache --public-url ./"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.1.0",
-    "babel-plugin-emotion": "^9.2.6",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "normalize.css": "^8.0.0",
-    "parcel-bundler": "^1.9.7",
-    "prop-types": "^15.6.2",
-    "rimraf": "^2.6.2"
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.3.3",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.3.1",
+    "@fortawesome/fontawesome-free": "^5.7.2",
+    "babel-plugin-emotion": "^10.0.7",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "parcel-bundler": "^1.11.0",
+    "rimraf": "^2.6.3"
   },
   "browserslist": [
-    "last 1 Chrome versions"
+    "last 2 Firefox versions"
   ]
 }

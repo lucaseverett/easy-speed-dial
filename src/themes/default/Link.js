@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { css } from "preact-emotion";
+import React from "react";
+import { css } from "emotion";
 
 let style = css({
   textDecoration: "none",

@@ -1,11 +1,9 @@
-import { h, Component, render } from "preact";
-import "./index.css";
-import { css } from "preact-emotion";
+import React from "react";
+import { render } from "react-dom";
+import "./styles.css";
+import { css } from "emotion";
 import DefaultTheme from "./themes/default/index.js";
 import filter from "./filter.js";
-
-// Mock Data for Testing
-//import browser from "./mockdata.js";
 
 const themes = {
   DefaultLight: DefaultTheme,
@@ -14,7 +12,7 @@ const themes = {
 
 const rootFolder = { id: "toolbar_____", title: "Bookmarks" };
 
-class App extends Component {
+class App extends React.Component {
   state = {
     bookmarks: [],
     theme: "DefaultLight",
@@ -111,7 +109,8 @@ class App extends Component {
     window.scrollTo(0, 0);
   }
 
-  render({}, { bookmarks, theme, path, currentFolder }) {
+  render() {
+    let { bookmarks, theme, path, currentFolder } = this.state;
     let noOutline = css({ outline: 0 });
 
     let Theme = themes[theme];
@@ -132,4 +131,4 @@ class App extends Component {
   }
 }
 
-render(<App />, document.body, document.body.lastElementChild);
+render(<App />, document.querySelector("#app"));

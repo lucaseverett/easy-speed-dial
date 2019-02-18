@@ -18,12 +18,12 @@ const getType = url => {
 
 export default bookmarks => {
   return bookmarks
-    .filter(({ url = "" }) => !url.match(/^(javascript:|place:)/i))
+    .filter(({ url = "" }) => !url.match(/^(javascript:\/\/|place:)/i))
     .map(({ title, url, id, parentID, index }) => {
       if (url) {
         let type = getType(url);
         let name = type === "link" ? getLinkName(url) : getFileName(url);
-        return { title, url, type, name, parentID, index };
+        return { title, url, type, name, id, parentID, index };
       } else {
         return { type: "folder", title, name: [title], id, parentID, index };
       }
