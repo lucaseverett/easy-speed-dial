@@ -6,7 +6,7 @@ Toolbar Dial replaces the New Tab page and requires no configuration. Bookmarks 
 
 ## No Configuration Required
 
-Toolbar Dial is ready to go with no configuration required! Place bookmarks and folders that you would like to find in the Toolbar Dial grid in the "Bookmarks Toolbar" folder. They will be show in the same order they are in the folder. To change the order of bookmarks or folders in the Toolbar Dial grid, rearrange their order in the "Bookmarks Toolbar" folder.
+Toolbar Dial is ready to go with no configuration required! Place bookmarks and folders that you would like to find in the Toolbar Dial grid in the "Bookmarks Toolbar" folder. They will be shown in the same order they are in the folder. To change the order of bookmarks or folders in the Toolbar Dial grid, rearrange their order in the "Bookmarks Toolbar" folder.
 
 ## Customization Options
 
