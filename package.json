@@ -14,28 +14,28 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@emotion/core": "^10.0.7",
-    "@emotion/styled": "^10.0.7",
-    "emotion": "^10.0.7",
+    "@emotion/core": "^10.0.10",
+    "@emotion/styled": "^10.0.12",
+    "emotion": "^10.0.9",
     "fontawesome": "^5.6.3",
     "normalize.css": "^8.0.1",
     "random-material-color": "^1.0.3",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "scripts": {
     "start": "parcel ./src/index.html --open --no-cache",
     "build": "rimraf dist && parcel build ./src/*.html --no-cache --public-url ./"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-proposal-class-properties": "^7.3.3",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/preset-env": "^7.3.1",
-    "@fortawesome/fontawesome-free": "^5.7.2",
-    "babel-plugin-emotion": "^10.0.7",
+    "@babel/preset-env": "^7.4.5",
+    "@fortawesome/fontawesome-free": "^5.9.0",
+    "babel-plugin-emotion": "^10.0.13",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "parcel-bundler": "^1.11.0",
+    "parcel-bundler": "^1.12.3",
     "rimraf": "^2.6.3"
   },
   "browserslist": [
