@@ -2,24 +2,25 @@
   "name": "toolbar-dial-firefox",
   "author": {
     "name": "Lucas Everett",
-    "email": "lucas@lucaseverett.codes",
-    "url": "http://lucaseverett.codes"
+    "email": "lucas@lucaseverett.dev",
+    "url": "http://lucaseverett.dev"
   },
-  "verion": "1.0.10",
+  "verion": "1.0.11",
   "description": "Uses bookmarks and folders in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
   "homepage": "https://github.com/lucaseverett/Firefox-Toolbar-Dial",
   "keywords": [
     "firefox",
-    "speed dial"
+    "speed dial",
+    "toolbar dial"
   ],
   "license": "MIT",
   "dependencies": {
-    "@emotion/core": "^10.0.10",
-    "@emotion/styled": "^10.0.12",
-    "emotion": "^10.0.9",
+    "@emotion/core": "^10.0.14",
+    "@emotion/styled": "^10.0.14",
+    "emotion": "^10.0.14",
     "fontawesome": "^5.6.3",
     "normalize.css": "^8.0.1",
-    "random-material-color": "^1.0.3",
+    "random-material-color": "^1.0.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
@@ -33,7 +34,7 @@
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.4.5",
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "babel-plugin-emotion": "^10.0.13",
+    "babel-plugin-emotion": "^10.0.14",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "parcel-bundler": "^1.12.3",
     "rimraf": "^2.6.3"
