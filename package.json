@@ -3,11 +3,11 @@
   "author": {
     "name": "Lucas Everett",
     "email": "lucas@lucaseverett.dev",
-    "url": "http://lucaseverett.dev"
+    "url": "https://lucaseverett.dev"
   },
   "verion": "1.0.11",
   "description": "Uses bookmarks and folders in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
-  "homepage": "https://github.com/lucaseverett/Firefox-Toolbar-Dial",
+  "homepage": "https://github.com/lucaseverett/toolbar-dial-firefox",
   "keywords": [
     "firefox",
     "speed dial",

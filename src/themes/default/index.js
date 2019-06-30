@@ -12,7 +12,8 @@ export default ({
   path,
   theme,
   isRoot,
-  changeFolder
+  changeFolder,
+  folderTarget
 }) => (
   <Theme {...{ theme }}>
     {!isRoot && (
@@ -29,7 +30,8 @@ export default ({
               title,
               changeFolder,
               currentFolder,
-              isRoot
+              isRoot,
+              folderTarget
             }}
           >
             <Box {...{ name, type, theme }} />

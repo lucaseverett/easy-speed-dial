@@ -17,7 +17,12 @@ class App extends React.Component {
     bookmarks: [],
     theme: "DefaultLight",
     currentFolder: rootFolder,
+    folderTarget: "new",
     path: []
+  };
+
+  getDefaultFolder = async () => {
+    return await browser.storage.local.get({ folder: rootFolder.id });
   };
 
   changeFolder = ({ currentFolder = "", nextFolder }) => {
@@ -41,10 +46,26 @@ class App extends React.Component {
     );
   };
 
+  getTheme = async () => {
+    return await browser.storage.local.get({ theme: this.state.DefaultTheme });
+  };
+
   changeTheme = ({ theme }) => {
     if (theme) {
       this.setState({
         theme
+      });
+    }
+  };
+
+  getTarget = async () => {
+    return await browser.storage.local.get({ target: "new" });
+  };
+
+  changeTarget = ({ target }) => {
+    if (target) {
+      this.setState({
+        folderTarget: target
       });
     }
   };
@@ -57,6 +78,9 @@ class App extends React.Component {
       rootFolder.id = change["folder"]["newValue"];
       this.initialBookmarks();
     }
+    if (change["target"]) {
+      this.changeTarget({ target: change["target"]["newValue"] });
+    }
   };
 
   initialBookmarks = () => {
@@ -65,6 +89,17 @@ class App extends React.Component {
         this.setState({ bookmarks, currentFolder: rootFolder, path: [] });
       }
     });
+  };
+
+  getBookmarks = async folder => {
+    let bookmarks = [];
+    let sort = (a, b) => a.index - b.index;
+    try {
+      bookmarks = await browser.bookmarks.getChildren(folder);
+    } catch (e) {
+      console.log(e);
+    }
+    return filter(bookmarks).sort(sort);
   };
 
   updateBookmarks = () => {
@@ -80,31 +115,13 @@ class App extends React.Component {
     getChildren.then(this.updateBookmarks, this.initialBookmarks);
   };
 
-  getBookmarks = async folder => {
-    let bookmarks = [];
-    let sort = (a, b) => a.index - b.index;
-    try {
-      bookmarks = await browser.bookmarks.getChildren(folder);
-    } catch (e) {
-      console.log(e);
-    }
-    return filter(bookmarks).sort(sort);
-  };
-
-  getTheme = async () => {
-    return await browser.storage.local.get({ theme: this.state.DefaultTheme });
-  };
-
-  getDefaultFolder = async () => {
-    return await browser.storage.local.get({ folder: rootFolder.id });
-  };
-
   componentDidMount() {
     this.getDefaultFolder().then(({ folder }) => {
       rootFolder.id = folder;
       this.initialBookmarks();
     });
     this.getTheme().then(theme => this.changeTheme(theme));
+    this.getTarget().then(target => this.changeTarget(target));
     browser.storage.onChanged.addListener(this.receiveOptions);
     browser.bookmarks.onChanged.addListener(this.receiveBookmarks);
     browser.bookmarks.onCreated.addListener(this.receiveBookmarks);
@@ -136,7 +153,7 @@ class App extends React.Component {
   }
 
   render() {
-    let { bookmarks, theme, path, currentFolder } = this.state;
+    let { bookmarks, theme, path, currentFolder, folderTarget } = this.state;
     let noOutline = css({ outline: 0 });
 
     let Theme = themes[theme];
@@ -149,7 +166,8 @@ class App extends React.Component {
             path,
             theme,
             changeFolder: this.changeFolder,
-            isRoot: currentFolder.id === rootFolder.id
+            isRoot: currentFolder.id === rootFolder.id,
+            folderTarget
           }}
         />
       </div>

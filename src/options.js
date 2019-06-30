@@ -26,6 +26,14 @@ function init() {
     browser.storage.local.set({ folder: e.target.value });
   }
 
+  async function getTarget() {
+    return await browser.storage.local.get({ target: "new" });
+  }
+
+  function setTarget(e) {
+    browser.storage.local.set({ target: e.target.value });
+  }
+
   function updateFolders(defaultFolder) {
     let folders = "";
 
@@ -66,19 +74,26 @@ function init() {
     gettingTree.then(logTree, onRejected);
   }
 
+  function updateTarget(target) {
+    folderTarget.value = target;
+  }
+
   let themeDiv = document.querySelector("#theme");
   let lightButton = document.querySelector("#defaultLightBtn");
   let darkButton = document.querySelector("#defaultDarkBtn");
   let urlDiv = document.querySelector("#homepage-url");
   let selectFolder = document.querySelector("#selectFolder");
+  let folderTarget = document.querySelector("#folderTarget");
   getTheme().then(({ theme }) => (themeDiv.className = theme));
   getFolder().then(({ folder }) => updateFolders(folder));
+  getTarget().then(({ target }) => updateTarget(target));
   let homeURL = browser.runtime.getURL("dist/index.html");
   urlDiv.innerHTML = `<a href="${homeURL}">${homeURL}</a>`;
 
   lightButton.addEventListener("click", setLightTheme);
   darkButton.addEventListener("click", setDarkTheme);
   selectFolder.addEventListener("change", setFolder);
+  folderTarget.addEventListener("change", setTarget);
 }
 
 document.onload = init();
