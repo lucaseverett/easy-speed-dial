@@ -22,8 +22,9 @@ const getType = url => {
 export default bookmarks => {
   return bookmarks
     .filter(
-      ({ url = "" }) =>
-        !url.match(/^(javascript|place|about|chrome|edge|file):/i)
+      ({ url = "", type }) =>
+        !url.match(/^(javascript|place|about|chrome|edge|file):/i) &&
+        type !== "separator"
     )
     .map(({ title, url, id, parentID, index }) => {
       if (url) {
