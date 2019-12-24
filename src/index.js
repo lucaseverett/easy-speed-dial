@@ -12,6 +12,12 @@ const themes = {
 
 const rootFolder = { id: "toolbar_____", title: "Bookmarks" };
 
+let scrollPosition = 0;
+
+window.onscroll = () => {
+  scrollPosition = window.pageYOffset;
+};
+
 class App extends React.Component {
   state = {
     bookmarks: [],
@@ -147,9 +153,13 @@ class App extends React.Component {
     this.focusRef.focus();
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     this.setFocus();
-    window.scrollTo(0, 0);
+    if (prevState.currentFolder !== this.state.currentFolder) {
+      window.scrollTo(0, 0);
+    } else {
+      window.scrollTo(0, scrollPosition);
+    }
   }
 
   render() {
