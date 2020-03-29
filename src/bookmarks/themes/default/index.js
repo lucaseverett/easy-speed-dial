@@ -16,7 +16,8 @@ export const Theme = ({
 }) => (
   <div
     className={css`
-      font: message-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     `}
   >
     {!isRoot && <Breadcrumbs {...{ path, currentFolder, changeFolder }} />}

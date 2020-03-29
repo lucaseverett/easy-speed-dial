@@ -6,7 +6,7 @@ export const Title = ({ title }) => {
     padding: 2px 18px 1px;
     text-align: center;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: normal;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
