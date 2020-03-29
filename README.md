@@ -10,4 +10,4 @@ Toolbar Dial is ready to go with no configuration required! Place bookmarks and 
 
 ## Customization Options
 
-The Toolbar Dial options/preferences page offers a Dark mode that complements the browser's dark theme. It also offers the ability to change the default folder, if you'd prefer to use something other the "Bookmarks Toolbar" folder.
+Toolbar Dial offers many wallpapers to choose from, including a Dark Wallpaper that complements the browser's dark theme. It also offers the ability to change the default folder, if you'd prefer to use something other the "Bookmarks Toolbar" folder.
