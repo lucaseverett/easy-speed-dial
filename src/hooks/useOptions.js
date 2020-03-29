@@ -10,14 +10,14 @@ export function ProvideOptions({ children }) {
   const [smallerDials, setSmallerDials] = useState();
   const [fullWidth, setFullWidth] = useState();
 
-  function handleAppearance(value) {
-    browser.storage.local.set({ appearance: value });
-    setAppearance(value);
+  function handleAppearance(appearance) {
+    browser.storage.local.set({ appearance });
+    setAppearance(appearance);
   }
 
-  function handleWallpaper(value) {
-    browser.storage.local.set({ wallpaper: value });
-    setWallpaper(value);
+  function handleWallpaper(wallpaper) {
+    browser.storage.local.set({ wallpaper });
+    setWallpaper(wallpaper);
   }
 
   function handleDefaultFolder(e) {
@@ -25,19 +25,19 @@ export function ProvideOptions({ children }) {
     setFolder(e.target.value);
   }
 
-  function handleNewTab(value) {
-    browser.storage.local.set({ newTab: value });
-    setNewTab(value);
+  function handleNewTab(newTab) {
+    browser.storage.local.set({ newTab });
+    setNewTab(newTab);
   }
 
-  function handleSmallerDials(value) {
-    browser.storage.local.set({ smallerDials: value });
-    setSmallerDials(value);
+  function handleSmallerDials(smallerDials) {
+    browser.storage.local.set({ smallerDials });
+    setSmallerDials(smallerDials);
   }
 
-  function handleFullWidth(value) {
-    browser.storage.local.set({ fullWidth: value });
-    setFullWidth(value);
+  function handleFullWidth(fullWidth) {
+    browser.storage.local.set({ fullWidth });
+    setFullWidth(fullWidth);
   }
 
   function changeOptions(change) {

@@ -44,7 +44,7 @@ export function Bookmarks() {
     } else {
       menuCoords = {
         x: e.pageX + 147 >= window.innerWidth ? e.pageX - 147 : e.pageX,
-        y: e.pageY + 83 >= window.innerHeight ? e.pageY - 83 : e.pageY
+        y: e.pageY + 46 >= window.innerHeight ? e.pageY - 46 : e.pageY
       };
       setShowContextMenu(true);
     }
