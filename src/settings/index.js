@@ -91,9 +91,12 @@ export const Settings = () => {
             <div className="setting-wrapper">
               <h2>Default Folder</h2>
               <div className="setting-option folder">
-                <select id="selectFolder">
+                <select id="selectFolder" onChange={handleDefaultFolder}>
                   {folders.map(({ id, title }) => (
-                    <option selected={id === defaultFolder ? true : false}>
+                    <option
+                      value={id}
+                      selected={id === defaultFolder ? true : false}
+                    >
                       {title}
                     </option>
                   ))}

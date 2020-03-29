@@ -20,9 +20,9 @@ export function ProvideOptions({ children }) {
     setWallpaper(value);
   }
 
-  function handleDefaultFolder(value) {
-    browser.storage.local.set({ defaultFolder: value });
-    setFolder(value);
+  function handleDefaultFolder(e) {
+    browser.storage.local.set({ defaultFolder: e.target.value });
+    setFolder(e.target.value);
   }
 
   function handleNewTab(value) {
