@@ -9,7 +9,7 @@ export const Link = ({
   title,
   changeFolder,
   currentFolder,
-  newTab
+  newTab,
 }) => {
   const style = css`
     text-decoration: none;
@@ -17,35 +17,37 @@ export const Link = ({
     outline: none;
   `;
 
-  const FileLink = ({ url, title, children, newTab }) => (
+  const FileLink = ({ id, url, title, children, newTab }) => (
     <a
       href={url}
+      data-id={id}
       rel="noopener noreferrer"
       className={style}
       title={title}
       target={newTab ? "_blank" : "_self"}
-      onContextMenu={e => e.stopPropagation()}
+      onContextMenu={(e) => e.stopPropagation()}
     >
       {children}
     </a>
   );
 
   const FolderLink = ({ children, id, title, currentFolder, changeFolder }) => {
-    let handleClick = e => {
+    let handleClick = (e) => {
       e.preventDefault();
       changeFolder({
         currentFolder,
-        nextFolder: { id, title }
+        nextFolder: { id, title },
       });
     };
 
     return (
       <a
         href={id}
+        data-id={id}
         className={style}
         title={`${title} Folder`}
         onClick={handleClick}
-        onContextMenu={e => e.stopPropagation()}
+        onContextMenu={(e) => e.stopPropagation()}
       >
         {children}
       </a>
@@ -53,7 +55,7 @@ export const Link = ({
   };
 
   return type.match(/(file|link)/) ? (
-    <FileLink {...{ url, children, title, currentFolder, newTab }} />
+    <FileLink {...{ id, url, children, title, currentFolder, newTab }} />
   ) : (
     <FolderLink {...{ children, id, title, changeFolder, currentFolder }} />
   );

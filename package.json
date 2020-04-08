@@ -5,7 +5,7 @@
     "email": "lucas@lucaseverett.dev",
     "url": "https://lucaseverett.dev"
   },
-  "verion": "1.1.2",
+  "verion": "1.1.3",
   "description": "Uses bookmarks and folders in the 'Bookmarks Toolbar' folder to produce a grid similar to the Speed Dial in Opera browser.",
   "homepage": "https://toolbardial.com",
   "keywords": [
@@ -20,7 +20,8 @@
     "normalize.css": "^8.0.1",
     "random-material-color": "^1.0.5",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "sortablejs": "^1.10.2"
   },
   "scripts": {
     "start": "parcel ./src/*.html --open --no-cache",
@@ -30,9 +31,9 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-transform-react-jsx": "^7.9.4",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "@fortawesome/fontawesome-free": "^5.13.0",
-    "babel-plugin-emotion": "^10.0.29",
+    "babel-plugin-emotion": "^10.0.33",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",

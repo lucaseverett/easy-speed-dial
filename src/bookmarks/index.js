@@ -23,7 +23,7 @@ export function Bookmarks() {
     smallerDials,
     defaultFolder,
     wallpaper,
-    fullWidth
+    fullWidth,
   } = useOptions();
   const [showContextMenu, setShowContextMenu] = useState(false);
 
@@ -44,7 +44,7 @@ export function Bookmarks() {
     } else {
       menuCoords = {
         x: e.pageX + 147 >= window.innerWidth ? e.pageX - 147 : e.pageX,
-        y: e.pageY + 46 >= window.innerHeight ? e.pageY - 46 : e.pageY
+        y: e.pageY + 46 >= window.innerHeight ? e.pageY - 46 : e.pageY,
       };
       setShowContextMenu(true);
     }
@@ -79,7 +79,8 @@ export function Bookmarks() {
         fullWidth ? "full-width" : "normal-width",
         css`
           outline: 0;
-        `
+          overflow: auto;
+        `,
       ].join(" ")}
       onClick={hideContextMenu}
       onKeyDown={handleEscape}
@@ -95,7 +96,7 @@ export function Bookmarks() {
           path,
           changeFolder,
           isRoot: currentFolder.id === defaultFolder,
-          newTab
+          newTab,
         }}
       />
     </div>

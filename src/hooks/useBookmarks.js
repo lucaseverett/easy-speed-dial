@@ -41,10 +41,10 @@ function useBookmarks() {
     if (defaultFolder) {
       setCurrentFolder({
         id: defaultFolder,
-        title: rootTitle
+        title: rootTitle,
       });
       setPath([]);
-      getBookmarks(defaultFolder).then(bookmarks => {
+      getBookmarks(defaultFolder).then((bookmarks) => {
         if (bookmarks) {
           setBookmarks(bookmarks);
         }
@@ -53,7 +53,7 @@ function useBookmarks() {
   }
 
   function updateBookmarks() {
-    getBookmarks(currentFolderRef.current.id).then(bookmarks => {
+    getBookmarks(currentFolderRef.current.id).then((bookmarks) => {
       if (bookmarks) {
         setBookmarks(bookmarks);
       }
@@ -72,7 +72,7 @@ function useBookmarks() {
   }
 
   function changeFolder({ currentFolder = "", nextFolder }) {
-    getBookmarks(nextFolder.id).then(bookmarks => {
+    getBookmarks(nextFolder.id).then((bookmarks) => {
       setBookmarks(bookmarks);
       if (currentFolder) {
         setPath([...path, currentFolder]);
@@ -104,7 +104,7 @@ function useBookmarks() {
           indent++;
         }
         if (bookmarkItem.children) {
-          bookmarkItem.children.forEach(child => logItems(child, indent));
+          bookmarkItem.children.forEach((child) => logItems(child, indent));
         }
       }
     }
@@ -122,12 +122,17 @@ function useBookmarks() {
     gettingTree.then(logTree, onRejected);
   }
 
+  function moveBookmark({ bookmarkID, newIndex }) {
+    browser.bookmarks.move(bookmarkID, { index: newIndex });
+  }
+
   return {
     bookmarks,
     currentFolder,
     changeFolder,
     path,
-    folders
+    folders,
+    moveBookmark,
   };
 }
 
