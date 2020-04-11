@@ -5,7 +5,7 @@ export const wallpapers = [
     filename: "stephen-wheeler-etiMpySyrnI-unsplash.jpg",
     appearance: "dark-appearance",
     author: "Photo by Anchor Lee on Unsplash",
-    url: "https://unsplash.com/photos/etiMpySyrnI"
+    url: "https://unsplash.com/photos/etiMpySyrnI",
   },
   {
     id: "WhiteSands",
@@ -13,7 +13,7 @@ export const wallpapers = [
     filename: "anchor-lee-kO1G3neRA2o-unsplash.jpg",
     appearance: "medium-appearance",
     author: "Photo by Anchor Lee on Unsplash",
-    url: "https://unsplash.com/photos/kO1G3neRA2o"
+    url: "https://unsplash.com/photos/kO1G3neRA2o",
   },
   {
     id: "DarkSands",
@@ -21,7 +21,7 @@ export const wallpapers = [
     filename: "black-sand-dunes-2387793.jpg",
     appearance: "dark-appearance",
     author: "Adrien Olichon from Pexels",
-    url: "https://www.pexels.com/photo/black-sand-dunes-2387793/"
+    url: "https://www.pexels.com/photo/black-sand-dunes-2387793/",
   },
   {
     id: "CityLights",
@@ -30,7 +30,7 @@ export const wallpapers = [
     appearance: "dark-appearance",
     author: "Bruno Thethe from Pexels",
     url:
-      "https://www.pexels.com/photo/big-city-city-city-lights-citylights-1910233/"
+      "https://www.pexels.com/photo/big-city-city-city-lights-citylights-1910233/",
   },
   {
     id: "NightSky",
@@ -39,7 +39,7 @@ export const wallpapers = [
     appearance: "dark-appearance",
     author: "Jakub Novacek from Pexels",
     url:
-      "https://www.pexels.com/photo/abstract-night-night-sky-star-gazing-994198/"
+      "https://www.pexels.com/photo/abstract-night-night-sky-star-gazing-994198/",
   },
   {
     id: "IslandBeach",
@@ -48,7 +48,7 @@ export const wallpapers = [
     appearance: "dark-appearance",
     author: "Sindre Strøm from Pexels",
     url:
-      "https://www.pexels.com/photo/areal-photography-of-island-at-daytime-1106437/"
+      "https://www.pexels.com/photo/areal-photography-of-island-at-daytime-1106437/",
   },
   {
     id: "SnowCoveredMountainwithGray Sky",
@@ -57,7 +57,7 @@ export const wallpapers = [
     appearance: "dark-appearance",
     author: "Sindre Strøm from Pexels",
     url:
-      "https://www.pexels.com/photo/mountain-coated-with-snow-under-gray-sky-948409/"
+      "https://www.pexels.com/photo/mountain-coated-with-snow-under-gray-sky-948409/",
   },
   {
     id: "SnowCoveredMountainwithSunnySky",
@@ -65,7 +65,7 @@ export const wallpapers = [
     filename: "wladislaw-sokolowskij-0vw4InAC-yM-unsplash.jpg",
     appearance: "medium-appearance",
     author: "Photo by Wladislaw Sokolowskij on Unsplash",
-    url: "https://unsplash.com/photos/0vw4InAC-yM"
+    url: "https://unsplash.com/photos/0vw4InAC-yM",
   },
   {
     id: "AbstractLights",
@@ -74,7 +74,7 @@ export const wallpapers = [
     appearance: "dark-appearance",
     author: "Tomislav Jakupec from Pixabay",
     url:
-      "https://pixabay.com/illustrations/abstract-background-wallpaper-1780357/"
+      "https://pixabay.com/illustrations/abstract-background-wallpaper-1780357/",
   },
   {
     id: "AbstractLines",
@@ -83,7 +83,7 @@ export const wallpapers = [
     appearance: "dark-appearance",
     author: "Tomislav Jakupec from Pixabay",
     url:
-      "https://pixabay.com/illustrations/abstract-background-wallpaper-1780385/"
+      "https://pixabay.com/illustrations/abstract-background-wallpaper-1780385/",
   },
   {
     id: "AbstractPurple",
@@ -91,6 +91,7 @@ export const wallpapers = [
     filename: "purple-1780371.png",
     appearance: "dark-appearance",
     author: "Tomislav Jakupec from Pixabay",
-    url: "https://pixabay.com/illustrations/purple-abstract-background-1780371/"
-  }
+    url:
+      "https://pixabay.com/illustrations/purple-abstract-background-1780371/",
+  },
 ];

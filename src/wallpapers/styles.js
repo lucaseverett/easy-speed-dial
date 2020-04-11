@@ -1,7 +1,7 @@
 import { css } from "emotion";
 import { wallpapers } from "./index.js";
 
-export const wallpaperStyles = wallpaper => css`
+export const wallpaperStyles = (wallpaper) => css`
   min-height: 100vh;
   &.light-wallpaper {
     background-color: #f5f5f5;
@@ -10,7 +10,7 @@ export const wallpaperStyles = wallpaper => css`
     background-color: #212121;
   }
   background-image: url(${wallpapers
-    .filter(w => w.id === wallpaper)
+    .filter((w) => w.id === wallpaper)
     .map(({ filename }) => filename)});
   background-size: cover;
   background-position: bottom;

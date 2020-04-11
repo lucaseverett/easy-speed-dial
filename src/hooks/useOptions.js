@@ -7,8 +7,8 @@ export function ProvideOptions({ children }) {
   const [wallpaper, setWallpaper] = useState();
   const [defaultFolder, setFolder] = useState();
   const [newTab, setNewTab] = useState();
-  const [smallerDials, setSmallerDials] = useState();
   const [fullWidth, setFullWidth] = useState();
+  const [useHomepage, setUseHomepage] = useState();
 
   function handleAppearance(appearance) {
     browser.storage.local.set({ appearance });
@@ -30,14 +30,14 @@ export function ProvideOptions({ children }) {
     setNewTab(newTab);
   }
 
-  function handleSmallerDials(smallerDials) {
-    browser.storage.local.set({ smallerDials });
-    setSmallerDials(smallerDials);
-  }
-
   function handleFullWidth(fullWidth) {
     browser.storage.local.set({ fullWidth });
     setFullWidth(fullWidth);
+  }
+
+  function handleUseHomepage(useHomepage) {
+    browser.storage.local.set({ useHomepage });
+    setUseHomepage(useHomepage);
   }
 
   function changeOptions(change) {
@@ -49,10 +49,10 @@ export function ProvideOptions({ children }) {
       setFolder(change["defaultFolder"]["newValue"]);
     } else if (change["newTab"]) {
       setNewTab(change["newTab"]["newValue"]);
-    } else if (change["smallerDials"]) {
-      setSmallerDials(change["smallerDials"]["newValue"]);
     } else if (change["fullWidth"]) {
       setFullWidth(change["fullWidth"]["newValue"]);
+    } else if (change["useHomepage"]) {
+      setUseHomepage(change["useHomepage"]["newValue"]);
     }
   }
 
@@ -74,12 +74,12 @@ export function ProvideOptions({ children }) {
       .then(({ newTab }) => setNewTab(newTab));
 
     browser.storage.local
-      .get({ smallerDials: false })
-      .then(({ smallerDials }) => setSmallerDials(smallerDials));
-
-    browser.storage.local
       .get({ fullWidth: false })
       .then(({ fullWidth }) => setFullWidth(fullWidth));
+
+    browser.storage.local
+      .get({ useHomepage: false })
+      .then(({ useHomepage }) => setUseHomepage(useHomepage));
 
     browser.storage.onChanged.addListener(changeOptions);
 
@@ -95,14 +95,14 @@ export function ProvideOptions({ children }) {
         newTab,
         defaultFolder,
         wallpaper,
-        smallerDials,
         fullWidth,
+        useHomepage,
         handleAppearance,
         handleWallpaper,
         handleNewTab,
-        handleSmallerDials,
         handleDefaultFolder,
-        handleFullWidth
+        handleFullWidth,
+        handleUseHomepage,
       }}
     >
       {children}

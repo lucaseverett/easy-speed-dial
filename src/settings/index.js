@@ -13,14 +13,14 @@ export const Settings = () => {
     newTab,
     defaultFolder,
     wallpaper,
-    smallerDials,
     fullWidth,
+    useHomepage,
     handleAppearance,
     handleWallpaper,
     handleNewTab,
-    handleSmallerDials,
     handleDefaultFolder,
-    handleFullWidth
+    handleFullWidth,
+    handleUseHomepage,
   } = useOptions();
 
   const homeURL = browser.runtime.getURL("dist/index.html");
@@ -33,7 +33,7 @@ export const Settings = () => {
             background-size: contain;
             background-image: url(${filename.split(".")[0]}_thumb.png);
           `,
-          `wallpaper-button${wallpaper === id ? " selected" : ""}`
+          `wallpaper-button${wallpaper === id ? " selected" : ""}`,
         ].join(" ")}
         title={`${title} Wallpaper`}
         onClick={() => {
@@ -51,7 +51,7 @@ export const Settings = () => {
         styles,
         appearance,
         wallpaper,
-        wallpaperStyles(wallpaper)
+        wallpaperStyles(wallpaper),
       ].join(" ")}
     >
       <div className="options-background">
@@ -122,7 +122,9 @@ export const Settings = () => {
                 </div>
               </div>
               <div className="setting-group">
-                <div className="setting-label">Use full page width</div>
+                <div className="setting-label">
+                  Use full page width (large displays)
+                </div>
                 <div className="setting-option">
                   <label className="switch-wrap">
                     <input
@@ -136,21 +138,38 @@ export const Settings = () => {
                   </label>
                 </div>
               </div>
-            </div>
-            <div className="setting-wrapper">
-              <h2>Homepage</h2>
-              <div className="setting-description">
-                The following URL can been used for the browser's homepage.{" "}
-                <span
-                  className={css`
-                    margin-top: 10px;
-                    display: block;
-                  `}
-                >
-                  <a href={homeURL}>{homeURL}</a>
-                </span>
+              <div className="setting-group">
+                <div className="setting-label">Use as homepage</div>
+                <div className="setting-option">
+                  <label className="switch-wrap">
+                    <input
+                      type="checkbox"
+                      id="useHomepage"
+                      value="use-homepage"
+                      checked={useHomepage}
+                      onChange={() => handleUseHomepage(!useHomepage)}
+                    />
+                    <div className="switch"></div>
+                  </label>
+                </div>
               </div>
             </div>
+            {useHomepage && (
+              <div className="setting-wrapper">
+                <h2>Homepage</h2>
+                <div className="setting-description">
+                  The following URL can be used for the browser's homepage.{" "}
+                  <span
+                    className={css`
+                      margin-top: 10px;
+                      display: block;
+                    `}
+                  >
+                    <a href={homeURL}>{homeURL}</a>
+                  </span>
+                </div>
+              </div>
+            )}
             <div className="setting-wrapper">
               <div className="setting-description">
                 <a

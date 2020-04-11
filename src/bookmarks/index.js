@@ -80,6 +80,7 @@ export function Bookmarks() {
         css`
           outline: 0;
           overflow: auto;
+          height: 100vh;
         `,
       ].join(" ")}
       onClick={hideContextMenu}
