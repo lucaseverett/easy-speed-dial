@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { css } from "emotion";
 import Sortable from "sortablejs";
 import { useBookmarks } from "../../../hooks/useBookmarks.js";
+import { useOptions } from "../../../hooks/useOptions.js";
 
 export const Grid = ({ children, isRoot }) => {
   const { moveBookmark } = useBookmarks();
+  const { maxColumns } = useOptions();
 
   useEffect(() => {
     const sortable = Sortable.create(document.getElementById("sortable"), {
@@ -16,32 +18,32 @@ export const Grid = ({ children, isRoot }) => {
       revertOnSpill: true,
       onSort(e) {
         moveBookmark({
-          bookmarkID: e.item.dataset.id,
-          oldIndex: e.oldIndex,
-          newIndex: e.newIndex,
+          id: e.item.dataset.id,
+          from: e.oldIndex,
+          to: e.newIndex,
         });
       },
     });
   }, []);
 
-  const style = css`
+  const styles = css`
     display: grid;
     grid-template-columns: repeat(auto-fill, 210px);
-    grid-gap: 25px;
+    max-width: ${maxColumns === "Unlimited"
+      ? "100%"
+      : `${Number(maxColumns) * 210 + (Number(maxColumns) - 1) * 25 + 140}px`};
+    row-gap: 19px;
+    column-gap: 25px;
     justify-content: center;
-    margin: ${isRoot ? "70px" : "0 70px 70px"};
-    .normal-width & {
-      @media only screen and (min-width: 1740px) {
-        grid-template-columns: repeat(7, 210px);
-      }
-    }
+    margin: ${isRoot ? "70px auto" : "0 auto 70px"};
+    padding: 0 70px;
     .sortable-ghost {
       visibility: hidden;
     }
   `;
 
   return (
-    <div className={style} id="sortable">
+    <div className={styles} id="sortable">
       {children}
     </div>
   );

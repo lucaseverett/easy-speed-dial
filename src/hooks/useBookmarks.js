@@ -1,18 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { filter } from "./filter.js";
 import { useOptions } from "./useOptions.js";
+import { usePrevious } from "./usePrevious.js";
 
-const rootTitle = "Bookmarks";
+const BookmarksContext = createContext();
 
-function useBookmarks() {
+export function ProvideBookmarks({ children }) {
   const { defaultFolder } = useOptions();
 
   const [bookmarks, setBookmarks] = useState([]);
   const [currentFolder, setCurrentFolder] = useState({});
-  const [path, setPath] = useState([]);
   const [folders, setFolders] = useState([]);
 
   const currentFolderRef = useRef();
+
+  const previousDefaultFolder = usePrevious(defaultFolder);
 
   useEffect(() => {
     getFolders();
@@ -28,28 +36,64 @@ function useBookmarks() {
     };
   }, []);
 
-  // Default folder has been changed in Options
   useEffect(() => {
-    initialBookmarks();
+    window.addEventListener("popstate", popState);
+    if (history.state) {
+      const { id, title } = history.state;
+      setCurrentFolder({
+        id,
+        title,
+      });
+      getBookmarks(id).then((bookmarks) => {
+        if (bookmarks) {
+          setBookmarks(bookmarks);
+        }
+      });
+    }
+    return () => {
+      window.removeEventListener("popstate", popState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (defaultFolder !== undefined && history.state === null) {
+      // first run
+      history.replaceState({ id: defaultFolder }, document.title);
+      setCurrentFolder({ id: defaultFolder });
+      getBookmarks(defaultFolder).then((bookmarks) => {
+        if (bookmarks) {
+          setBookmarks(bookmarks);
+        }
+      });
+    } else if (
+      defaultFolder !== undefined &&
+      previousDefaultFolder !== undefined &&
+      previousDefaultFolder !== defaultFolder &&
+      history.state !== null
+    ) {
+      // default folder option changed
+      const id = defaultFolder;
+      history.replaceState({ id }, document.title);
+      getBookmarks(id).then((bookmarks) => {
+        if (bookmarks) {
+          setBookmarks(bookmarks);
+        }
+      });
+      setCurrentFolder({ id });
+    }
   }, [defaultFolder]);
 
   useEffect(() => {
     currentFolderRef.current = currentFolder;
   }, [currentFolder]);
 
-  function initialBookmarks() {
-    if (defaultFolder) {
-      setCurrentFolder({
-        id: defaultFolder,
-        title: rootTitle,
-      });
-      setPath([]);
-      getBookmarks(defaultFolder).then((bookmarks) => {
-        if (bookmarks) {
-          setBookmarks(bookmarks);
-        }
-      });
-    }
+  function popState(e) {
+    const { id, title } = e.state;
+    getBookmarks(id).then(
+      (bookmarks) => setBookmarks(bookmarks || []),
+      setBookmarks([])
+    );
+    setCurrentFolder({ id, title });
   }
 
   function updateBookmarks() {
@@ -71,15 +115,12 @@ function useBookmarks() {
     return filter(bookmarks).sort(sort);
   }
 
-  function changeFolder({ currentFolder = "", nextFolder }) {
-    getBookmarks(nextFolder.id).then((bookmarks) => {
+  function changeFolder(nextFolder) {
+    const { id, title } = nextFolder;
+    history.pushState({ id, title }, document.title);
+    getBookmarks(id).then((bookmarks) => {
       setBookmarks(bookmarks);
-      if (currentFolder) {
-        setPath([...path, currentFolder]);
-      } else {
-        setPath(path.slice(0, path.map(({ id }) => id).indexOf(nextFolder.id)));
-      }
-      setCurrentFolder(nextFolder);
+      setCurrentFolder({ id, title });
     });
   }
 
@@ -122,18 +163,61 @@ function useBookmarks() {
     gettingTree.then(logTree, onRejected);
   }
 
-  function moveBookmark({ bookmarkID, newIndex }) {
-    browser.bookmarks.move(bookmarkID, { index: newIndex });
+  function moveBookmark({ id, from, to }) {
+    browser.bookmarks.move(id, { index: to });
   }
 
-  return {
-    bookmarks,
-    currentFolder,
-    changeFolder,
-    path,
-    folders,
-    moveBookmark,
-  };
+  function deleteBookmark(id) {
+    browser.bookmarks.remove(id);
+  }
+
+  function deleteFolder(id) {
+    browser.bookmarks.removeTree(id);
+  }
+
+  function openLinkTab(url) {
+    browser.tabs.create({ url });
+  }
+
+  function openAllTab(linkID) {
+    getBookmarks(linkID).then((bookmarks) => {
+      let links = bookmarks.filter((b) => b.url);
+      links.forEach(({ url }) => openLinkTab(url));
+    });
+  }
+
+  function openAllWindow(linkID) {
+    getBookmarks(linkID).then((bookmarks) => {
+      let links = bookmarks.filter((b) => b.url).map(({ url }) => url);
+      openLinkWindow(links);
+    });
+  }
+
+  function openLinkWindow(url) {
+    browser.windows.create({ url });
+  }
+
+  return (
+    <BookmarksContext.Provider
+      value={{
+        bookmarks,
+        currentFolder,
+        changeFolder,
+        moveBookmark,
+        deleteBookmark,
+        deleteFolder,
+        folders,
+        openLinkTab,
+        openAllWindow,
+        openAllTab,
+        openLinkWindow,
+      }}
+    >
+      {children}
+    </BookmarksContext.Provider>
+  );
 }
 
-export { useBookmarks };
+export const useBookmarks = () => {
+  return useContext(BookmarksContext);
+};

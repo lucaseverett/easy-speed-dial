@@ -1,43 +1,92 @@
 import { css } from "emotion";
 
-export const buttonStyles = {
-  defaultBtn: css`
-    border-radius: 4px;
-    border: 1px solid #e0e0e0;
-    text-transform: uppercase;
-    padding: 10px;
-    background-color: #e0e0e0;
+const defaultBtn = css`
+  padding: 10px 10px 8px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  :active,
+  :hover {
+    outline: none;
+  }
+  :disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  :focus {
+    outline: none;
+  }
+`;
+
+const defaultBtnLight = css`
+  background-color: #e0e0e0;
+  border: 1px solid #9e9e9e;
+  color: #000;
+  :active,
+  :hover {
+    background-color: #c7c7c7;
     color: #000;
-    cursor: pointer;
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    &:focus,
-    &:active,
-    &:hover {
-      outline: none;
-    }
-    &:hover {
-      background-color: #aeaeae;
-      border-color: #aeaeae;
-    }
-    &:focus {
-      border-color: #707070;
-      box-shadow: 0 0 0 2px #707070;
-    }
-  `,
-  primaryBtn: css`
-    border-color: #5e35b1;
-    background-color: #5e35b1;
-    color: #fff;
-    &:hover {
-      background-color: #280680;
-      border-color: #280680;
-    }
-    &:focus {
-      border-color: #9162e4;
-      box-shadow: 0 0 0 2px #9162e4;
-    }
-  `
+  }
+  :focus {
+    box-shadow: 0 0 0 4px #aeaeae;
+  }
+`;
+
+const defaultBtnDark = css`
+  background-color: #494949;
+  border: 1px solid #212121;
+  color: #f5f5f5;
+  :active,
+  :hover {
+    background-color: #373737;
+    color: #f5f5f5;
+  }
+  :focus {
+    box-shadow: 0 0 0 4px #757575;
+  }
+`;
+
+const dismissBtn = css`
+  background: transparent;
+  border: none;
+  padding: 3px;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  :focus {
+    outline: none;
+  }
+  :active {
+    outline: none;
+  }
+  .close {
+    vertical-align: middle;
+  }
+`;
+
+const dismissBtnLight = css`
+  :hover {
+    background-color: #aeaeae;
+  }
+  :focus {
+    background-color: #aeaeae;
+  }
+`;
+
+const dismissBtnDark = css`
+  :hover {
+    background-color: #424242;
+  }
+  :focus {
+    background-color: #424242;
+  }
+`;
+
+export {
+  defaultBtn,
+  defaultBtnLight,
+  defaultBtnDark,
+  dismissBtn,
+  dismissBtnLight,
+  dismissBtnDark,
 };

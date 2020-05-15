@@ -4,7 +4,6 @@ import { Title } from "./Title.js";
 import { Grid } from "./Grid.js";
 import { Link } from "./Link.js";
 import { Breadcrumbs } from "./Breadcrumbs.js";
-import { css } from "emotion";
 
 export const Theme = ({
   bookmarks,
@@ -12,15 +11,12 @@ export const Theme = ({
   path,
   isRoot,
   changeFolder,
-  newTab
+  newTab,
+  handleLinkContextMenu,
+  switchTitle,
 }) => (
-  <div
-    className={css`
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    `}
-  >
-    {!isRoot && <Breadcrumbs {...{ path, currentFolder, changeFolder }} />}
+  <>
+    {!isRoot && <Breadcrumbs {...{ currentFolder, changeFolder }} />}
     <Grid {...{ currentFolder, isRoot }}>
       {bookmarks.map(({ title, url, type, name, id }) => (
         <Fragment key={id}>
@@ -32,14 +28,17 @@ export const Theme = ({
               title,
               changeFolder,
               currentFolder,
-              newTab
+              newTab,
+              handleLinkContextMenu,
             }}
           >
-            <Box {...{ name, type }} />
-            <Title {...{ title }} />
+            <Box {...{ name, title, switchTitle, type }} />
+            <Title
+              {...{ title: switchTitle && url ? name.join(".") : title }}
+            />
           </Link>
         </Fragment>
       ))}
     </Grid>
-  </div>
+  </>
 );

@@ -1,67 +1,67 @@
 import React from "react";
 import { css } from "emotion";
 
-export const Breadcrumbs = ({ path, currentFolder, changeFolder }) => {
-  const style = css`
-    font-size: 20px;
-    line-height: 62px;
-    padding-top: 8px;
-    text-align: center;
-    cursor: default;
-    .light-appearance & {
-      span,
-      a {
-        color: #000;
-      }
-    }
-    .medium-appearance & {
-      span,
-      a {
-        color: #1b1b1b;
-      }
-    }
-    .dark-appearance & {
-      span,
-      a {
-        color: #fff;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-      }
-    }
-    a {
-      text-decoration: underline;
-      cursor: pointer;
-      :focus {
-        color: #01579b;
-        outline: none;
-      }
-    }
-  `;
+function goBack() {
+  history.back();
+}
 
-  let handleClick = (e, folder) => {
-    e.preventDefault();
-    changeFolder(folder);
-  };
+const styles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  height: 70px;
+  padding-top: 8px;
+  cursor: default;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  span {
+    text-decoration: underline;
+    :hover {
+      text-decoration: none;
+    }
+  }
+  button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 2px;
+    height: 30px;
+    padding: 0 8px 0 0;
+    border: none;
+    .color-scheme-light & {
+      color: #424242;
+      background-color: rgba(35, 35, 35, 0.8);
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    .color-scheme-dark & {
+      color: #e0e0e0;
+      background-color: rgba(35, 35, 35, 0.8);
+    }
+    :focus:not(.focus-visible) {
+      outline: none;
+    }
+    &.focus-visible {
+      background-color: #90caf9;
+      color: #424242;
+      outline: none;
+      text-decoration: none;
+    }
+  }
+`;
 
+export const Breadcrumbs = ({ currentFolder }) => {
   return (
-    <div className={style}>
-      {path.map(({ id, title }, index) => (
-        <span key={id}>
-          {index !== 0 && " / "}
-          <a
-            href={id}
-            title={title}
-            onClick={e =>
-              handleClick(e, {
-                nextFolder: { id, title }
-              })
-            }
-            onContextMenu={e => e.stopPropagation()}
-          >
-            {title}
-          </a>
-          {index === path.length - 1 && ` / ${currentFolder.title}`}
-        </span>
-      ))}
+    <div className={styles}>
+      <button
+        title="Go to parent folder"
+        onClick={goBack}
+        onContextMenu={(e) => e.stopPropagation()}
+      >
+        <i className="material-icons">chevron_left</i>
+        <span>{currentFolder.title}</span>
+      </button>
     </div>
   );
 };

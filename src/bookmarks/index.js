@@ -1,103 +1,174 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { css } from "emotion";
 import { Theme } from "./themes/default";
-import { ContextMenu } from "./contextMenu.js";
-import { usePrevious } from "../hooks/usePrevious.js";
+import { AlertBanner } from "./AlertBanner.js";
+import { WhatsNew } from "./WhatsNew.js";
+import { ContextMenu } from "../hooks/useContextMenu.js";
 import { useOptions } from "../hooks/useOptions.js";
 import { useBookmarks } from "../hooks/useBookmarks.js";
 import { wallpaperStyles } from "../wallpapers/styles.js";
+import { mainScrollbarStyles } from "../styles/scrollbars.js";
 
-let scrollPosition = 0;
-
-window.onscroll = () => {
-  scrollPosition = window.pageYOffset;
-};
-
-let menuCoords = { x: 0, y: 0 };
+const userAgent = navigator.userAgent.toLowerCase();
+const isMacOS = userAgent.includes("macintosh") ? true : false;
+const isChrome = userAgent.includes("chrome") ? true : false;
 
 export function Bookmarks() {
-  const { bookmarks, currentFolder, changeFolder, path } = useBookmarks();
+  useEffect(() => {
+    document.title = "Toolbar Dial";
+  }, []);
+
+  const { bookmarks, currentFolder, changeFolder } = useBookmarks();
   const {
-    appearance,
     newTab,
-    smallerDials,
     defaultFolder,
+    colorScheme,
     wallpaper,
-    fullWidth,
+    customColor,
+    customImage,
+    themeOption,
+    showAlertBanner,
+    hideAlertBanner,
+    switchTitle,
   } = useOptions();
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const [linkID, setLinkID] = useState();
+  const [linkURL, setLinkURL] = useState();
+  const [menuCoords, setMenuCoords] = useState();
+  const [showModal, setShowModal] = useState();
 
-  let prevFolder = usePrevious(currentFolder);
-
-  useLayoutEffect(() => {
-    if (prevFolder !== currentFolder) {
-      window.scrollTo(0, 0);
-    } else {
-      window.scrollTo(0, scrollPosition);
+  function handleScroll() {
+    if (showContextMenu) {
+      hideContextMenu();
     }
-  }, [bookmarks, currentFolder]);
+  }
 
   function handleContextMenu(e) {
     e.preventDefault();
-    if (showContextMenu) {
-      setShowContextMenu(false);
-    } else {
-      menuCoords = {
-        x: e.pageX + 147 >= window.innerWidth ? e.pageX - 147 : e.pageX,
-        y: e.pageY + 46 >= window.innerHeight ? e.pageY - 46 : e.pageY,
-      };
-      setShowContextMenu(true);
-    }
+    setMenuCoords({
+      pageX: e.pageX,
+      pageY: e.pageY,
+    });
+    setShowContextMenu(true);
+  }
+
+  function handleWallpaperContextMenu(e) {
+    setLinkURL();
+    setLinkID();
+    handleContextMenu(e);
+  }
+
+  function handleLinkContextMenu(e, { url = "", id = "" }) {
+    e.stopPropagation();
+    setLinkURL(url);
+    setLinkID(id);
+    handleContextMenu(e);
   }
 
   function hideContextMenu() {
     setShowContextMenu(false);
+    setLinkURL();
+    setLinkID();
   }
 
-  function handleEscape(e) {
+  function handleEscapeContext(e) {
     if (e.key === "Escape") {
       e.preventDefault();
-      setShowContextMenu(false);
+      hideContextMenu();
     }
+  }
+
+  function handleEscapeModal(e) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setShowModal();
+    }
+  }
+
+  function handleDismissAlertBanner() {
+    hideAlertBanner();
+  }
+
+  function handleDismissModal() {
+    setShowModal();
+  }
+
+  function handleShowWhatsNew() {
+    hideContextMenu();
+    hideAlertBanner();
+    setShowModal("whats-new");
   }
 
   const focusRef = useRef(null);
 
-  if (focusRef.current) {
+  useLayoutEffect(() => {
+    // Resets focus and scrolls to the top upon changing folders
+    focusRef.current.scrollTop = 0;
     focusRef.current.focus();
-  }
+  }, [currentFolder]);
 
   return (
     <div
       ref={focusRef}
       tabIndex="-1"
       className={[
-        appearance,
+        themeOption === "System Theme"
+          ? colorScheme
+          : themeOption === "Light"
+          ? "color-scheme-light"
+          : "color-scheme-dark",
         wallpaper,
-        wallpaperStyles(wallpaper),
-        smallerDials ? "small-dials" : "large-dials",
-        fullWidth ? "full-width" : "normal-width",
+        wallpaperStyles({ wallpaper, customColor, customImage }),
+        isChrome ? "chrome" : "firefox",
+        isMacOS ? "mac" : "windows",
         css`
           outline: 0;
           overflow: auto;
+          ${mainScrollbarStyles}
           height: 100vh;
+          font-family: "Roboto", sans-serif;
         `,
       ].join(" ")}
       onClick={hideContextMenu}
-      onKeyDown={handleEscape}
-      onContextMenu={handleContextMenu}
+      onContextMenu={handleWallpaperContextMenu}
+      onScroll={handleScroll}
     >
       {showContextMenu && (
-        <ContextMenu {...{ top: menuCoords.y, left: menuCoords.x }} />
+        <ContextMenu
+          {...{
+            menuCoords,
+            linkID,
+            linkURL,
+            handleShowWhatsNew,
+            handleEscapeContext,
+            hideContextMenu,
+          }}
+        />
+      )}
+      {showAlertBanner && (
+        <AlertBanner
+          {...{ handleDismissAlertBanner, handleShowWhatsNew, hideContextMenu }}
+        />
+      )}
+      {showModal === "whats-new" && (
+        <WhatsNew {...{ handleDismissModal, handleEscapeModal }} />
       )}
       <Theme
         {...{
           bookmarks,
-          currentFolder: { id: currentFolder.id, title: currentFolder.title },
-          path,
+          currentFolder,
           changeFolder,
-          isRoot: currentFolder.id === defaultFolder,
+          isRoot:
+            currentFolder.id === undefined ||
+            currentFolder.title === undefined ||
+            defaultFolder === undefined
+              ? true
+              : currentFolder.title
+              ? false
+              : defaultFolder === currentFolder.id,
           newTab,
+          handleLinkContextMenu,
+          switchTitle,
         }}
       />
     </div>

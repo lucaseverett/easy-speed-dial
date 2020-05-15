@@ -3,3 +3,4 @@ dist
 *.log
 .cache
 .DS_Store
+src/wallpapers/wallpapers

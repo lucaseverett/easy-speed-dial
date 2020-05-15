@@ -1,53 +1,51 @@
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { css } from "emotion";
 
-let shorten = name => {
-  return name.length > 24 ? `${name.substr(0, 22)}..` : name;
-};
-
 export const Name = ({ name, type }) => {
-  const styles = css`
-    margin: 0 auto;
-  `;
-
   const Small = ({ children, align }) => (
     <div
       className={css`
-        font-size: 12px;
-        line-height: 12px;
+        font-size: 13px;
         font-weight: normal;
-        white-space: nowrap;
-        max-width: 190px;
+        max-width: 180px;
         text-align: ${align};
+        margin: 0 auto;
       `}
     >
       {children}
     </div>
   );
 
-  const Domain = ({ children, padding = false }) => (
-    <div
-      className={css`
-        line-height: 16px;
-        padding-bottom: 3px;
-        white-space: nowrap;
-        max-width: 190px;
-        font-size: ${children.length < 14
-          ? "24px"
-          : children.length > 12 &&
-            children.length < 25 &&
-            ((24 - children.length) / 10) * 23 > 13
-          ? `${((24 - children.length) / 10) * 23}px`
-          : "14px"};
-        padding-top: ${padding ? "13px" : "0"};
-      `}
-    >
-      {children}
-    </div>
-  );
+  const Domain = ({ children, padding = false, title = false }) => {
+    const [scale, setScale] = useState();
+    const domainRef = useRef(null);
+    useLayoutEffect(() => {
+      const domainWidth = domainRef.current.offsetWidth;
+      const domainHeight = domainRef.current.offsetHeight;
+      if (domainHeight > "120") {
+        setScale(120 / domainHeight);
+      } else if (domainWidth > "180") {
+        setScale(180 / domainWidth);
+      }
+    }, []);
+    return (
+      <div
+        ref={domainRef}
+        className={css`
+          line-height: ${title ? "26px" : "16px"};
+          white-space: ${title ? "initial" : "nowrap"};
+          padding: ${title ? "0" : padding ? "18px 0 3px" : "3px 0"};
+          font-size: 24px;
+          transform: ${scale ? `scale(${scale})` : "initial"};
+        `}
+      >
+        {children}
+      </div>
+    );
+  };
 
   if (type === "file" || name.length === 1) {
-    name = <Domain>{shorten(name.join("."))}</Domain>;
+    name = <Domain {...{ title: true }}>{name.join(".")}</Domain>;
   } else if (name.length === 3 && name[0].length < name[1].length) {
     name = name.map((n, i) => {
       if (i === 0) {
@@ -63,14 +61,14 @@ export const Name = ({ name, type }) => {
           </Small>
         );
       }
-      return <Domain key={n}>{shorten(n)}</Domain>;
+      return <Domain key={n}>{n}</Domain>;
     });
   } else if (name.length === 2) {
     name = name.map((n, i) => {
       if (i === 0) {
         return (
           <Domain padding={true} key={n}>
-            {shorten(n)}
+            {n}
           </Domain>
         );
       }
@@ -85,30 +83,30 @@ export const Name = ({ name, type }) => {
     name[0].length === name[1].length
   ) {
     name = (
-      <div>
-        <Domain padding={true}>{shorten(name[0])}</Domain>
+      <>
+        <Domain padding={true}>{name[0]}</Domain>
         <Small align="right">
           {name
             .slice(1)
-            .map(n => n)
+            .map((n) => n)
             .join(".")}
         </Small>
-      </div>
+      </>
     );
   } else {
     name = (
-      <div>
+      <>
         <Small align="left">{name[0]}</Small>
-        <Domain>{shorten(name[1])}</Domain>
+        <Domain>{name[1]}</Domain>
         <Small align="right">
           {name
             .slice(2)
-            .map(n => n)
+            .map((n) => n)
             .join(".")}
         </Small>
-      </div>
+      </>
     );
   }
 
-  return <div className={styles}>{name}</div>;
+  return <div>{name}</div>;
 };

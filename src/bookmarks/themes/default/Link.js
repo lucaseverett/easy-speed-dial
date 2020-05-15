@@ -1,6 +1,12 @@
 import React from "react";
 import { css } from "emotion";
 
+const styles = css`
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+`;
+
 export const Link = ({
   url,
   type,
@@ -10,44 +16,34 @@ export const Link = ({
   changeFolder,
   currentFolder,
   newTab,
+  handleLinkContextMenu,
 }) => {
-  const style = css`
-    text-decoration: none;
-    cursor: pointer;
-    outline: none;
-  `;
-
-  const FileLink = ({ id, url, title, children, newTab }) => (
+  const FileLink = ({ url, children, newTab }) => (
     <a
       href={url}
       data-id={id}
       rel="noopener noreferrer"
-      className={style}
-      title={title}
+      className={styles}
       target={newTab ? "_blank" : "_self"}
-      onContextMenu={(e) => e.stopPropagation()}
+      onContextMenu={(e) => handleLinkContextMenu(e, { id, url })}
     >
       {children}
     </a>
   );
 
-  const FolderLink = ({ children, id, title, currentFolder, changeFolder }) => {
+  const FolderLink = ({ children, id, title, changeFolder }) => {
     let handleClick = (e) => {
       e.preventDefault();
-      changeFolder({
-        currentFolder,
-        nextFolder: { id, title },
-      });
+      changeFolder({ id, title });
     };
 
     return (
       <a
-        href={id}
         data-id={id}
-        className={style}
-        title={`${title} Folder`}
+        tabIndex="0"
+        className={styles}
         onClick={handleClick}
-        onContextMenu={(e) => e.stopPropagation()}
+        onContextMenu={(e) => handleLinkContextMenu(e, { id })}
       >
         {children}
       </a>
