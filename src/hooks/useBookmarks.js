@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useState,
   useEffect,
@@ -96,13 +97,32 @@ export function ProvideBookmarks({ children }) {
     setCurrentFolder({ id, title });
   }
 
-  function updateBookmarks() {
-    getBookmarks(currentFolderRef.current.id).then((bookmarks) => {
-      if (bookmarks) {
-        setBookmarks(bookmarks);
-      }
-    });
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function () {
+      var context = this,
+        args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      }, wait);
+      if (immediate && !timeout) func.apply(context, args);
+    };
   }
+
+  const updateBookmarks = useCallback(
+    debounce(
+      () =>
+        getBookmarks(currentFolderRef.current.id).then((bookmarks) => {
+          if (bookmarks) {
+            setBookmarks(bookmarks);
+          }
+        }),
+      200
+    ),
+    [currentFolderRef]
+  );
 
   async function getBookmarks(folder) {
     let bookmarks = [];
@@ -136,7 +156,7 @@ export function ProvideBookmarks({ children }) {
     }
 
     function logItems(bookmarkItem, indent) {
-      if (bookmarkItem.type === "folder") {
+      if (!bookmarkItem.url) {
         if (bookmarkItem.id !== "root________") {
           addFolder(
             bookmarkItem.id,
@@ -164,7 +184,7 @@ export function ProvideBookmarks({ children }) {
   }
 
   function moveBookmark({ id, from, to }) {
-    browser.bookmarks.move(id, { index: to });
+    browser.bookmarks.move(id.toString(), { index: to });
   }
 
   function deleteBookmark(id) {

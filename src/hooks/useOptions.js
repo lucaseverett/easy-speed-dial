@@ -51,10 +51,8 @@ export function ProvideOptions({ children }) {
       .get({ "custom-image": "" })
       .then(({ "custom-image": image }) => {
         if (image) {
-          if (image) {
-            let imageURI = URL.createObjectURL(image);
-            setCustomImage(imageURI);
-          }
+          let imageURI = URL.createObjectURL(image);
+          setCustomImage(imageURI);
         }
       });
   }

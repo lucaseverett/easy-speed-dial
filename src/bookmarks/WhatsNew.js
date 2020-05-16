@@ -8,6 +8,7 @@ const styles = css`
   outline: none;
 
   h2 {
+    margin: 20px 0 0;
     font-size: 16px;
 
     .color-scheme-light & {
@@ -17,10 +18,6 @@ const styles = css`
     .color-scheme-dark & {
       color: #64b5f6;
     }
-  }
-
-  h2 {
-    margin: 0;
   }
 
   h3 {
@@ -52,6 +49,10 @@ const styles = css`
 
     :first-child {
       border: none;
+
+      h2 {
+        margin-top: 0;
+      }
     }
 
     :last-child {
@@ -100,6 +101,13 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
         className={styles}
         onKeyDown={tabKey}
       >
+        <div>
+          <h2>Version 2.0.1</h2>
+          <h3>Resolved Issues</h3>
+          <ul>
+            <li>Minor bug fixes</li>
+          </ul>
+        </div>
         <div>
           <h2>Version 2.0</h2>
           <h3>New features</h3>

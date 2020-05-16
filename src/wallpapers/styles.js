@@ -38,7 +38,7 @@ export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
       ? customImage
       : wallpapers
           .filter((w) => w.id === wallpaper)
-          .map(({ filename }) => filename)});
+          .map(({ filename }) => `https://media.toolbardial.com/${filename}`)});
     background-size: cover;
     background-position: ${/BlackSand|Crayons/.test(wallpaper)
       ? "bottom"
