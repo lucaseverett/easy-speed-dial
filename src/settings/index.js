@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useOptions } from "../hooks/useOptions.js";
+import { useOptions } from "useOptions";
 import { styles } from "./styles.js";
-import { useBookmarks } from "../hooks/useBookmarks.js";
+import { useBookmarks } from "useBookmarks";
 import { wallpapers } from "../wallpapers";
 import { wallpaperStyles } from "../wallpapers/styles.js";
 import { css } from "emotion";
@@ -31,7 +31,6 @@ export const Settings = () => {
     handleCustomImage,
     handleThemeOption,
     handleSwitchTitle,
-    repoURL,
   } = useOptions();
 
   const focusRef = useRef(null);
@@ -346,7 +345,11 @@ export const Settings = () => {
                   .<br />
                   <br />
                   Please report any bugs or issues to the{" "}
-                  <a href={repoURL} rel="noopener" target="_blank">
+                  <a
+                    href="https://github.com/lucaseverett/toolbar-dial"
+                    rel="noopener"
+                    target="_blank"
+                  >
                     GitHub repository
                   </a>
                   .

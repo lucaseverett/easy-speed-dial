@@ -1,5 +1,5 @@
-export const filter = bookmarks => {
-  const getLinkName = name => {
+export const filter = (bookmarks) => {
+  const getLinkName = (name) => {
     try {
       name = /:\/\/(?:www\.)?(.*?)(?:\?|\/|$)/i.exec(name)[1].toLowerCase();
     } finally {
@@ -7,12 +7,12 @@ export const filter = bookmarks => {
     }
   };
 
-  const getFileName = name => {
+  const getFileName = (name) => {
     name = /:\/\/.*\/(.*?)$/i.exec(name)[1].toLowerCase();
     return name.split(".");
   };
 
-  const getType = url => {
+  const getType = (url) => {
     if (/^(http|ftp)/i.test(url)) {
       return "link";
     } else {

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { css } from "emotion";
 import Sortable from "sortablejs";
-import { useBookmarks } from "../../../hooks/useBookmarks.js";
-import { useOptions } from "../../../hooks/useOptions.js";
+import { useBookmarks } from "useBookmarks";
+import { useOptions } from "useOptions";
 
 export const Grid = ({ children, isRoot }) => {
   const { moveBookmark } = useBookmarks();

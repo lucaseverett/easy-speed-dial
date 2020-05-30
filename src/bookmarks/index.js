@@ -3,9 +3,9 @@ import { css } from "emotion";
 import { Theme } from "./themes/default";
 import { AlertBanner } from "./AlertBanner.js";
 import { WhatsNew } from "./WhatsNew.js";
-import { ContextMenu } from "../hooks/useContextMenu.js";
-import { useOptions } from "../hooks/useOptions.js";
-import { useBookmarks } from "../hooks/useBookmarks.js";
+import { ContextMenu } from "useContextMenu";
+import { useOptions } from "useOptions";
+import { useBookmarks } from "useBookmarks";
 import { wallpaperStyles } from "../wallpapers/styles.js";
 import { mainScrollbarStyles } from "../styles/scrollbars.js";
 

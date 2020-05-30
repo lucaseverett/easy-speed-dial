@@ -6,9 +6,10 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { filter } from "./filter.js";
+import { filter } from "../../common/filter.js";
 import { useOptions } from "./useOptions.js";
-import { usePrevious } from "./usePrevious.js";
+import { usePrevious } from "../../common/usePrevious.js";
+import browser from "webextension-polyfill";
 
 const BookmarksContext = createContext();
 
@@ -29,13 +30,28 @@ export function ProvideBookmarks({ children }) {
     browser.bookmarks.onCreated.addListener(updateBookmarks);
     browser.bookmarks.onMoved.addListener(updateBookmarks);
     browser.bookmarks.onRemoved.addListener(updateBookmarks);
+    browser.bookmarks.onChildrenReordered.addListener(updateBookmarks);
+    browser.bookmarks.onImportBegan.addListener(endListening);
+    browser.bookmarks.onImportEnded.addListener(resumeListening);
     return () => {
       browser.bookmarks.onChanged.removeListener(updateBookmarks);
       browser.bookmarks.onCreated.removeListener(updateBookmarks);
       browser.bookmarks.onMoved.removeListener(updateBookmarks);
       browser.bookmarks.onRemoved.removeListener(updateBookmarks);
+      browser.bookmarks.onChildrenReordered.removeListener(updateBookmarks);
+      browser.bookmarks.onImportBegan.removeListener(endListening);
+      browser.bookmarks.onImportEnded.removeListener(resumeListening);
     };
   }, []);
+
+  function endListening() {
+    browser.bookmarks.onCreated.removeListener(updateBookmarks);
+  }
+
+  function resumeListening() {
+    browser.bookmarks.onCreated.addListener(updateBookmarks);
+    updateBookmarks();
+  }
 
   useEffect(() => {
     window.addEventListener("popstate", popState);
@@ -157,7 +173,7 @@ export function ProvideBookmarks({ children }) {
 
     function logItems(bookmarkItem, indent) {
       if (!bookmarkItem.url) {
-        if (bookmarkItem.id !== "root________") {
+        if (bookmarkItem.id !== "0") {
           addFolder(
             bookmarkItem.id,
             `${makeIndent(indent)}${bookmarkItem.title}`
@@ -184,6 +200,10 @@ export function ProvideBookmarks({ children }) {
   }
 
   function moveBookmark({ id, from, to }) {
+    // This is a workaround for a Chromium bug
+    // https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
+    if (from < to) to++;
+
     browser.bookmarks.move(id.toString(), { index: to });
   }
 

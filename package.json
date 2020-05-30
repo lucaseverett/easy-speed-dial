@@ -1,5 +1,5 @@
 {
-  "name": "toolbar-dial-firefox",
+  "name": "toolbar-dial",
   "author": {
     "name": "Lucas Everett",
     "email": "lucas@lucaseverett.dev",
@@ -9,7 +9,6 @@
   "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
   "homepage": "https://toolbardial.com",
   "keywords": [
-    "firefox",
     "speed dial",
     "toolbar dial"
   ],
@@ -19,15 +18,21 @@
     "emotion": "^10.0.27",
     "focus-visible": "^5.1.0",
     "fontawesome": "^5.6.3",
+    "localforage": "^1.7.3",
     "normalize.css": "^8.0.1",
     "random-material-color": "^1.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "sortablejs": "^1.10.2"
   },
   "scripts": {
-    "start": "web-ext run",
-    "build": "rimraf dist && parcel build ./src/*.html --no-cache --public-url ./"
+    "lint": "prettier --write 'src/**/*.js'",
+    "dev": "web-ext run --source-dir ./dist-firefox/",
+    "start": "cross-env PROJECT=demo parcel ./src/demo/index.html --open --no-cache --out-dir dist-demo",
+    "build:firefox": "rimraf dist-firefox && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --out-dir dist-firefox",
+    "build:chrome": "rimraf dist-chrome && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --no-cache --public-url ./ --out-dir dist-chrome",
+    "build:demo": "rimraf dist-demo && cross-env PROJECT=demo parcel build ./src/demo/*.html --no-cache --public-url ./ --out-dir dist-demo"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
@@ -35,19 +40,38 @@
     "@babel/plugin-transform-react-jsx": "^7.9.4",
     "@babel/preset-env": "^7.9.6",
     "babel-plugin-emotion": "^10.0.33",
+    "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "cross-env": "^7.0.2",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
+    "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
-    "web-ext": "^4.2.0"
+    "web-ext": "^4.2.0",
+    "webextension-polyfill": "^0.6.0"
   },
   "browserslist": [
-    "last 2 Firefox versions"
+    "defaults",
+    "not IE 11"
   ],
   "staticFiles": {
     "staticPath": [
-      "src/wallpapers/wallpapers",
-      "src/wallpapers/thumbs"
+      {
+        "outDirPattern": "**/dist-firefox",
+        "staticPath": "public/firefox"
+      },
+      {
+        "outDirPattern": "**/dist-chrome",
+        "staticPath": "public/chrome"
+      },
+      {
+        "outDirPattern": "**",
+        "staticPath": "public/thumbs"
+      },
+      {
+        "outDirPattern": "**",
+        "staticPath": "public/icons"
+      }
     ],
     "watcherGlob": "**"
   }

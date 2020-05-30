@@ -8,7 +8,7 @@ import {
   dismissBtnLight,
   dismissBtnDark,
 } from "../styles/buttons.js";
-import { useOptions } from "../hooks/useOptions.js";
+import { useOptions } from "useOptions";
 
 const styles = css`
   -webkit-font-smoothing: antialiased;

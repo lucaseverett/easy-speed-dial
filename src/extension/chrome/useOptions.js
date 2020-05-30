@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import localForage from "localforage";
+import browser from "webextension-polyfill";
 
 const OptionsContext = createContext();
 
@@ -40,21 +42,22 @@ export function ProvideOptions({ children }) {
     i.type = "File";
     i.onchange = (e) => {
       let image = e.target.files[0];
-      browser.storage.local.set({ "custom-image": image });
+      localForage.setItem("custom-image", image);
+      browser.storage.local.set({
+        "custom-image": `custom-image${Math.floor(Math.random() * 10000)}`,
+      });
       handleWallpaper(`custom-image${Math.floor(Math.random() * 10000)}`);
     };
     i.click();
   }
 
   function getCustomImage() {
-    browser.storage.local
-      .get({ "custom-image": "" })
-      .then(({ "custom-image": image }) => {
-        if (image) {
-          let imageURI = URL.createObjectURL(image);
-          setCustomImage(imageURI);
-        }
-      });
+    localForage.getItem("custom-image").then((image) => {
+      if (image) {
+        let imageURI = URL.createObjectURL(image);
+        setCustomImage(imageURI);
+      }
+    });
   }
 
   function handleThemeOption(e) {
@@ -134,8 +137,7 @@ export function ProvideOptions({ children }) {
           : "light-wallpaper");
       let customColor = results[`${apiVersion}-custom-color`] || "";
       let themeOption = results[`${apiVersion}-theme-option`] || "System Theme";
-      let defaultFolder =
-        results[`${apiVersion}-default-folder`] || "toolbar_____";
+      let defaultFolder = results[`${apiVersion}-default-folder`] || "1";
       let maxColumns = results[`${apiVersion}-max-columns`] || "7";
       let newTab = results[`${apiVersion}-new-tab`] || false;
       let switchTitle = results[`${apiVersion}-switch-title`] || false;
@@ -218,11 +220,9 @@ export function ProvideOptions({ children }) {
 
   function openOptions() {
     browser.tabs.create({
-      url: browser.runtime.getURL("dist/options.html"),
+      url: browser.runtime.getURL("options.html"),
     });
   }
-
-  const repoURL = "https://github.com/lucaseverett/toolbar-dial-firefox";
 
   return (
     <OptionsContext.Provider
@@ -247,7 +247,6 @@ export function ProvideOptions({ children }) {
         handleThemeOption,
         handleSwitchTitle,
         openOptions,
-        repoURL,
       }}
     >
       {children}
