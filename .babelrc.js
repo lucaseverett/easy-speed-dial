@@ -10,7 +10,6 @@ module.exports = {
   plugins: [
     "transform-inline-environment-variables",
     "emotion",
-    "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-react-jsx",
     [
       "module-resolver",
