@@ -182,7 +182,7 @@ const devBookmarks = () => {
 };
 
 export const allBookmarks = {
-  "1": {
+  1: {
     bookmarks: [
       ...bookmarksFolder.map((b) => createBookmark(b[0], b[1])),
       {
@@ -197,7 +197,7 @@ export const allBookmarks = {
     parentID: "0",
     title: "Bookmarks Bar",
   },
-  "2": {
+  2: {
     bookmarks: [
       ...otherBookmarks.map((b) => createBookmark(b[0], b[1])),
       ...devBookmarks(),
@@ -205,12 +205,12 @@ export const allBookmarks = {
     parentID: "1",
     title: "Other Bookmarks",
   },
-  "3": {
+  3: {
     bookmarks: topSites.map((b) => createBookmark(`https://${b}`, b)),
     parentID: "2",
     title: "Top Sites - US",
   },
-  "4": {
+  4: {
     bookmarks: topSitesGlobal.map((b) => createBookmark(`https://${b}`, b)),
     parentID: "2",
     title: "Top Sites - Global",
