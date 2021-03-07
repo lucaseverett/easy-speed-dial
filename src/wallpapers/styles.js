@@ -1,4 +1,4 @@
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { wallpapers } from "./index.js";
 
 export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {

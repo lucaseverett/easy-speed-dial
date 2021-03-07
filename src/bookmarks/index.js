@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { css } from "emotion";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { css } from "@emotion/css";
 import { Theme } from "./themes/default";
 import { AlertBanner } from "./AlertBanner.js";
 import { WhatsNew } from "./WhatsNew.js";

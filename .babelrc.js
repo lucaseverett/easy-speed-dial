@@ -8,9 +8,13 @@ const resolveFile = (file) =>
 module.exports = {
   presets: ["@babel/preset-env"],
   plugins: [
-    "transform-inline-environment-variables",
-    "emotion",
-    "@babel/plugin-transform-react-jsx",
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        runtime: "automatic",
+      },
+    ],
+    "@emotion",
     [
       "module-resolver",
       {

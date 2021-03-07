@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { css } from "emotion";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { css } from "@emotion/css";
 import { useBookmarks } from "./useBookmarks.js";
 import { useOptions } from "./useOptions.js";
 

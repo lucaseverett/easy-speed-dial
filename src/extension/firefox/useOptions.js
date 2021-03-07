@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  createContext,
-  useEffect,
-  useRef,
-} from "react";
+import { useState, useContext, createContext, useEffect, useRef } from "react";
 
 const OptionsContext = createContext();
 

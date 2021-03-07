@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import "../../common/styles.css";
 import { Bookmarks } from "../../bookmarks/index.js";

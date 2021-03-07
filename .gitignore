@@ -6,3 +6,4 @@ dist-*
 firebase.json
 .firebase
 .firebaserc
+.parcel-cache

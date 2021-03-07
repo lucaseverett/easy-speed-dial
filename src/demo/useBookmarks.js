@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { filter } from "../common/filter.js";
 import { useOptions } from "./useOptions.js";
 import { allBookmarks } from "./bookmarks.js";

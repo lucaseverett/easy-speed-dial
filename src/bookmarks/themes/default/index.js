@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Box } from "./Box.js";
 import { Title } from "./Title.js";
 import { Grid } from "./Grid.js";

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { css } from "emotion";
+import { useEffect, useRef } from "react";
+import { css } from "@emotion/css";
 import { Modal } from "./Modal.js";
 
 const styles = css`
