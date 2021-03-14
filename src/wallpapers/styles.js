@@ -37,7 +37,7 @@ export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
     background-image: url(${wallpaper === "custom-image"
       ? customImage
       : `https://media.toolbardial.com/${
-          wallpapers.filter((w) => w.id === wallpaper)[0]?.filename
+          wallpapers.filter((w) => w.id === wallpaper)[0]?.filename || ""
         }`});
     background-size: cover;
     background-position: ${/Crayons/.test(wallpaper) ? "bottom" : "center"};
