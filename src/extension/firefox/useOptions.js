@@ -142,11 +142,13 @@ export function ProvideOptions({ children }) {
           // updated version, show banner
           setShowAlertBanner(true);
         }
-        */
+        
       if (version < appVersion) {
         // updated version, show banner
         setShowAlertBanner(true);
       }
+      */
+
       setWallpaper(
         wallpaper.includes("custom-image") ? "custom-image" : wallpaper
       );

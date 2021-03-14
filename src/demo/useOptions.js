@@ -27,7 +27,7 @@ export function ProvideOptions({ children }) {
   const [maxColumns, setMaxColumns] = useState();
   const [newTab, setNewTab] = useReducer(parse, false);
   const [switchTitle, setSwitchTitle] = useReducer(parse, false);
-  const [showAlertBanner, setShowAlertBanner] = useState(true);
+  const [showAlertBanner, setShowAlertBanner] = useState(false);
 
   function handleWallpaper(value) {
     localStorage.setItem(`${apiVersion}-wallpaper`, value);
