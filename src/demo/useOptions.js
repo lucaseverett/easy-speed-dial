@@ -10,8 +10,11 @@ import localForage from "localforage/src/localforage.js";
 
 const OptionsContext = createContext();
 
-// For setting Options
+// For setting Options (don't change unless something breaks)
 const apiVersion = "2.0";
+
+// For displaying Alert Banner (change for every release)
+const appVersion = "2.0.2";
 
 function parse(state, value) {
   return JSON.parse(value);
@@ -125,6 +128,14 @@ export function ProvideOptions({ children }) {
   }
 
   useEffect(() => {
+    let lastVersion = localStorage.getItem("last-version") || false;
+    let firstRun = lastVersion ? false : true;
+
+    // store version upon first run
+    if (firstRun) {
+      localStorage.setItem("last-version", appVersion);
+    }
+
     let wallpaper = localStorage.getItem(`${apiVersion}-wallpaper`);
     setWallpaper(
       wallpaper && wallpaper.includes("custom-image")

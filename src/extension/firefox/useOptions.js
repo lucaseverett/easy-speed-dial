@@ -2,11 +2,11 @@ import { useState, useContext, createContext, useEffect, useRef } from "react";
 
 const OptionsContext = createContext();
 
-// For setting Options
+// For setting Options (don't change unless something breaks)
 const apiVersion = "2.0";
 
-// For displaying Alert Banner
-const appVersion = "2.0";
+// For displaying Alert Banner (change for every release)
+const appVersion = "2.0.2";
 
 export function ProvideOptions({ children }) {
   const [wallpaper, setWallpaper] = useState();
@@ -89,7 +89,6 @@ export function ProvideOptions({ children }) {
 
   function hideAlertBanner() {
     setShowAlertBanner(false);
-    browser.storage.local.set({ "last-alert-banner": appVersion });
   }
 
   function changeOptions(change) {
@@ -119,7 +118,8 @@ export function ProvideOptions({ children }) {
 
   useEffect(() => {
     browser.storage.local.get().then((results) => {
-      let version = results["last-alert-banner"] || "0";
+      let lastVersion = results["last-version"] || false;
+      let firstRun = lastVersion ? false : true;
       let wallpaper =
         results[`${apiVersion}-wallpaper`] ||
         (window.matchMedia &&
@@ -133,6 +133,11 @@ export function ProvideOptions({ children }) {
       let maxColumns = results[`${apiVersion}-max-columns`] || "7";
       let newTab = results[`${apiVersion}-new-tab`] || false;
       let switchTitle = results[`${apiVersion}-switch-title`] || false;
+
+      // store version upon first run
+      if (firstRun) {
+        browser.storage.local.set({ "last-version": appVersion });
+      }
 
       /*
         if (!version) {
