@@ -105,7 +105,7 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
           <h2>Version 2.0.2</h2>
           <h3>Changes</h3>
           <ul>
-            <li>Tweaked dial colors used for many popular websites</li>
+            <li>Tweaked dial colors for many popular websites</li>
           </ul>
         </div>
         <div>

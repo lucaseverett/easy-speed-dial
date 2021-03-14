@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { filter } from "../common/filter.js";
 import { useOptions } from "./useOptions.js";
-import { allBookmarks } from "./bookmarks.js";
+import { allBookmarks } from "./mockBookmarks.js";
 import { usePrevious } from "../common/usePrevious.js";
 
 const BookmarksContext = createContext();

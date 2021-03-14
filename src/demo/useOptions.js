@@ -6,7 +6,7 @@ import {
   useReducer,
   useRef,
 } from "react";
-import localForage from "localforage";
+import localForage from "localforage/src/localforage.js";
 
 const OptionsContext = createContext();
 

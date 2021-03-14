@@ -1,5 +1,5 @@
 import { useState, useContext, createContext, useEffect, useRef } from "react";
-import localForage from "localforage";
+import localForage from "localforage/src/localforage.js";
 import browser from "webextension-polyfill";
 
 const OptionsContext = createContext();
