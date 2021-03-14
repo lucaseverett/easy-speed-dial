@@ -5,7 +5,7 @@
     "email": "lucas@lucaseverett.dev",
     "url": "https://lucaseverett.dev"
   },
-  "verion": "2.0.1",
+  "verion": "2.0.2",
   "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
   "homepage": "https://toolbardial.com",
   "keywords": [
@@ -35,17 +35,17 @@
     "format": "prettier --write 'src/**/*.js'"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.8",
+    "@babel/core": "^7.13.10",
     "@babel/plugin-transform-react-jsx": "^7.12.17",
-    "@babel/preset-env": "^7.13.9",
+    "@babel/preset-env": "^7.13.10",
     "@emotion/babel-plugin": "^11.2.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.3",
-    "parcel": "^2.0.0-nightly.551",
+    "parcel": "^2.0.0-nightly.626",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "web-ext": "^5.5.0",
+    "web-ext": "^6.0.0",
     "webextension-polyfill": "^0.7.0"
   },
   "browserslist": [

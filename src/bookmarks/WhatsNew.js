@@ -102,6 +102,17 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
         onKeyDown={tabKey}
       >
         <div>
+          <h2>Version 2.0.2</h2>
+          <h3>Changes</h3>
+          <ul>
+            <li>Tweaked dial colors used for many popular websites</li>
+          </ul>
+          <h3>Resolved Issues</h3>
+          <ul>
+            <li>Minor bug fixes</li>
+          </ul>
+        </div>
+        <div>
           <h2>Version 2.0.1</h2>
           <h3>Resolved Issues</h3>
           <ul>
@@ -142,7 +153,8 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
           <h3>Features coming in future releases of Toolbar Dial</h3>
           <ul>
             <li>Bookmark editing</li>
-            <li>Option to change dial size</li>
+            <li>Custom dial colors</li>
+            <li>Option to change dial size and shape</li>
           </ul>
         </div>
       </div>
