@@ -102,6 +102,20 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
         onKeyDown={tabKey}
       >
         <div>
+          <h2>Version 2.1</h2>
+          <h3>Changes</h3>
+          <ul>
+            <li>Added context menu for &quot;open in background tab&quot;</li>
+            <li>Added button to reset all options to default</li>
+            <li>Added option to be notified of updates</li>
+          </ul>
+          <h3>Resolved Issues</h3>
+          <ul>
+            <li>Minor bug fixes</li>
+            <li>Minor performance enhancements</li>
+          </ul>
+        </div>
+        <div>
           <h2>Version 2.0.2</h2>
           <h3>Changes</h3>
           <ul>
@@ -139,14 +153,7 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
           </ul>
         </div>
         <div>
-          <h3>Other recent additions to Toolbar Dial</h3>
-          <ul>
-            <li>Context menu for background to customize Options</li>
-            <li>Drag and drop to sort bookmarks</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Features coming in future releases of Toolbar Dial</h3>
+          <h2>Features coming in future releases of Toolbar Dial</h2>
           <ul>
             <li>Bookmark editing</li>
             <li>Custom dial colors</li>
