@@ -1,5 +1,4 @@
-import React from "react";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { Name } from "./Name.js";
 import { dialColors } from "./dialColors.js";
 

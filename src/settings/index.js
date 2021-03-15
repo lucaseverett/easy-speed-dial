@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useOptions } from "useOptions";
 import { styles } from "./styles.js";
 import { useBookmarks } from "useBookmarks";
 import { wallpapers } from "../wallpapers";
 import { wallpaperStyles } from "../wallpapers/styles.js";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { ColorPicker } from "./ColorPicker.js";
 
 const userAgent = navigator.userAgent.toLowerCase();

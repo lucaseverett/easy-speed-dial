@@ -1,4 +1,4 @@
-import { css } from "emotion";
+import { css } from "@emotion/css";
 
 const defaultBtn = css`
   padding: 10px 10px 8px;

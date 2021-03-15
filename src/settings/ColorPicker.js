@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import iro from "@jaames/iro";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { input, inputLight, inputDark } from "../styles/inputs.js";
 
 let colorPicker;

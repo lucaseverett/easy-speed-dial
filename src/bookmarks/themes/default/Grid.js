@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { css } from "emotion";
+import { useEffect } from "react";
+import { css } from "@emotion/css";
 import Sortable from "sortablejs";
 import { useBookmarks } from "useBookmarks";
 import { useOptions } from "useOptions";

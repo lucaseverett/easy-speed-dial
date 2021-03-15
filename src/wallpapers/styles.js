@@ -1,4 +1,4 @@
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { wallpapers } from "./index.js";
 
 export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
@@ -36,13 +36,11 @@ export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
     }
     background-image: url(${wallpaper === "custom-image"
       ? customImage
-      : wallpapers
-          .filter((w) => w.id === wallpaper)
-          .map(({ filename }) => `https://media.toolbardial.com/${filename}`)});
+      : `https://media.toolbardial.com/${
+          wallpapers.filter((w) => w.id === wallpaper)[0]?.filename || ""
+        }`});
     background-size: cover;
-    background-position: ${/BlackSand|Crayons/.test(wallpaper)
-      ? "bottom"
-      : "center"};
+    background-position: ${/Crayons/.test(wallpaper) ? "bottom" : "center"};
     background-attachment: fixed;
   `;
 };

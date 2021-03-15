@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
-import { css } from "emotion";
+import { useLayoutEffect, useRef, useState } from "react";
+import { css } from "@emotion/css";
 
 export const Name = ({ name, type }) => {
   const Small = ({ children, align }) => (

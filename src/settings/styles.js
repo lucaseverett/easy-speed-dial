@@ -1,4 +1,4 @@
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { settingsScrollbarStyles } from "../styles/scrollbars.js";
 import {
   defaultBtn,
