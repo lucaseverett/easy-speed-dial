@@ -27,6 +27,7 @@ export function Bookmarks() {
     customColor,
     customImage,
     themeOption,
+    firstRun,
     showAlertBanner,
     hideAlertBanner,
     switchTitle,
@@ -147,7 +148,12 @@ export function Bookmarks() {
       )}
       {showAlertBanner && (
         <AlertBanner
-          {...{ handleDismissAlertBanner, handleShowWhatsNew, hideContextMenu }}
+          {...{
+            handleDismissAlertBanner,
+            handleShowWhatsNew,
+            hideContextMenu,
+            firstRun,
+          }}
         />
       )}
       {showModal === "whats-new" && (

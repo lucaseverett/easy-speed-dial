@@ -7,14 +7,12 @@ import {
   useRef,
 } from "react";
 import localForage from "localforage/src/localforage.js";
+import { appVersion } from "../common/version.js";
 
 const OptionsContext = createContext();
 
 // For setting Options (don't change unless something breaks)
 const apiVersion = "2.0";
-
-// For displaying Alert Banner (change for every release)
-const appVersion = "2.0.2";
 
 function parse(state, value) {
   return JSON.parse(value);
@@ -31,6 +29,7 @@ export function ProvideOptions({ children }) {
   const [newTab, setNewTab] = useReducer(parse, false);
   const [switchTitle, setSwitchTitle] = useReducer(parse, false);
   const [showAlertBanner, setShowAlertBanner] = useState(false);
+  const [firstRun, setFirstRun] = useState(false);
 
   function handleWallpaper(value) {
     localStorage.setItem(`${apiVersion}-wallpaper`, value);
@@ -129,11 +128,15 @@ export function ProvideOptions({ children }) {
 
   useEffect(() => {
     let lastVersion = localStorage.getItem("last-version") || false;
-    let firstRun = lastVersion ? false : true;
 
-    // store version upon first run
-    if (firstRun) {
+    if (!lastVersion) {
+      // store version upon first run
       localStorage.setItem("last-version", appVersion);
+      setFirstRun(true);
+      setShowAlertBanner(true);
+    } else if (lastVersion < appVersion) {
+      localStorage.setItem("last-version", appVersion);
+      setShowAlertBanner(true);
     }
 
     let wallpaper = localStorage.getItem(`${apiVersion}-wallpaper`);
@@ -225,6 +228,7 @@ export function ProvideOptions({ children }) {
         customImage,
         themeOption,
         switchTitle,
+        firstRun,
         handleWallpaper,
         handleNewTab,
         handleDefaultFolder,

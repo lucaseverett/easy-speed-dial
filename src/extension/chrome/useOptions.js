@@ -1,14 +1,12 @@
 import { useState, useContext, createContext, useEffect, useRef } from "react";
 import localForage from "localforage/src/localforage.js";
 import browser from "webextension-polyfill";
+import { appVersion } from "../common/version.js";
 
 const OptionsContext = createContext();
 
 // For setting Options (don't change unless something breaks)
 const apiVersion = "2.0";
-
-// For displaying Alert Banner (change for every release)
-const appVersion = "2.0.2";
 
 export function ProvideOptions({ children }) {
   const [wallpaper, setWallpaper] = useState();
