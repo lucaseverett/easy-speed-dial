@@ -1,5 +1,5 @@
 import { useState, useContext, createContext, useEffect, useRef } from "react";
-import { appVersion } from "../common/version.js";
+import { appVersion } from "../../common/version.js";
 
 const OptionsContext = createContext();
 

@@ -6,7 +6,7 @@ const resolveFile = (file) =>
   }/${file}.js`;
 
 module.exports = {
-  presets: ["@babel/preset-env"],
+  presets: ["@parcel/babel-preset-env"],
   plugins: [
     [
       "@babel/plugin-transform-react-jsx",

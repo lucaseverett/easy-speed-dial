@@ -16,15 +16,17 @@ const styles = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 0 20px;
   background-color: #4527a0;
   color: #fff;
   font-size: 16px;
   .message {
     display: flex;
     align-items: center;
+    padding: 15px 0;
     .info {
       padding-right: 10px;
+      font-size: 28px;
     }
     strong {
       font-weight: 500;
@@ -89,10 +91,10 @@ export const AlertBanner = ({
       {firstRun ? (
         <>
           <div className="message">
-            <i className="material-icons info">info</i>
+            <i className="material-icons info">campaign</i>
             <div>
               <strong>Welcome to Toolbar Dial {appVersion}!</strong> You can set
-              a background color or image along with other customizations in{" "}
+              a background color or image, among other customizations, in{" "}
               <a onClick={openOptions}>Options</a>.
             </div>
           </div>
@@ -109,7 +111,7 @@ export const AlertBanner = ({
       ) : (
         <>
           <div className="message">
-            <i className="material-icons info">info</i>
+            <i className="material-icons info">campaign</i>
             <div>
               <strong>
                 Toolbar Dial has been updated to version {appVersion}!

@@ -106,8 +106,7 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
           <h3>Changes</h3>
           <ul>
             <li>Added context menu for &quot;open in background tab&quot;</li>
-            <li>Added button to reset all options to default</li>
-            <li>Added option to be notified of updates</li>
+            <li>Added Desert Night wallpaper</li>
           </ul>
           <h3>Resolved Issues</h3>
           <ul>
