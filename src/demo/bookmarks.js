@@ -16,7 +16,3 @@ render(
   </React.StrictMode>,
   document.querySelector("#app")
 );
-
-if (module.hot) {
-  module.hot.accept();
-}

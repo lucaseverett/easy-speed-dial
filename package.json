@@ -24,14 +24,15 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "sortablejs": "^1.13.0"
+    "sortablejs": "^1.13.0",
+    "webextension-polyfill": "^0.7.0"
   },
   "scripts": {
     "dev": "web-ext run --source-dir ./dist-firefox/",
-    "start": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel ./src/demo/index.html --open --no-cache --dist-dir dist-demo",
-    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox && cpy public/thumbs/* dist-firefox && cpy public/icons/* dist-firefox && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --dist-dir dist-firefox",
-    "build:chrome": "rimraf dist-chrome && cpy public/chrome/* dist-chrome && cpy public/thumbs/* dist-chrome && cpy public/icons/* dist-chrome && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --no-cache --public-url ./ --dist-dir dist-chrome",
-    "build:demo": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel build ./src/demo/*.html --no-cache --public-url ./ --dist-dir dist-demo",
+    "start": "rimraf dist-demo && cross-env PROJECT=demo parcel ./src/demo/index.html --open --dist-dir dist-demo",
+    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox && cpy public/thumbs/* dist-firefox && cpy public/icons/* dist-firefox && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --public-url ./ --dist-dir dist-firefox",
+    "build:chrome": "rimraf dist-chrome && cpy public/chrome/* dist-chrome && cpy public/thumbs/* dist-chrome && cpy public/icons/* dist-chrome && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --public-url ./ --dist-dir dist-chrome",
+    "build:demo": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel build ./src/demo/*.html --public-url ./ --dist-dir dist-demo",
     "format": "prettier --write 'src/**/*.js'"
   },
   "devDependencies": {
@@ -42,11 +43,10 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.3",
-    "parcel": "^2.0.0-nightly.626",
+    "parcel": "^2.0.0-nightly.627",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "web-ext": "^6.0.0",
-    "webextension-polyfill": "^0.7.0"
+    "web-ext": "^6.0.0"
   },
   "browserslist": [
     "defaults",
