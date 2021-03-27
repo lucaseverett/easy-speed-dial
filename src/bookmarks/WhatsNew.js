@@ -105,7 +105,7 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
           <h2>Version 2.1</h2>
           <h3>Changes</h3>
           <ul>
-            <li>Added context menu for &quot;open in background tab&quot;</li>
+            <li>Added context menu for &quot;Open in background tab&quot;</li>
             <li>Added Desert Night wallpaper</li>
           </ul>
           <h3>Resolved Issues</h3>

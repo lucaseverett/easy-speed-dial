@@ -17,6 +17,7 @@ export function ProvideOptions({ children }) {
   const [newTab, setNewTab] = useState();
   const [switchTitle, setSwitchTitle] = useState(false);
   const [showAlertBanner, setShowAlertBanner] = useState(false);
+  const [firstRun, setFirstRun] = useState(false);
 
   function handleWallpaper(wallpaper) {
     browser.storage.local.set({ [`${apiVersion}-wallpaper`]: wallpaper });
@@ -117,7 +118,6 @@ export function ProvideOptions({ children }) {
   useEffect(() => {
     browser.storage.local.get().then((results) => {
       let lastVersion = results["last-version"] || false;
-      let firstRun = lastVersion ? false : true;
       let wallpaper =
         results[`${apiVersion}-wallpaper`] ||
         (window.matchMedia &&
@@ -132,25 +132,15 @@ export function ProvideOptions({ children }) {
       let newTab = results[`${apiVersion}-new-tab`] || false;
       let switchTitle = results[`${apiVersion}-switch-title`] || false;
 
-      // store version upon first run
-      if (firstRun) {
+      if (!lastVersion) {
+        // store version upon first run
         browser.storage.local.set({ "last-version": appVersion });
-      }
-
-      /*
-        if (!version) {
-          // first run
-          hideAlertBanner();
-        } else if (version < appVersion) {
-          // updated version, show banner
-          setShowAlertBanner(true);
-        }
-        
-      if (version < appVersion) {
-        // updated version, show banner
+        setFirstRun(true);
+        setShowAlertBanner(true);
+      } else if (lastVersion < appVersion) {
+        browser.storage.local.set({ "last-version": appVersion });
         setShowAlertBanner(true);
       }
-      */
 
       setWallpaper(
         wallpaper.includes("custom-image") ? "custom-image" : wallpaper
@@ -234,6 +224,7 @@ export function ProvideOptions({ children }) {
         customImage,
         themeOption,
         switchTitle,
+        firstRun,
         handleWallpaper,
         handleNewTab,
         handleDefaultFolder,

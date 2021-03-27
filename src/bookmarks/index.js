@@ -96,7 +96,6 @@ export function Bookmarks() {
 
   function handleShowWhatsNew() {
     hideContextMenu();
-    hideAlertBanner();
     setShowModal("whats-new");
   }
 
