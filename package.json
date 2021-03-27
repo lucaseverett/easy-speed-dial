@@ -30,7 +30,7 @@
   "scripts": {
     "dev": "web-ext run --source-dir ./dist-firefox/",
     "start": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel ./src/demo/index.html --open --no-cache --dist-dir dist-demo",
-    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox && cpy public/thumbs/* dist-firefox && cpy public/icons/* dist-firefox && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --dist-dir dist-firefox",
+    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox && cpy public/firefox-fix/* dist-firefox/dist && cpy public/thumbs/* dist-firefox && cpy public/icons/* dist-firefox && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --dist-dir dist-firefox",
     "build:chrome": "rimraf dist-chrome && cpy public/chrome/* dist-chrome && cpy public/thumbs/* dist-chrome && cpy public/icons/* dist-chrome && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --no-cache --public-url ./ --dist-dir dist-chrome",
     "build:demo": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel build ./src/demo/*.html --no-cache --public-url ./ --dist-dir dist-demo",
     "format": "prettier --write 'src/**/*.js'"
