@@ -13,6 +13,7 @@ export const ContextMenu = ({
 }) => {
   const {
     openLinkTab,
+    openLinkBackgroundTab,
     openLinkWindow,
     openAllTab,
     openAllWindow,
@@ -26,6 +27,7 @@ export const ContextMenu = ({
   const secondItemRef = useRef(null);
   const thirdItemRef = useRef(null);
   const fourthItemRef = useRef(null);
+  const fifthItemRef = useRef(null);
 
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
@@ -41,6 +43,7 @@ export const ContextMenu = ({
       secondItemRef.current,
       thirdItemRef.current,
       fourthItemRef.current,
+      fifthItemRef.current,
     ];
 
     if (currIndex >= 0) {
@@ -73,14 +76,14 @@ export const ContextMenu = ({
       e.preventDefault();
       e.stopPropagation();
       if (currIndex < 1) {
-        setCurrIndex(3);
+        setCurrIndex(4);
       } else {
         setCurrIndex(currIndex - 1);
       }
     } else if (e.keyCode === 40) {
       e.preventDefault();
       e.stopPropagation();
-      if (currIndex < 3) {
+      if (currIndex < 4) {
         setCurrIndex(currIndex + 1);
       } else {
         setCurrIndex(0);
@@ -146,6 +149,11 @@ export const ContextMenu = ({
   function handleOpenLinkTab() {
     hideContextMenu();
     openLinkTab(linkURL);
+  }
+
+  function handleOpenLinkBackgroundTab() {
+    hideContextMenu();
+    openLinkBackgroundTab(linkURL);
   }
 
   function handleOpenLinkWindow() {
@@ -293,7 +301,6 @@ export const ContextMenu = ({
             <li>
               <button
                 ref={firstItemRef}
-                tabIndex="0"
                 onClick={handleOpenLinkTab}
                 onContextMenu={handleContextMenu}
                 onMouseEnter={handleMouseEnter}
@@ -304,7 +311,16 @@ export const ContextMenu = ({
             <li>
               <button
                 ref={secondItemRef}
-                tabIndex="0"
+                onClick={handleOpenLinkBackgroundTab}
+                onContextMenu={handleContextMenu}
+                onMouseEnter={handleMouseEnter}
+              >
+                Open <span className="lowercase">in</span> background tab
+              </button>
+            </li>
+            <li>
+              <button
+                ref={thirdItemRef}
                 onClick={handleOpenLinkWindow}
                 onContextMenu={handleContextMenu}
                 onMouseEnter={handleMouseEnter}
@@ -316,7 +332,7 @@ export const ContextMenu = ({
           <ul>
             <li>
               <button
-                ref={thirdItemRef}
+                ref={fourthItemRef}
                 onClick={copyURL}
                 onContextMenu={handleContextMenu}
                 onMouseEnter={handleMouseEnter}
@@ -328,8 +344,7 @@ export const ContextMenu = ({
           <ul>
             <li className="delete">
               <button
-                ref={fourthItemRef}
-                tabIndex="0"
+                ref={fifthItemRef}
                 onClick={handleDeletebookmark}
                 onMouseEnter={handleMouseEnter}
               >
@@ -351,7 +366,6 @@ export const ContextMenu = ({
             <li>
               <button
                 ref={firstItemRef}
-                tabIndex="0"
                 onClick={handleOpenAllTab}
                 onContextMenu={handleContextMenu}
                 onMouseEnter={handleMouseEnter}
@@ -362,7 +376,6 @@ export const ContextMenu = ({
             <li>
               <button
                 ref={secondItemRef}
-                tabIndex="0"
                 onClick={handleOpenAllWindow}
                 onContextMenu={handleContextMenu}
                 onMouseEnter={handleMouseEnter}
@@ -375,7 +388,6 @@ export const ContextMenu = ({
             <li className="delete">
               <button
                 ref={thirdItemRef}
-                tabIndex="0"
                 onClick={handleDeleteFolder}
                 onMouseEnter={handleMouseEnter}
               >
@@ -397,7 +409,6 @@ export const ContextMenu = ({
             <li>
               <button
                 ref={firstItemRef}
-                tabIndex="0"
                 onClick={handleopenOptions}
                 onContextMenu={handleContextMenu}
                 onMouseEnter={handleMouseEnter}
@@ -410,7 +421,6 @@ export const ContextMenu = ({
             <li>
               <button
                 ref={secondItemRef}
-                tabIndex="0"
                 onClick={handleShowWhatsNew}
                 onMouseEnter={handleMouseEnter}
               >
