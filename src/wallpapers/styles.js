@@ -34,13 +34,15 @@ export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
     &.custom-color {
       background-color: ${customColor};
     }
-    background-image: url(${wallpaper
+    background-image: ${wallpaper
       ? wallpaper === "custom-image"
         ? customImage
-        : `https://media.toolbardial.com/${
+          ? `url(${customImage})`
+          : ""
+        : `url(https://media.toolbardial.com/${
             wallpapers.filter((w) => w.id === wallpaper)[0]?.filename || ""
-          }`
-      : ""});
+          })`
+      : ""};
     background-size: cover;
     background-position: ${/Crayons/.test(wallpaper) ? "bottom" : "center"};
     background-attachment: fixed;
