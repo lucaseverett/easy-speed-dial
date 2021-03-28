@@ -1,5 +1,4 @@
 import { render } from "react-dom";
-import "../../common/styles.css";
 import { Bookmarks } from "../../bookmarks/index.js";
 import { ProvideOptions } from "./useOptions.js";
 import { ProvideBookmarks } from "./useBookmarks.js";

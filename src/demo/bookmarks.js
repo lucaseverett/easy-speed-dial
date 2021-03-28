@@ -1,6 +1,5 @@
 import React from "react";
 import { render } from "react-dom";
-import "../common/styles.css";
 import { ProvideOptions } from "./useOptions.js";
 import { ProvideBookmarks } from "./useBookmarks.js";
 import App from "./App.js";
@@ -16,7 +15,3 @@ render(
   </React.StrictMode>,
   document.querySelector("#app")
 );
-
-if (module.hot) {
-  module.hot.accept();
-}

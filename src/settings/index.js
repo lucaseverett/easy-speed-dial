@@ -43,12 +43,12 @@ export const Settings = () => {
     focusRef.current.focus();
   }, []);
 
-  const wallpapersList = wallpapers.map(({ id, title, filename }) => (
+  const wallpapersList = wallpapers.map(({ id, title, thumbnail }) => (
     <button
       className={[
         css`
           background-size: contain;
-          background-image: url(${filename.split(".")[0]}_thumb.png);
+          background-image: url(${thumbnail});
         `,
         `wallpaper-button${wallpaper === id ? " selected" : ""}`,
       ].join(" ")}

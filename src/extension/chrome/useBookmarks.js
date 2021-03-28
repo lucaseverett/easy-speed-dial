@@ -219,6 +219,10 @@ export function ProvideBookmarks({ children }) {
     browser.tabs.create({ url });
   }
 
+  function openLinkBackgroundTab(url) {
+    browser.tabs.create({ url, active: false });
+  }
+
   function openAllTab(linkID) {
     getBookmarks(linkID).then((bookmarks) => {
       let links = bookmarks.filter((b) => b.url);
@@ -250,6 +254,7 @@ export function ProvideBookmarks({ children }) {
         openLinkTab,
         openAllWindow,
         openAllTab,
+        openLinkBackgroundTab,
         openLinkWindow,
       }}
     >
