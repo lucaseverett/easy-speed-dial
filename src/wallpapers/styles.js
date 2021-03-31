@@ -40,7 +40,7 @@ export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
       ? `url(https://media.toolbardial.com/${
           wallpapers.filter((w) => w.id === wallpaper)[0]?.filename || ""
         })`
-      : ""};
+      : "none"};
     background-size: cover;
     background-position: ${/Crayons/.test(wallpaper) ? "bottom" : "center"};
     background-attachment: fixed;

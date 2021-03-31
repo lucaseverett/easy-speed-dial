@@ -63,7 +63,7 @@ export const wallpapers = [
     title: "Desert Night",
     filename: "DesertNight.png",
     thumbnail: "DesertNight_thumb.png",
-    url: "https://stock.adobe.com/101124546",
+    url: "https://stock.adobe.com/315957514",
   },
   {
     id: "Crayons",

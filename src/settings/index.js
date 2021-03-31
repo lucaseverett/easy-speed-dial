@@ -94,7 +94,15 @@ export const Settings = () => {
           <main>
             <div className="settings-content" ref={focusRef} tabIndex="-1">
               <div className="setting-wrapper">
-                <h2>Background Color</h2>
+                <div className="setting-title">Background</div>
+                <div className="background-types">
+                  <button>Colors</button>
+                  <button>Abstract</button>
+                  <button>Animals</button>
+                  <button>Artistic</button>
+                  <button>Nature</button>
+                  <button>Custom</button>
+                </div>
                 <div className="setting-option wallpapers">
                   <button
                     id="light-wallpaper"
@@ -203,7 +211,6 @@ export const Settings = () => {
                 )}
               </div>
               <div className="setting-wrapper">
-                <h2>Background Image</h2>
                 <div className="setting-option wallpapers">
                   {wallpapersList}
                   {customImage && (
@@ -225,107 +232,123 @@ export const Settings = () => {
                     ></button>
                   )}
                 </div>
+                <div className="wallpaper-credit">
+                  Photo Credit: <a href="#">Name of artist</a>
+                </div>
                 <button className="custom" onClick={handleCustomImage}>
                   Custom Image
                 </button>
               </div>
-              <div className="setting-wrapper">
-                <h2>Preferences</h2>
-                <div className="setting-columns">
-                  <div className="setting-column-left">
-                    <div className="setting-group">
-                      <div className="setting-label">Default Folder</div>
-                      <div className="setting-option select">
-                        <select
-                          onChange={handleDefaultFolder}
-                          value={defaultFolder}
-                        >
-                          {folders.map(({ id, title }) => (
-                            <option value={id}>{title}</option>
-                          ))}
-                        </select>
-                        <span className="material-icons arrow_drop_down">
-                          arrow_drop_down
-                        </span>
-                      </div>
-                    </div>
-                    <div className="setting-group">
-                      <div className="setting-label">Theme</div>
-                      <div className="setting-option select">
-                        <select
-                          onChange={handleThemeOption}
-                          value={themeOption}
-                        >
-                          {["System Theme", "Light", "Dark"].map((t) => (
-                            <option value={t}>{t}</option>
-                          ))}
-                        </select>
-                        <span className="material-icons arrow_drop_down">
-                          arrow_drop_down
-                        </span>
-                      </div>
-                    </div>
-                    <div className="setting-group">
-                      <div className="setting-label">Maximum Columns</div>
-                      <div className="setting-option select">
-                        <select onChange={handleMaxColumns} value={maxColumns}>
-                          {[
-                            "1",
-                            "2",
-                            "3",
-                            "4",
-                            "5",
-                            "6",
-                            "7",
-                            "8",
-                            "9",
-                            "10",
-                            "11",
-                            "12",
-                            "Unlimited",
-                          ].map((n) => (
-                            <option value={n}>{n}</option>
-                          ))}
-                        </select>
-                        <span className="material-icons arrow_drop_down">
-                          arrow_drop_down
-                        </span>
-                      </div>
-                    </div>
+              <div className="setting-wrapper setting-group">
+                <div className="setting-label">
+                  <div className="setting-title">Default Folder</div>
+                  <div className="setting-description">
+                    Choose what folder is used to display dials.
                   </div>
-                  <div className="setting-column-right">
-                    <div className="setting-group checkbox">
-                      <div className="setting-label">
-                        Open Bookmarks in New Tab
-                      </div>
-                      <div className="setting-option">
-                        <label className="switch-wrap">
-                          <input
-                            type="checkbox"
-                            checked={newTab}
-                            onChange={() => handleNewTab(!newTab)}
-                          />
-                          <div className="switch"></div>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="setting-group checkbox">
-                      <div className="setting-label">Use Title in Dial</div>
-                      <div className="setting-option">
-                        <label className="switch-wrap">
-                          <input
-                            type="checkbox"
-                            checked={switchTitle}
-                            onChange={() => handleSwitchTitle(!switchTitle)}
-                          />
-                          <div className="switch"></div>
-                        </label>
-                      </div>
-                    </div>
+                </div>
+                <div className="setting-option select">
+                  <select onChange={handleDefaultFolder} value={defaultFolder}>
+                    {folders.map(({ id, title }) => (
+                      <option value={id}>{title}</option>
+                    ))}
+                  </select>
+                  <span className="material-icons arrow_drop_down">
+                    arrow_drop_down
+                  </span>
+                </div>
+              </div>
+              <div className="setting-wrapper setting-group">
+                <div className="setting-label">
+                  <div className="setting-title">Theme</div>
+                  <div className="setting-description">
+                    Choose the colors used throughout Toolbar Dial. If this
+                    option is set to &quot;System Theme&quot;, colors will
+                    change based on the preference set for your computer.
                   </div>
+                </div>
+                <div className="setting-option select">
+                  <select onChange={handleThemeOption} value={themeOption}>
+                    {["System Theme", "Light", "Dark"].map((t) => (
+                      <option value={t}>{t}</option>
+                    ))}
+                  </select>
+                  <span className="material-icons arrow_drop_down">
+                    arrow_drop_down
+                  </span>
+                </div>
+              </div>
+              <div className="setting-wrapper setting-group">
+                <div className="setting-label">
+                  <div className="setting-title">Maximum Columns</div>
+                  <div className="setting-description">
+                    Choose the maximum number of columns that will be displayed.
+                  </div>
+                </div>
+
+                <div className="setting-option select">
+                  <select onChange={handleMaxColumns} value={maxColumns}>
+                    {[
+                      "1",
+                      "2",
+                      "3",
+                      "4",
+                      "5",
+                      "6",
+                      "7",
+                      "8",
+                      "9",
+                      "10",
+                      "11",
+                      "12",
+                      "Unlimited",
+                    ].map((n) => (
+                      <option value={n}>{n}</option>
+                    ))}
+                  </select>
+                  <span className="material-icons arrow_drop_down">
+                    arrow_drop_down
+                  </span>
+                </div>
+              </div>
+              <div className="setting-wrapper setting-group">
+                <div className="setting-label">
+                  <div className="setting-title"> Open in New Tab</div>
+                  <div className="setting-description">
+                    All bookmarks will open in a new browser tab.
+                  </div>
+                </div>
+                <div className="setting-option">
+                  <label className="switch-wrap">
+                    <input
+                      type="checkbox"
+                      checked={newTab}
+                      onChange={() => handleNewTab(!newTab)}
+                    />
+                    <div className="switch"></div>
+                  </label>
+                </div>
+              </div>
+              <div className="setting-wrapper setting-group">
+                <div className="setting-label">
+                  <div className="setting-title">Use Title in Dial</div>
+                  <div className="setting-description">
+                    Display the title of the bookmark instead of the URL in
+                    dial.
+                  </div>
+                </div>
+                <div className="setting-option">
+                  <label className="switch-wrap">
+                    <input
+                      type="checkbox"
+                      checked={switchTitle}
+                      onChange={() => handleSwitchTitle(!switchTitle)}
+                    />
+                    <div className="switch"></div>
+                  </label>
                 </div>
               </div>
               <div className="setting-wrapper">
+                <div className="setting-title">About Toolbar Dial</div>
                 <div className="setting-description">
                   <a
                     href="https://toolbardial.com/"

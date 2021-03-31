@@ -74,17 +74,12 @@ export const styles = css`
   }
 
   .settings-content {
-    padding: 0 25px;
     overflow: auto;
     outline: none;
   }
 
-  h2 {
-    font-size: 1rem;
-    margin: 0 0 20px;
-    font-weight: bold;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  .background-types {
+    padding: 20px 0;
   }
 
   .setting-option.wallpapers {
@@ -93,17 +88,21 @@ export const styles = css`
     margin-right: -15px;
   }
 
+  .wallpaper-credit {
+    padding: 20px 0;
+  }
+
   button.wallpaper-button {
     outline: none;
-    width: 80px;
-    height: 60px;
+    width: 120px;
+    height: 90px;
     border-radius: 4px;
     border: none;
     cursor: pointer;
     position: relative;
     background-size: cover;
     background-position: center;
-    margin: 0 15px 15px 0;
+    margin: 0 20px 20px 0;
   }
   .wallpaper-button.selected {
     ::before {
@@ -204,47 +203,46 @@ export const styles = css`
   }
 
   .setting-label {
-    margin-bottom: 10px;
   }
 
   .setting-wrapper {
-    padding: 25px 0;
+    padding: 25px 25px 25px;
+    border-radius: 6px;
+    margin: 25px;
   }
   &.color-scheme-light .setting-wrapper {
-    border-bottom: 1px solid #bdbdbd;
+    border: 1px solid #bdbdbd;
+    background-color: #eee;
   }
 
   &.color-scheme-dark .setting-wrapper {
-    border-bottom: 1px solid #373737;
+    border: 1px solid #373737;
+    background-color: #484848;
   }
 
-  .setting-wrapper:last-of-type {
-    padding-bottom: 0;
-    border-bottom: none;
+  .setting-wrapper.setting-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
+  .setting-title {
+    font-weight: bold;
+    padding-bottom: 10px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   .setting-column-right .setting-group:last-of-type {
-    margin-bottom: 0;
   }
 
   .setting-group {
-    margin-bottom: 15px;
   }
 
   .setting-group.checkbox {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 34px;
-    margin-bottom: 10px;
-    .setting-label {
-      margin-bottom: 0;
-    }
   }
 
   select {
     ${select};
-    width: 100%;
   }
   &.color-scheme-light select {
     ${selectLight};
@@ -255,6 +253,7 @@ export const styles = css`
 
   .setting-option.select {
     position: relative;
+    margin-left: 20px;
   }
 
   .material-icons.arrow_drop_down {
@@ -270,8 +269,8 @@ export const styles = css`
     color: #f5f5f5;
   }
 
-  .setting-description {
-    display: block;
+  .setting-group .setting-description {
+    line-height: 1.5;
   }
 
   .switch-wrap {
@@ -394,24 +393,18 @@ export const styles = css`
       padding: 6px 11px 11px 25px;
     }
     select {
-      width: auto;
     }
     .setting-group.checkbox {
       .setting-label {
-        width: 220px;
       }
     }
     .setting-option.select {
-      display: inline-block;
     }
     .setting-columns {
-      display: flex;
     }
     .setting-column-right {
-      padding-left: 100px;
     }
     .setting-group:last-of-type {
-      margin-bottom: 0;
     }
   }
 `;
