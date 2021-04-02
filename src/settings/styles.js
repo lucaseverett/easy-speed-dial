@@ -86,10 +86,7 @@ export const styles = css`
     display: flex;
     flex-wrap: wrap;
     margin-right: -15px;
-  }
-
-  .wallpaper-credit {
-    padding: 20px 0;
+    margin-bottom: -20px;
   }
 
   button.wallpaper-button {
@@ -202,9 +199,6 @@ export const styles = css`
     ${defaultBtnDark}
   }
 
-  .setting-label {
-  }
-
   .setting-wrapper {
     padding: 25px 25px 25px;
     border-radius: 6px;
@@ -233,12 +227,6 @@ export const styles = css`
     -moz-osx-font-smoothing: grayscale;
   }
   .setting-column-right .setting-group:last-of-type {
-  }
-
-  .setting-group {
-  }
-
-  .setting-group.checkbox {
   }
 
   select {
@@ -374,6 +362,7 @@ export const styles = css`
     }
     main {
       border-radius: 6px;
+      max-height: 963px;
     }
     &.color-scheme-light main {
       border: 1px solid #9e9e9e;
@@ -382,29 +371,16 @@ export const styles = css`
       border: 1px solid #212121;
     }
     &.color-scheme-light #options {
-      box-shadow: 0 0 0 5px #bdbdbd, 0 0 15px rgb(33, 33, 33, 0.5),
-        8px 8px 20px rgb(33, 33, 33, 0.5);
+      box-shadow: 0 0 0 5px #bdbdbd, 0 0 0 6px #9e9e9e,
+        0 0 15px rgb(33, 33, 33, 0.5), 8px 8px 20px rgb(33, 33, 33, 0.5);
     }
     &.color-scheme-dark #options {
-      box-shadow: 0 0 0 5px #373737, 10px 14px 13px rgb(0, 0, 0, 0.6);
+      box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
+        10px 14px 13px rgb(0, 0, 0, 0.6);
     }
 
     header {
       padding: 6px 11px 11px 25px;
-    }
-    select {
-    }
-    .setting-group.checkbox {
-      .setting-label {
-      }
-    }
-    .setting-option.select {
-    }
-    .setting-columns {
-    }
-    .setting-column-right {
-    }
-    .setting-group:last-of-type {
     }
   }
 `;

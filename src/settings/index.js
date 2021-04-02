@@ -36,6 +36,7 @@ export const Settings = () => {
   const focusRef = useRef(null);
   const customColorRef = useRef(null);
 
+  const [showBackground, setShowBackground] = useState("colors");
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   useEffect(() => {
@@ -43,22 +44,25 @@ export const Settings = () => {
     focusRef.current.focus();
   }, []);
 
-  const wallpapersList = wallpapers.map(({ id, title, thumbnail }) => (
-    <button
-      className={[
-        css`
-          background-size: contain;
-          background-image: url(${thumbnail});
-        `,
-        `wallpaper-button${wallpaper === id ? " selected" : ""}`,
-      ].join(" ")}
-      title={title}
-      onClick={() => {
-        handleWallpaper(id);
-      }}
-      key={title}
-    ></button>
-  ));
+  const wallpapersList = (filter) =>
+    wallpapers
+      .filter(({ category }) => category === filter)
+      .map(({ id, title, thumbnail }) => (
+        <button
+          className={[
+            css`
+              background-size: contain;
+              background-image: url(${thumbnail});
+            `,
+            `wallpaper-button${wallpaper === id ? " selected" : ""}`,
+          ].join(" ")}
+          title={title}
+          onClick={() => {
+            handleWallpaper(id);
+          }}
+          key={title}
+        ></button>
+      ));
 
   return (
     <div
@@ -96,148 +100,159 @@ export const Settings = () => {
               <div className="setting-wrapper">
                 <div className="setting-title">Background</div>
                 <div className="background-types">
-                  <button>Colors</button>
-                  <button>Abstract</button>
-                  <button>Animals</button>
-                  <button>Artistic</button>
-                  <button>Nature</button>
-                  <button>Custom</button>
+                  <button onClick={() => setShowBackground("colors")}>
+                    Colors
+                  </button>
+                  <button onClick={() => setShowBackground("abstract")}>
+                    Abstract
+                  </button>
+                  <button onClick={() => setShowBackground("artistic")}>
+                    Artistic
+                  </button>
+                  <button onClick={() => setShowBackground("nature")}>
+                    Nature
+                  </button>
+                  <button onClick={() => setShowBackground("custom")}>
+                    Custom
+                  </button>
                 </div>
-                <div className="setting-option wallpapers">
-                  <button
-                    id="light-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "light-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Light"
-                    onClick={() => {
-                      handleWallpaper("light-wallpaper");
-                    }}
-                  ></button>
-                  <button
-                    id="dark-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "dark-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Dark"
-                    onClick={() => {
-                      handleWallpaper("dark-wallpaper");
-                    }}
-                  ></button>
-                  <button
-                    id="brown-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "brown-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Brown"
-                    onClick={() => {
-                      handleWallpaper("brown-wallpaper");
-                    }}
-                  ></button>
-                  <button
-                    id="blue-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "blue-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Blue"
-                    onClick={() => {
-                      handleWallpaper("blue-wallpaper");
-                    }}
-                  ></button>
-                  <button
-                    id="yellow-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "yellow-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Yellow"
-                    onClick={() => {
-                      handleWallpaper("yellow-wallpaper");
-                    }}
-                  ></button>
-                  <button
-                    id="green-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "green-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Green"
-                    onClick={() => {
-                      handleWallpaper("green-wallpaper");
-                    }}
-                  ></button>
-                  <button
-                    id="pink-wallpaper"
-                    className={`wallpaper-button${
-                      wallpaper === "pink-wallpaper" ? " selected" : ""
-                    }`}
-                    title="Pink"
-                    onClick={() => {
-                      handleWallpaper("pink-wallpaper");
-                    }}
-                  ></button>
-                  {customColor && (
+                {showBackground === "colors" ? (
+                  <div className="setting-option wallpapers colors">
                     <button
-                      className={[
-                        `wallpaper-button${
-                          wallpaper === "custom-color" ? " selected" : ""
-                        }`,
-                        css`
-                          background-color: ${customColor};
-                        `,
-                      ].join(" ")}
-                      title="Custom"
+                      id="light-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "light-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Light"
                       onClick={() => {
-                        handleWallpaper("custom-color");
+                        handleWallpaper("light-wallpaper");
                       }}
                     ></button>
-                  )}
-                </div>
-                <button
-                  className="custom"
-                  ref={customColorRef}
-                  onClick={() => setShowColorPicker(true)}
-                >
-                  Custom Color
-                </button>
-                {showColorPicker && (
-                  <ColorPicker
-                    {...{
-                      customColor,
-                      handleCustomColor,
-                      top: customColorRef.current.getBoundingClientRect()
-                        .bottom,
-                      left: customColorRef.current.getBoundingClientRect().left,
-                    }}
-                  />
+                    <button
+                      id="dark-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "dark-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Dark"
+                      onClick={() => {
+                        handleWallpaper("dark-wallpaper");
+                      }}
+                    ></button>
+                    <button
+                      id="brown-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "brown-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Brown"
+                      onClick={() => {
+                        handleWallpaper("brown-wallpaper");
+                      }}
+                    ></button>
+                    <button
+                      id="blue-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "blue-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Blue"
+                      onClick={() => {
+                        handleWallpaper("blue-wallpaper");
+                      }}
+                    ></button>
+                    <button
+                      id="yellow-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "yellow-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Yellow"
+                      onClick={() => {
+                        handleWallpaper("yellow-wallpaper");
+                      }}
+                    ></button>
+                    <button
+                      id="green-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "green-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Green"
+                      onClick={() => {
+                        handleWallpaper("green-wallpaper");
+                      }}
+                    ></button>
+                    <button
+                      id="pink-wallpaper"
+                      className={`wallpaper-button${
+                        wallpaper === "pink-wallpaper" ? " selected" : ""
+                      }`}
+                      title="Pink"
+                      onClick={() => {
+                        handleWallpaper("pink-wallpaper");
+                      }}
+                    ></button>
+                  </div>
+                ) : showBackground === "custom" ? (
+                  <div className="setting-options wallpapers">
+                    {customColor && (
+                      <button
+                        className={[
+                          `wallpaper-button${
+                            wallpaper === "custom-color" ? " selected" : ""
+                          }`,
+                          css`
+                            background-color: ${customColor};
+                          `,
+                        ].join(" ")}
+                        title="Custom"
+                        onClick={() => {
+                          handleWallpaper("custom-color");
+                        }}
+                      ></button>
+                    )}
+                    {showColorPicker && (
+                      <ColorPicker
+                        {...{
+                          customColor,
+                          handleCustomColor,
+                          top: customColorRef.current.getBoundingClientRect()
+                            .bottom,
+                          left: customColorRef.current.getBoundingClientRect()
+                            .left,
+                        }}
+                      />
+                    )}
+                    {customImage && (
+                      <button
+                        id="custom-image"
+                        className={[
+                          `wallpaper-button${
+                            wallpaper === "custom-image" ? " selected" : ""
+                          }`,
+                          css`
+                            background-size: contain;
+                            background-image: url(${customImage});
+                          `,
+                        ].join(" ")}
+                        title="Custom"
+                        onClick={() => {
+                          handleWallpaper("custom-image");
+                        }}
+                      ></button>
+                    )}
+                    <button
+                      className="custom"
+                      ref={customColorRef}
+                      onClick={() => setShowColorPicker(true)}
+                    >
+                      Custom Color
+                    </button>
+                    <button className="custom" onClick={handleCustomImage}>
+                      Custom Image
+                    </button>
+                  </div>
+                ) : (
+                  <div className="setting-option wallpapers">
+                    {wallpapersList(showBackground)}
+                  </div>
                 )}
-              </div>
-              <div className="setting-wrapper">
-                <div className="setting-option wallpapers">
-                  {wallpapersList}
-                  {customImage && (
-                    <button
-                      id="custom-image"
-                      className={[
-                        `wallpaper-button${
-                          wallpaper === "custom-image" ? " selected" : ""
-                        }`,
-                        css`
-                          background-size: contain;
-                          background-image: url(${customImage});
-                        `,
-                      ].join(" ")}
-                      title="Custom"
-                      onClick={() => {
-                        handleWallpaper("custom-image");
-                      }}
-                    ></button>
-                  )}
-                </div>
-                <div className="wallpaper-credit">
-                  Photo Credit: <a href="#">Name of artist</a>
-                </div>
-                <button className="custom" onClick={handleCustomImage}>
-                  Custom Image
-                </button>
               </div>
               <div className="setting-wrapper setting-group">
                 <div className="setting-label">

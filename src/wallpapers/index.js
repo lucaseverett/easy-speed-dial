@@ -5,6 +5,7 @@ export const wallpapers = [
     filename: "wavy-sand-2931286.jpg",
     thumbnail: "wavy-sand-2931286_thumb.png",
     url: "https://www.pexels.com/photo/wavy-sand-2931286/",
+    category: "nature",
   },
   {
     id: "SandDune",
@@ -13,6 +14,7 @@ export const wallpapers = [
     thumbnail: "sand-2848098_thumb.png",
     url:
       "https://pixabay.com/photos/sand-dune-background-nature-desert-2848098/",
+    category: "nature",
   },
   {
     id: "Galaxy",
@@ -20,6 +22,7 @@ export const wallpapers = [
     filename: "stephen-wheeler-etiMpySyrnI-unsplash.jpg",
     thumbnail: "stephen-wheeler-etiMpySyrnI-unsplash_thumb.png",
     url: "https://unsplash.com/photos/etiMpySyrnI",
+    category: "nature",
   },
   {
     id: "BeachForest",
@@ -29,6 +32,7 @@ export const wallpapers = [
       "seashore-near-on-forest-trees-on-bird-s-eye-view-1123484_thumb.png",
     url:
       "https://www.pexels.com/photo/seashore-near-on-forest-trees-on-bird-s-eye-view-1123484/",
+    category: "nature",
   },
   {
     id: "Water",
@@ -36,6 +40,7 @@ export const wallpapers = [
     filename: "yucar-fotografik-cfR-V1QuEKw-unsplash.jpg",
     thumbnail: "yucar-fotografik-cfR-V1QuEKw-unsplash_thumb.png",
     url: "https://unsplash.com/photos/cfR-V1QuEKw",
+    category: "nature",
   },
   {
     id: "Flowers",
@@ -43,6 +48,7 @@ export const wallpapers = [
     filename: "anthony-delanoix-urUdKCxsTUI-unsplash.jpg",
     thumbnail: "anthony-delanoix-urUdKCxsTUI-unsplash_thumb.png",
     url: "https://unsplash.com/photos/urUdKCxsTUI",
+    category: "nature",
   },
   {
     id: "SnowCoveredMountainwithSunnySky",
@@ -50,6 +56,7 @@ export const wallpapers = [
     filename: "wladislaw-sokolowskij-0vw4InAC-yM-unsplash.jpg",
     thumbnail: "wladislaw-sokolowskij-0vw4InAC-yM-unsplash_thumb.png",
     url: "https://unsplash.com/photos/0vw4InAC-yM",
+    category: "nature",
   },
   {
     id: "DesertDay",
@@ -57,6 +64,7 @@ export const wallpapers = [
     filename: "DesertDay.png",
     thumbnail: "DesertDay_thumb.png",
     url: "https://stock.adobe.com/101124546",
+    category: "nature",
   },
   {
     id: "DesertNight",
@@ -64,6 +72,7 @@ export const wallpapers = [
     filename: "DesertNight.png",
     thumbnail: "DesertNight_thumb.png",
     url: "https://stock.adobe.com/315957514",
+    category: "nature",
   },
   {
     id: "Crayons",
@@ -71,6 +80,7 @@ export const wallpapers = [
     filename: "AdobeStock_213611570.jpeg",
     thumbnail: "AdobeStock_213611570_thumb.png",
     url: "https://stock.adobe.com/213611570",
+    category: "artistic",
   },
   {
     id: "Underwater",
@@ -78,6 +88,7 @@ export const wallpapers = [
     filename: "AdobeStock_29107448.jpeg",
     thumbnail: "AdobeStock_29107448_thumb.png",
     url: "https://stock.adobe.com/29107448",
+    category: "nature",
   },
   {
     id: "AbstractPurple",
@@ -86,6 +97,7 @@ export const wallpapers = [
     thumbnail: "purple-1780371_thumb.png",
     url:
       "https://pixabay.com/illustrations/purple-abstract-background-1780371/",
+    category: "abstract",
   },
   {
     id: "Gradient1",
@@ -93,6 +105,7 @@ export const wallpapers = [
     filename: "RiceFlower.png",
     thumbnail: "RiceFlower_thumb.png",
     url: "https://www.ls.graphics/meshgradients",
+    category: "abstract",
   },
   {
     id: "Gradient2",
@@ -100,6 +113,7 @@ export const wallpapers = [
     filename: "ColumbiaBlue.png",
     thumbnail: "ColumbiaBlue_thumb.png",
     url: "https://www.ls.graphics/meshgradients",
+    category: "abstract",
   },
   {
     id: "Gradient3",
@@ -107,6 +121,7 @@ export const wallpapers = [
     filename: "Fuchsia.png",
     thumbnail: "Fuchsia_thumb.png",
     url: "https://www.ls.graphics/meshgradients",
+    category: "abstract",
   },
   {
     id: "Gradient4",
@@ -114,5 +129,6 @@ export const wallpapers = [
     filename: "VioletBlue.png",
     thumbnail: "VioletBlue_thumb.png",
     url: "https://www.ls.graphics/meshgradients",
+    category: "abstract",
   },
 ];

@@ -110,7 +110,8 @@ export const Modal = ({
           box-shadow: 0 0 0 5px #bdbdbd, 10px 14px 13px rgb(0, 0, 0, 0.3);
         }
         .color-scheme-dark & {
-          box-shadow: 0 0 0 5px #373737, 10px 14px 13px rgb(0, 0, 0, 0.3);
+          box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
+            10px 14px 13px rgb(0, 0, 0, 0.3);
         }
       }
       header {
