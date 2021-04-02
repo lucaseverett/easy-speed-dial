@@ -51,7 +51,6 @@ const styles = css`
   button.whats-new {
     ${defaultBtn}
     ${defaultBtnLight}
-    border: 1px solid #000063;
     :focus {
       box-shadow: 0 0 0 4px #7953d2;
     }

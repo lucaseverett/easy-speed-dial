@@ -19,12 +19,11 @@ const defaultBtn = css`
 `;
 
 const defaultBtnLight = css`
-  background-color: #e0e0e0;
-  border: 1px solid #9e9e9e;
+  background-color: #cfcfcf;
   color: #000;
   :active,
   :hover {
-    background-color: #c7c7c7;
+    background-color: #bcbcbc;
     color: #000;
   }
   :focus {
@@ -33,8 +32,7 @@ const defaultBtnLight = css`
 `;
 
 const defaultBtnDark = css`
-  background-color: #494949;
-  border: 1px solid #212121;
+  background-color: #616161;
   color: #f5f5f5;
   :active,
   :hover {

@@ -78,8 +78,28 @@ export const styles = css`
     outline: none;
   }
 
-  .background-types {
-    padding: 20px 0;
+  .background-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0 20px;
+  }
+  .background-buttons button {
+    ${defaultBtn}
+    margin: 0 5px;
+  }
+  &.color-scheme-light .background-buttons button {
+    ${defaultBtnLight}
+    background-color: transparent;
+    &.active {
+      ${defaultBtnLight}
+    }
+  }
+  &.color-scheme-dark .background-buttons button {
+    ${defaultBtnDark}
+    background-color: transparent;
+    &.active {
+      ${defaultBtnDark}
+    }
   }
 
   .setting-option.wallpapers {
@@ -225,6 +245,9 @@ export const styles = css`
     padding-bottom: 10px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    &.background {
+      padding-bottom: 0;
+    }
   }
   .setting-column-right .setting-group:last-of-type {
   }
@@ -239,9 +262,15 @@ export const styles = css`
     ${selectDark};
   }
 
+  .setting-option {
+    &.select,
+    &.toggle {
+      margin-left: 20px;
+    }
+  }
+
   .setting-option.select {
     position: relative;
-    margin-left: 20px;
   }
 
   .material-icons.arrow_drop_down {
@@ -303,7 +332,7 @@ export const styles = css`
       }
     }
     .switch {
-      background-color: #bdbdbd;
+      background-color: #c2c2c2;
     }
     .switch::before {
       background-color: #f5f5f5;
@@ -319,7 +348,7 @@ export const styles = css`
       }
     }
     .switch {
-      background-color: #bdbdbd;
+      background-color: #616161;
     }
     .switch::before {
       background-color: #f5f5f5;

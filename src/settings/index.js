@@ -36,13 +36,25 @@ export const Settings = () => {
   const focusRef = useRef(null);
   const customColorRef = useRef(null);
 
-  const [showBackground, setShowBackground] = useState("colors");
+  const [showBackground, setShowBackground] = useState(null);
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   useEffect(() => {
     document.title = "Toolbar Dial - Options";
     focusRef.current.focus();
   }, []);
+
+  useEffect(() => {
+    if (!showBackground && wallpaper) {
+      setShowBackground(
+        wallpaper.includes("wallpaper")
+          ? "colors"
+          : wallpaper.includes("custom")
+          ? "custom"
+          : wallpapers.filter(({ id }) => id === wallpaper)[0].category
+      );
+    }
+  }, [wallpaper]);
 
   const wallpapersList = (filter) =>
     wallpapers
@@ -98,21 +110,36 @@ export const Settings = () => {
           <main>
             <div className="settings-content" ref={focusRef} tabIndex="-1">
               <div className="setting-wrapper">
-                <div className="setting-title">Background</div>
-                <div className="background-types">
-                  <button onClick={() => setShowBackground("colors")}>
+                <div className="setting-title background">Background</div>
+                <div className="background-buttons">
+                  <button
+                    onClick={() => setShowBackground("colors")}
+                    className={showBackground === "colors" ? "active" : ""}
+                  >
                     Colors
                   </button>
-                  <button onClick={() => setShowBackground("abstract")}>
+                  <button
+                    onClick={() => setShowBackground("abstract")}
+                    className={showBackground === "abstract" ? "active" : ""}
+                  >
                     Abstract
                   </button>
-                  <button onClick={() => setShowBackground("artistic")}>
+                  <button
+                    onClick={() => setShowBackground("artistic")}
+                    className={showBackground === "artistic" ? "active" : ""}
+                  >
                     Artistic
                   </button>
-                  <button onClick={() => setShowBackground("nature")}>
+                  <button
+                    onClick={() => setShowBackground("nature")}
+                    className={showBackground === "nature" ? "active" : ""}
+                  >
                     Nature
                   </button>
-                  <button onClick={() => setShowBackground("custom")}>
+                  <button
+                    onClick={() => setShowBackground("custom")}
+                    className={showBackground === "custom" ? "active" : ""}
+                  >
                     Custom
                   </button>
                 </div>
@@ -332,7 +359,7 @@ export const Settings = () => {
                     All bookmarks will open in a new browser tab.
                   </div>
                 </div>
-                <div className="setting-option">
+                <div className="setting-option toggle">
                   <label className="switch-wrap">
                     <input
                       type="checkbox"
@@ -351,7 +378,7 @@ export const Settings = () => {
                     dial.
                   </div>
                 </div>
-                <div className="setting-option">
+                <div className="setting-option toggle">
                   <label className="switch-wrap">
                     <input
                       type="checkbox"
