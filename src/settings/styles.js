@@ -109,7 +109,15 @@ export const styles = css`
     margin-bottom: -20px;
   }
 
-  button.wallpaper-button {
+  .wallpaper-button-transparent {
+    width: 120px;
+    height: 90px;
+    border-radius: 4px;
+    border: none;
+    margin: 0 20px 20px 0;
+  }
+
+  .wallpaper-button {
     outline: none;
     width: 120px;
     height: 90px;
@@ -137,12 +145,15 @@ export const styles = css`
     }
   }
   &.color-scheme-light {
-    button.wallpaper-button {
+    .wallpaper-button {
       box-shadow: 0 0 0 1px #9e9e9e;
       &:focus,
       &:active {
         box-shadow: 0 0 0 4px #64b5f6;
       }
+    }
+    .wallpaper-button-transparent {
+      box-shadow: 0 0 0 1px #9e9e9e;
     }
     .wallpaper-button.selected {
       box-shadow: 0 0 0 4px #1565c0;
@@ -159,12 +170,15 @@ export const styles = css`
     }
   }
   &.color-scheme-dark {
-    button.wallpaper-button {
+    .wallpaper-button {
       box-shadow: 0 0 0 1px #212121;
       &:focus,
       &:active {
         box-shadow: 0 0 0 4px #64b5f6;
       }
+    }
+    .wallpaper-button-transparent {
+      box-shadow: 0 0 0 1px #212121;
     }
     .wallpaper-button.selected {
       box-shadow: 0 0 0 4px #1565c0;
@@ -209,8 +223,14 @@ export const styles = css`
     background-color: #f8bbd0;
   }
 
+  .custom-group {
+    width: 120px;
+    margin: 0 20px 20px 0;
+  }
+
   button.custom {
     ${defaultBtn}
+    width: 100%;
   }
   &.color-scheme-light button.custom {
     ${defaultBtnLight}
@@ -391,7 +411,7 @@ export const styles = css`
     }
     main {
       border-radius: 6px;
-      max-height: 963px;
+      max-height: 949px;
     }
     &.color-scheme-light main {
       border: 1px solid #9e9e9e;

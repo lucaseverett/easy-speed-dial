@@ -217,23 +217,59 @@ export const Settings = () => {
                     ></button>
                   </div>
                 ) : showBackground === "custom" ? (
-                  <div className="setting-options wallpapers">
-                    {customColor && (
+                  <div className="setting-option wallpapers">
+                    <div className="custom-group">
+                      {customColor ? (
+                        <button
+                          className={[
+                            `wallpaper-button${
+                              wallpaper === "custom-color" ? " selected" : ""
+                            }`,
+                            css`
+                              background-color: ${customColor};
+                            `,
+                          ].join(" ")}
+                          title="Custom Color"
+                          onClick={() => {
+                            handleWallpaper("custom-color");
+                          }}
+                        ></button>
+                      ) : (
+                        <div className="wallpaper-button-transparent"></div>
+                      )}
                       <button
-                        className={[
-                          `wallpaper-button${
-                            wallpaper === "custom-color" ? " selected" : ""
-                          }`,
-                          css`
-                            background-color: ${customColor};
-                          `,
-                        ].join(" ")}
-                        title="Custom"
-                        onClick={() => {
-                          handleWallpaper("custom-color");
-                        }}
-                      ></button>
-                    )}
+                        className="custom"
+                        ref={customColorRef}
+                        onClick={() => setShowColorPicker(true)}
+                      >
+                        Choose Color
+                      </button>
+                    </div>
+                    <div className="custom-group">
+                      {customImage ? (
+                        <button
+                          id="custom-image"
+                          className={[
+                            `wallpaper-button${
+                              wallpaper === "custom-image" ? " selected" : ""
+                            }`,
+                            css`
+                              background-size: contain;
+                              background-image: url(${customImage});
+                            `,
+                          ].join(" ")}
+                          title="Custom Image"
+                          onClick={() => {
+                            handleWallpaper("custom-image");
+                          }}
+                        ></button>
+                      ) : (
+                        <div className="wallpaper-button-transparent"></div>
+                      )}
+                      <button className="custom" onClick={handleCustomImage}>
+                        Open Image
+                      </button>
+                    </div>
                     {showColorPicker && (
                       <ColorPicker
                         {...{
@@ -246,34 +282,6 @@ export const Settings = () => {
                         }}
                       />
                     )}
-                    {customImage && (
-                      <button
-                        id="custom-image"
-                        className={[
-                          `wallpaper-button${
-                            wallpaper === "custom-image" ? " selected" : ""
-                          }`,
-                          css`
-                            background-size: contain;
-                            background-image: url(${customImage});
-                          `,
-                        ].join(" ")}
-                        title="Custom"
-                        onClick={() => {
-                          handleWallpaper("custom-image");
-                        }}
-                      ></button>
-                    )}
-                    <button
-                      className="custom"
-                      ref={customColorRef}
-                      onClick={() => setShowColorPicker(true)}
-                    >
-                      Custom Color
-                    </button>
-                    <button className="custom" onClick={handleCustomImage}>
-                      Custom Image
-                    </button>
                   </div>
                 ) : (
                   <div className="setting-option wallpapers">
