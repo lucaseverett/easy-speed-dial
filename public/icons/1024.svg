@@ -1,0 +1,61 @@
+<svg id="Row_3" data-name="Row 3" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #eee;
+      }
+
+      .cls-2 {
+        fill: #ffc107;
+      }
+
+      .cls-10, .cls-2, .cls-3, .cls-4, .cls-5, .cls-8 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        fill: #795548;
+      }
+
+      .cls-4 {
+        fill: #673ab7;
+      }
+
+      .cls-5 {
+        fill: #009688;
+      }
+
+      .cls-6 {
+        fill: #8bc34a;
+      }
+
+      .cls-7 {
+        fill: #9c27b0;
+      }
+
+      .cls-8 {
+        fill: #03a9f4;
+      }
+
+      .cls-9 {
+        fill: #00bcd4;
+      }
+
+      .cls-10 {
+        fill: #2196f3;
+      }
+    </style>
+  </defs>
+  <circle id="Border" cx="512" cy="512" r="512"/>
+  <circle id="Outer_Circle" data-name="Outer Circle" class="cls-1" cx="512" cy="512" r="496"/>
+  <circle id="Inner_Circle" data-name="Inner Circle" cx="512" cy="512" r="480"/>
+  <path class="cls-2" d="M651.994,609.007h208a6,6,0,0,1,6,6v134a6,6,0,0,1-6,6h-208a6,6,0,0,1-6-6v-134A6,6,0,0,1,651.994,609.007Z"/>
+  <path class="cls-3" d="M408,609.007H616a6,6,0,0,1,6,6v134a6,6,0,0,1-6,6H408a6,6,0,0,1-6-6v-134A6,6,0,0,1,408,609.007Z"/>
+  <path class="cls-4" d="M164.014,609.007h208a6,6,0,0,1,6,6v134a6,6,0,0,1-6,6h-208a6,6,0,0,1-6-6v-134A6,6,0,0,1,164.014,609.007Z"/>
+  <path class="cls-5" d="M651.994,439h208a6,6,0,0,1,6,6V579a6,6,0,0,1-6,6h-208a6,6,0,0,1-6-6V445A6,6,0,0,1,651.994,439Z"/>
+  <rect class="cls-6" x="402" y="439" width="220" height="146" rx="6" ry="6"/>
+  <rect class="cls-7" x="158" y="439" width="220" height="146" rx="6" ry="6"/>
+  <path class="cls-8" d="M651.994,269h208a6,6,0,0,1,6,6V409a6,6,0,0,1-6,6h-208a6,6,0,0,1-6-6V275A6,6,0,0,1,651.994,269Z"/>
+  <rect class="cls-9" x="402" y="269" width="220" height="146" rx="6" ry="6"/>
+  <path class="cls-10" d="M164.014,269h208a6,6,0,0,1,6,6V409a6,6,0,0,1-6,6h-208a6,6,0,0,1-6-6V275A6,6,0,0,1,164.014,269Z"/>
+</svg>

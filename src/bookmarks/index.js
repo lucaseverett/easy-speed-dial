@@ -14,10 +14,6 @@ const isMacOS = userAgent.includes("macintosh") ? true : false;
 const isChrome = userAgent.includes("chrome") ? true : false;
 
 export function Bookmarks() {
-  useEffect(() => {
-    document.title = "Toolbar Dial";
-  }, []);
-
   const { bookmarks, currentFolder, changeFolder } = useBookmarks();
   const {
     newTab,
