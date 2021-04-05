@@ -307,7 +307,7 @@ export const styles = css`
     color: #f5f5f5;
   }
 
-  .setting-group .setting-description {
+  .setting-description {
     line-height: 1.5;
   }
 
@@ -399,7 +399,8 @@ export const styles = css`
 
   .logo {
     display: flex;
-    margin-top: 10px;
+    align-items: center;
+
     img {
       padding-right: 20px;
     }
