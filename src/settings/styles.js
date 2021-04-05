@@ -274,7 +274,7 @@ export const styles = css`
 
   select {
     ${select};
-    max-width: 155px;
+    max-width: 175px;
   }
   &.color-scheme-light select {
     ${selectLight};
