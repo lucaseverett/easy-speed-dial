@@ -42,7 +42,11 @@ export const wallpaperStyles = ({ wallpaper, customColor, customImage }) => {
         })`
       : "none"};
     background-size: cover;
-    background-position: ${/Crayons/.test(wallpaper) ? "bottom" : "center"};
+    background-position: ${/Crayons/.test(wallpaper)
+      ? "bottom"
+      : /HorizonLight|HorizonDark/.test(wallpaper)
+      ? "bottom left"
+      : "center"};
     background-attachment: fixed;
   `;
 };

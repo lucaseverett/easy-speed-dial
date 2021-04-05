@@ -1,19 +1,19 @@
 export const wallpapers = [
   {
-    id: "WavySand",
-    title: "Wavy Sand",
-    filename: "wavy-sand-2931286.jpg",
-    thumbnail: "wavy-sand-2931286_thumb.png",
-    url: "https://www.pexels.com/photo/wavy-sand-2931286/",
-    category: "nature",
-  },
-  {
     id: "SandDune",
     title: "Sand Dune",
     filename: "sand-2848098.jpg",
     thumbnail: "sand-2848098_thumb.png",
     url:
       "https://pixabay.com/photos/sand-dune-background-nature-desert-2848098/",
+    category: "nature",
+  },
+  {
+    id: "WavySand",
+    title: "Wavy Sand",
+    filename: "wavy-sand-2931286.jpg",
+    thumbnail: "wavy-sand-2931286_thumb.png",
+    url: "https://www.pexels.com/photo/wavy-sand-2931286/",
     category: "nature",
   },
   {
@@ -89,6 +89,24 @@ export const wallpapers = [
     thumbnail: "AdobeStock_29107448_thumb.png",
     url: "https://stock.adobe.com/29107448",
     category: "nature",
+  },
+  {
+    id: "HorizonLight",
+    title: "Horizon Light",
+    filename: "purple-1780371.png",
+    thumbnail: "WallpaperLight_thumb.png",
+    url:
+      "https://pixabay.com/illustrations/purple-abstract-background-1780371/",
+    category: "abstract",
+  },
+  {
+    id: "HorizonDark",
+    title: "Horizon Dark",
+    filename: "purple-1780371.png",
+    thumbnail: "WallpaperDark_thumb.png",
+    url:
+      "https://pixabay.com/illustrations/purple-abstract-background-1780371/",
+    category: "abstract",
   },
   {
     id: "AbstractPurple",
