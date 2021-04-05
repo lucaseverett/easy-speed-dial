@@ -6,6 +6,8 @@ import { wallpapers } from "../wallpapers";
 import { wallpaperStyles } from "../wallpapers/styles.js";
 import { css } from "@emotion/css";
 import { ColorPicker } from "./ColorPicker.js";
+import logo from "url:../../public/icons/96.svg";
+import { appVersion } from "../common/version.js";
 
 const userAgent = navigator.userAgent.toLowerCase();
 const isMacOS = userAgent.includes("macintosh") ? true : false;
@@ -399,33 +401,39 @@ export const Settings = () => {
               </div>
               <div className="setting-wrapper">
                 <div className="setting-title">About Toolbar Dial</div>
-                <div className="setting-description">
-                  <a
-                    href="https://toolbardial.com/"
-                    rel="noopener"
-                    target="_blank"
-                  >
-                    Toolbar Dial
-                  </a>{" "}
-                  was created by{" "}
-                  <a
-                    href="https://lucaseverett.dev/"
-                    rel="noopener"
-                    target="_blank"
-                  >
-                    Lucas Everett
-                  </a>
-                  .<br />
-                  <br />
-                  Please report any bugs or issues to the{" "}
-                  <a
-                    href="https://github.com/lucaseverett/toolbar-dial"
-                    rel="noopener"
-                    target="_blank"
-                  >
-                    GitHub repository
-                  </a>
-                  .
+                <div className="setting-description logo">
+                  <img src={logo} />
+                  <div>
+                    Version {appVersion}
+                    <br />
+                    <br />
+                    <a
+                      href="https://toolbardial.com/"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      Toolbar Dial
+                    </a>{" "}
+                    was created by{" "}
+                    <a
+                      href="https://lucaseverett.dev/"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      Lucas Everett
+                    </a>
+                    .<br />
+                    <br />
+                    Please report issues and requests to the{" "}
+                    <a
+                      href="https://github.com/lucaseverett/toolbar-dial"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      GitHub repository
+                    </a>
+                    .
+                  </div>
                 </div>
               </div>
             </div>

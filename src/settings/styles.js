@@ -274,6 +274,7 @@ export const styles = css`
 
   select {
     ${select};
+    max-width: 155px;
   }
   &.color-scheme-light select {
     ${selectLight};
@@ -393,6 +394,14 @@ export const styles = css`
       background-color: #90caf9;
       color: #000;
       outline: none;
+    }
+  }
+
+  .logo {
+    display: flex;
+    margin-top: 10px;
+    img {
+      padding-right: 20px;
     }
   }
 

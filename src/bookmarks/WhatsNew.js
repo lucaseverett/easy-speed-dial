@@ -103,10 +103,6 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
       >
         <div>
           <h2>Version 2.2</h2>
-          <h3>New features</h3>
-          <ul>
-            <li>Added option for square dial shape</li>
-          </ul>
           <h3>Changes</h3>
           <ul>
             <li>Changed layout of Options screen</li>
