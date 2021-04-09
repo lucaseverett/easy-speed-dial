@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src ="https://github.com/lucaseverett/toolbar-dial-firefox/blob/master/DefaultLight.png" /></div>
+<div style="text-align:center"><img src ="screenshot.png" /></div>
 
 # Toolbar Dial
 
