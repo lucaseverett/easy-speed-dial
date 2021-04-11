@@ -58,6 +58,13 @@ export const Settings = () => {
     }
   }, [wallpaper]);
 
+  function handleEscape(e) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setShowColorPicker(false);
+    }
+  }
+
   const wallpapersList = (filter) =>
     wallpapers
       .filter(({ category }) => category === filter)
@@ -95,6 +102,7 @@ export const Settings = () => {
       onMouseDown={() => {
         setShowColorPicker(false);
       }}
+      onKeyDown={handleEscape}
       onContextMenu={(e) => {
         e.preventDefault();
       }}

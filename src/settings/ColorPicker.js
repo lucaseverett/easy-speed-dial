@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { css } from "@emotion/css";
 import { input, inputLight, inputDark } from "../styles/inputs.js";
@@ -13,6 +13,7 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
     box-shadow: 0 4px 3px rgb(0, 0, 0, 0.3);
     border-radius: 6px;
     width: 132px;
+    outline: none;
     input {
       ${input}
       margin-top: 5px;
@@ -64,9 +65,30 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
     setColor(color);
   }
 
+  const focusRef = useRef(null);
+
   useEffect(() => {
-    // set focus to handle
+    // set focus to color picker popup
+    if (focusRef.current) {
+      focusRef.current.focus();
+    }
   }, []);
+
+  function handleTab(e) {
+    if (e.key === "Tab" && e.shiftKey) {
+      e.preventDefault();
+      focusRef.current.lastChild.focus();
+    }
+  }
+
+  function handleTabInput(e) {
+    if (e.key === "Tab" && !e.shiftKey) {
+      e.preventDefault();
+      focusRef.current.focus();
+    } else if (e.shiftKey) {
+      e.stopPropagation();
+    }
+  }
 
   return (
     <div
@@ -78,9 +100,20 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
         e.preventDefault();
         e.stopPropagation();
       }}
+      onKeyDown={handleTab}
+      tabIndex="0"
+      ref={focusRef}
     >
-      <HexColorPicker color={color} onChange={changeColor} />
-      <HexColorInput color={color} onChange={changeColor} />
+      <HexColorPicker
+        color={color}
+        onChange={changeColor}
+        onKeyDown={(e) => e.stopPropagation()}
+      />
+      <HexColorInput
+        color={color}
+        onChange={changeColor}
+        onKeyDown={handleTabInput}
+      />
     </div>
   );
 }
