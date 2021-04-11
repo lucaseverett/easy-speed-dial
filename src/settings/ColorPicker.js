@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import iro from "@jaames/iro";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 import { css } from "@emotion/css";
 import { input, inputLight, inputDark } from "../styles/inputs.js";
-
-let colorPicker;
 
 export function ColorPicker({ customColor, handleCustomColor, left, top }) {
   const styles = css`
@@ -23,6 +21,7 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
       padding: 1px 0 0 0;
       line-height: 0;
       width: 100%;
+      border-radius: 4px;
     }
     .color-scheme-light & {
       background-color: #e0e0e0;
@@ -38,42 +37,37 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
         ${inputDark}
       }
     }
+    .react-colorful {
+      width: 120px;
+      height: 136px;
+    }
+    .react-colorful__saturation {
+      border-bottom: none;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+    .react-colorful__hue {
+      height: 16px;
+      border-radius: 4px;
+    }
+    .react-colorful__hue-pointer,
+    .react-colorful__saturation-pointer {
+      width: 20px;
+      height: 20px;
+    }
   `;
 
   const [color, setColor] = useState(customColor || "#ffffff");
 
-  function handleColor(e) {
-    if (e.key === "Enter") {
-      colorPicker.color.set(e.target.value);
-    }
-  }
-
   function changeColor(color) {
-    handleCustomColor(color.hexString);
-    setColor(color.hexString);
+    handleCustomColor(color);
+    setColor(color);
   }
 
   useEffect(() => {
-    colorPicker = new iro.ColorPicker("#picker", {
-      width: 120,
-      color: customColor || "#ffffff",
-      padding: 0,
-      margin: 5,
-      layout: [
-        {
-          component: iro.ui.Box,
-          options: {},
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: "hue",
-          },
-        },
-      ],
-    });
-    colorPicker.on("color:change", changeColor);
+    // set focus to handle
   }, []);
+
   return (
     <div
       className={styles}
@@ -85,13 +79,8 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
         e.stopPropagation();
       }}
     >
-      <div id="picker"></div>
-      <input
-        type="text"
-        value={color}
-        onKeyDown={handleColor}
-        onChange={(e) => setColor(e.target.value)}
-      />
+      <HexColorPicker color={color} onChange={changeColor} />
+      <HexColorInput color={color} onChange={changeColor} />
     </div>
   );
 }
