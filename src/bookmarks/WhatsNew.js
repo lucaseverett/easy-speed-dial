@@ -94,13 +94,7 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
         tabRef: focusRef,
       }}
     >
-      <div
-        className="releases"
-        tabIndex="0"
-        ref={focusRef}
-        className={styles}
-        onKeyDown={tabKey}
-      >
+      <div tabIndex="0" ref={focusRef} className={styles} onKeyDown={tabKey}>
         <div>
           <h2>Version 2.2</h2>
           <h3>Changes</h3>

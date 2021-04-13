@@ -379,33 +379,6 @@ export const styles = css`
     }
   }
 
-  &.color-scheme-light a {
-    color: inherit;
-  }
-
-  &.color-scheme-dark a {
-    color: inherit;
-  }
-  a {
-    :hover {
-      text-decoration: none;
-    }
-    :focus {
-      background-color: #90caf9;
-      color: #000;
-      outline: none;
-    }
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-
-    img {
-      padding-right: 20px;
-    }
-  }
-
   @media (min-width: 797px) {
     .options-background {
       display: flex;

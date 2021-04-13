@@ -3,6 +3,7 @@ import { css } from "@emotion/css";
 import { Theme } from "./themes/default";
 import { AlertBanner } from "./AlertBanner.js";
 import { WhatsNew } from "./WhatsNew.js";
+import { AboutModal } from "./AboutModal.js";
 import { ContextMenu } from "useContextMenu";
 import { useOptions } from "useOptions";
 import { useBookmarks } from "useBookmarks";
@@ -95,6 +96,11 @@ export function Bookmarks() {
     setShowModal("whats-new");
   }
 
+  function handleShowAbout() {
+    hideContextMenu();
+    setShowModal("about");
+  }
+
   const focusRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -136,6 +142,7 @@ export function Bookmarks() {
             linkID,
             linkURL,
             handleShowWhatsNew,
+            handleShowAbout,
             handleEscapeContext,
             hideContextMenu,
           }}
@@ -153,6 +160,9 @@ export function Bookmarks() {
       )}
       {showModal === "whats-new" && (
         <WhatsNew {...{ handleDismissModal, handleEscapeModal }} />
+      )}
+      {showModal === "about" && (
+        <AboutModal {...{ handleDismissModal, handleEscapeModal }} />
       )}
       <Theme
         {...{
