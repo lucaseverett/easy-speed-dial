@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
 import { modalScrollbarStyles } from "../styles/scrollbars.js";
 import {
@@ -14,9 +14,7 @@ export const Modal = ({
   title,
   width,
   height,
-  dismissRef,
-  shiftTabRef,
-  tabRef,
+  shiftTabFocus,
 }) => {
   const styles = css`
     -webkit-font-smoothing: antialiased;
@@ -133,16 +131,24 @@ export const Modal = ({
     }
   `;
 
+  const focusRef = useRef(null);
+
+  useEffect(() => {
+    if (focusRef.current) {
+      focusRef.current.focus();
+    }
+  }, []);
+
   function handleTab(e) {
     if (e.shiftKey && e.key === "Tab") {
-      shiftTabRef.current.focus();
-      e.stopPropagation();
-      e.preventDefault();
-    } else if (e.key === "Tab") {
-      tabRef.current.focus();
+      shiftTabFocus().focus();
       e.stopPropagation();
       e.preventDefault();
     }
+  }
+
+  function focusDismissBtn() {
+    document.querySelector("#dismiss-btn").focus();
   }
 
   return (
@@ -157,6 +163,8 @@ export const Modal = ({
         e.preventDefault();
       }}
       className={styles}
+      tabIndex="0"
+      ref={focusRef}
     >
       <div className="modal-wrapper">
         <div
@@ -175,13 +183,16 @@ export const Modal = ({
               title="Dismiss"
               onClick={handleDismissModal}
               onKeyDown={handleTab}
-              ref={dismissRef}
+              id="dismiss-btn"
             >
               <i className="material-icons close">close</i>
             </button>
           </header>
           <main>
-            <div className="scroll-box">{children}</div>
+            <div className="scroll-box" id="scroll-box">
+              {children}
+            </div>
+            <div tabIndex="0" onFocus={focusDismissBtn}></div>
           </main>
         </div>
       </div>

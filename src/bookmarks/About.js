@@ -52,6 +52,7 @@ export const About = () => (
           href="https://github.com/lucaseverett/toolbar-dial"
           rel="noopener"
           target="_blank"
+          id="github-repo-link"
         >
           GitHub repository
         </a>

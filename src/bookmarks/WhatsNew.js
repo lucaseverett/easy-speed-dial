@@ -1,11 +1,9 @@
-import { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
 import { Modal } from "./Modal.js";
 
 const styles = css`
   font-size: 16px;
   padding: 25px;
-  outline: none;
 
   h2 {
     margin: 20px 0 0;
@@ -64,23 +62,6 @@ const styles = css`
 `;
 
 export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
-  const focusRef = useRef(null);
-
-  const dismissRef = useRef(null);
-
-  useEffect(() => {
-    if (focusRef.current) {
-      focusRef.current.focus();
-    }
-  }, []);
-
-  function tabKey(e) {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      dismissRef.current.focus();
-    }
-  }
-
   return (
     <Modal
       {...{
@@ -89,12 +70,10 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
         title: "What's New",
         width: "470px",
         height: "450px",
-        dismissRef,
-        shiftTabRef: focusRef,
-        tabRef: focusRef,
+        shiftTabFocus: () => document.querySelector("#scroll-box"),
       }}
     >
-      <div tabIndex="0" ref={focusRef} className={styles} onKeyDown={tabKey}>
+      <div className={styles} id="shift-focus">
         <div>
           <h2>Version 2.2</h2>
           <h3>Changes</h3>
