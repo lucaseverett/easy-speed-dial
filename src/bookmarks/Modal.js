@@ -62,6 +62,7 @@ export const Modal = ({
         font-size: 20px;
         margin: 0;
         font-weight: normal;
+        outline: none;
       }
     }
 
@@ -163,8 +164,6 @@ export const Modal = ({
         e.preventDefault();
       }}
       className={styles}
-      tabIndex="0"
-      ref={focusRef}
     >
       <div className="modal-wrapper">
         <div
@@ -177,10 +176,12 @@ export const Modal = ({
           }}
         >
           <header>
-            <h1>{title}</h1>
+            <h1 tabIndex="-1" ref={focusRef}>
+              {title}
+            </h1>
             <button
               className="dismiss"
-              title="Dismiss"
+              title="Close"
               onClick={handleDismissModal}
               onKeyDown={handleTab}
               id="dismiss-btn"
