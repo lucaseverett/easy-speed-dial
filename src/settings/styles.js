@@ -80,32 +80,42 @@ export const styles = css`
 
   .background-buttons {
     margin: 5px 0 20px;
+
     & button {
       ${defaultBtn}
       display: block;
       width: 100%;
       text-align: left;
+      margin: 0 0 1px 0;
+
+      &.focus-visible {
+        z-index: 10;
+      }
     }
   }
-  &.color-scheme-light .background-buttons button {
-    ${defaultBtnLight}
-    background-color: transparent;
-    &.active {
+  &.color-scheme-light .background-buttons {
+    button {
       ${defaultBtnLight}
+
+      &.active {
+        background-color: #bcbcbc;
+      }
     }
   }
-  &.color-scheme-dark .background-buttons button {
-    ${defaultBtnDark}
-    background-color: transparent;
-    &.active {
+  &.color-scheme-dark .background-buttons {
+    button {
       ${defaultBtnDark}
+
+      &.active {
+        background-color: #373737;
+      }
     }
   }
 
   .setting-option.wallpapers {
     display: flex;
     flex-wrap: wrap;
-    margin-right: -15px;
+    margin-right: -20px;
     margin-bottom: -20px;
   }
 
@@ -383,14 +393,19 @@ export const styles = css`
 
     #options {
       border-radius: 6px;
-      width: 797px;
       max-height: calc(100vh - 40px);
       height: initial;
     }
+
     main {
       border-radius: 6px;
       max-height: 949px;
     }
+
+    .setting-wrapper {
+      width: 732px;
+    }
+
     &.color-scheme-light main {
       border: 1px solid #9e9e9e;
     }
@@ -414,6 +429,18 @@ export const styles = css`
       display: flex;
       button {
         text-align: center;
+        margin: 0 1px 0 0;
+        :not(:first-of-type) {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        :not(:last-of-type) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+        :last-of-type {
+          margin-right: 0;
+        }
       }
     }
   }
