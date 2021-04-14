@@ -79,13 +79,13 @@ export const styles = css`
   }
 
   .background-buttons {
-    display: flex;
-    justify-content: center;
     margin: 5px 0 20px;
-  }
-  .background-buttons button {
-    ${defaultBtn}
-    margin: 0 5px;
+    & button {
+      ${defaultBtn}
+      display: block;
+      width: 100%;
+      text-align: left;
+    }
   }
   &.color-scheme-light .background-buttons button {
     ${defaultBtnLight}
@@ -265,11 +265,6 @@ export const styles = css`
     padding-bottom: 10px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    &.background {
-      padding-bottom: 0;
-    }
-  }
-  .setting-column-right .setting-group:last-of-type {
   }
 
   select {
@@ -413,6 +408,13 @@ export const styles = css`
 
     header {
       padding: 6px 11px 11px 25px;
+    }
+
+    .background-buttons {
+      display: flex;
+      button {
+        text-align: center;
+      }
     }
   }
 `;
