@@ -8,6 +8,7 @@ export const ContextMenu = ({
   linkURL,
   linkID,
   handleShowWhatsNew,
+  handleShowAbout,
   handleEscapeContext,
   hideContextMenu,
 }) => {
@@ -116,14 +117,14 @@ export const ContextMenu = ({
       e.preventDefault();
       e.stopPropagation();
       if (currIndex < 1) {
-        setCurrIndex(1);
+        setCurrIndex(2);
       } else {
         setCurrIndex(currIndex - 1);
       }
     } else if (e.keyCode === 40) {
       e.preventDefault();
       e.stopPropagation();
-      if (currIndex < 1) {
+      if (currIndex < 2) {
         setCurrIndex(currIndex + 1);
       } else {
         setCurrIndex(0);
@@ -425,6 +426,17 @@ export const ContextMenu = ({
                 onMouseEnter={handleMouseEnter}
               >
                 What's new
+              </button>
+            </li>
+          </ul>
+          <ul>
+            <li>
+              <button
+                ref={thirdItemRef}
+                onClick={handleShowAbout}
+                onMouseEnter={handleMouseEnter}
+              >
+                About Toolbar Dial
               </button>
             </li>
           </ul>
