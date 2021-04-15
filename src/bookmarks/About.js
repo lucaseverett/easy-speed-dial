@@ -17,7 +17,7 @@ const styles = css`
   }
 
   img {
-    padding-right: 20px;
+    padding-right: 25px;
   }
 
   .color-scheme-light & a {
