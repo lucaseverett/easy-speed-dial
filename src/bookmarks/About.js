@@ -28,6 +28,15 @@ const styles = css`
     color: inherit;
   }
 
+  p {
+    &:first-of-type {
+      margin-top: 0;
+    }
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
   a {
     :hover {
       text-decoration: none;
