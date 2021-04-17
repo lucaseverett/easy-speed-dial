@@ -39,7 +39,7 @@ export const ContextMenu = ({
     } else if (currIndex === -1) {
       if (contextRef) contextRef.current.focus();
     }
-  }, [currIndex]);
+  }, [currIndex, menuItems]);
 
   function handleContextMenu(e) {
     e.stopPropagation();
