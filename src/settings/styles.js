@@ -131,6 +131,8 @@ export const styles = css`
     background-position: center;
     margin: 0 20px 20px 0;
     box-shadow: 0 0 0 1px var(--wallpaper-button-box-shadow-color);
+  }
+  .wallpaper-button {
     &:focus,
     &:active {
       box-shadow: 0 0 0 4px #64b5f6;

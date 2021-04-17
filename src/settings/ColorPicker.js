@@ -1,10 +1,20 @@
 import { useEffect, useState, useRef } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { css } from "@emotion/css";
-import { input, inputLight, inputDark } from "../styles/inputs.js";
+import { input } from "../styles/inputs.js";
 
 export function ColorPicker({ customColor, handleCustomColor, left, top }) {
   const styles = css`
+    .color-scheme-light & {
+      --picker-background-color: #e0e0e0;
+      --picker-border-color: #9e9e9e;
+    }
+
+    .color-scheme-dark & {
+      --picker-background-color: #424242;
+      --picker-border-color: #212121;
+    }
+
     position: absolute;
     z-index: 1;
     top: ${top + 4}px;
@@ -14,6 +24,8 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
     border-radius: 6px;
     width: 132px;
     outline: none;
+    background-color: var(--picker-background-color);
+    border: 1px solid var(--picker-border-color);
     input {
       ${input}
       margin-top: 5px;
@@ -23,20 +35,6 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
       line-height: 0;
       width: 100%;
       border-radius: 4px;
-    }
-    .color-scheme-light & {
-      background-color: #e0e0e0;
-      border: 1px solid #9e9e9e;
-      input {
-        ${inputLight}
-      }
-    }
-    .color-scheme-dark & {
-      background-color: #424242;
-      border: 1px solid #212121;
-      input {
-        ${inputDark}
-      }
     }
     .react-colorful {
       width: 120px;
