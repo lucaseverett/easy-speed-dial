@@ -24,35 +24,25 @@ export const ContextMenu = ({
   const { openOptions } = useOptions();
 
   const contextRef = useRef(null);
-  const firstItemRef = useRef(null);
-  const secondItemRef = useRef(null);
-  const thirdItemRef = useRef(null);
-  const fourthItemRef = useRef(null);
-  const fifthItemRef = useRef(null);
 
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
   const [currIndex, setCurrIndex] = useState(-1);
+  const [menuItems, setMenuItems] = useState(null);
 
   useEffect(() => {
     setCurrIndex(-1);
+    if (document.querySelectorAll("#context-menu button"))
+      setMenuItems(document.querySelectorAll("#context-menu button"));
   }, [linkID, linkURL]);
 
-  useLayoutEffect(() => {
-    let tabIndex = [
-      firstItemRef.current,
-      secondItemRef.current,
-      thirdItemRef.current,
-      fourthItemRef.current,
-      fifthItemRef.current,
-    ];
-
-    if (currIndex >= 0) {
-      tabIndex[currIndex].focus();
-    } else {
-      contextRef.current.focus();
+  useEffect(() => {
+    if (currIndex >= 0 && menuItems && menuItems[currIndex]) {
+      menuItems[currIndex].focus();
+    } else if (currIndex === -1) {
+      if (contextRef) contextRef.current.focus();
     }
-  }, [currIndex, linkURL, linkID]);
+  }, [currIndex]);
 
   function handleContextMenu(e) {
     e.stopPropagation();
@@ -64,71 +54,26 @@ export const ContextMenu = ({
   }
 
   function handleKeyDown(e) {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" || e.key === "Tab") {
       handleEscapeContext(e);
-    } else if (e.key === "Tab") {
+    } else if (e.keyCode === 38) {
       e.preventDefault();
       e.stopPropagation();
-    }
-  }
-
-  function handleLinkTabs(e) {
-    if (e.keyCode === 38) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (currIndex < 1) {
-        setCurrIndex(4);
-      } else {
+      if (currIndex === -1) {
+        setCurrIndex(menuItems.length - 1);
+      } else if (currIndex <= menuItems.length - 1 && currIndex > 0) {
         setCurrIndex(currIndex - 1);
       }
     } else if (e.keyCode === 40) {
       e.preventDefault();
       e.stopPropagation();
-      if (currIndex < 4) {
+      if (currIndex < menuItems.length - 1) {
         setCurrIndex(currIndex + 1);
-      } else {
-        setCurrIndex(0);
       }
-    }
-  }
-
-  function handleFolderTabs(e) {
-    if (e.keyCode === 38) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (currIndex < 1) {
-        setCurrIndex(2);
-      } else {
-        setCurrIndex(currIndex - 1);
-      }
-    } else if (e.keyCode === 40) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (currIndex < 2) {
-        setCurrIndex(currIndex + 1);
-      } else {
-        setCurrIndex(0);
-      }
-    }
-  }
-
-  function handleMainTabs(e) {
-    if (e.keyCode === 38) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (currIndex < 1) {
-        setCurrIndex(2);
-      } else {
-        setCurrIndex(currIndex - 1);
-      }
-    } else if (e.keyCode === 40) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (currIndex < 2) {
-        setCurrIndex(currIndex + 1);
-      } else {
-        setCurrIndex(0);
-      }
+    } else if (e.keyCode === 35) {
+      setCurrIndex(menuItems.length - 1);
+    } else if (e.keyCode === 36) {
+      setCurrIndex(0);
     }
   }
 
@@ -283,15 +228,13 @@ export const ContextMenu = ({
     <div
       onKeyDown={handleKeyDown}
       onClick={(e) => e.stopPropagation()}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
+      onContextMenu={handleContextMenu}
+      onMouseEnter={handleMouseEnter}
       className={styles}
+      id="context-menu"
     >
       {linkURL ? (
         <div
-          onKeyDown={handleLinkTabs}
           tabIndex="-1"
           ref={contextRef}
           className={css`
@@ -300,63 +243,34 @@ export const ContextMenu = ({
         >
           <ul>
             <li>
-              <button
-                ref={firstItemRef}
-                onClick={handleOpenLinkTab}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
+              <button onClick={handleOpenLinkTab}>
                 Open <span className="lowercase">in</span> new tab
               </button>
             </li>
             <li>
-              <button
-                ref={secondItemRef}
-                onClick={handleOpenLinkBackgroundTab}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
+              <button onClick={handleOpenLinkBackgroundTab}>
                 Open <span className="lowercase">in</span> background tab
               </button>
             </li>
             <li>
-              <button
-                ref={thirdItemRef}
-                onClick={handleOpenLinkWindow}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
+              <button onClick={handleOpenLinkWindow}>
                 Open <span className="lowercase">in</span> new window
               </button>
             </li>
           </ul>
           <ul>
             <li>
-              <button
-                ref={fourthItemRef}
-                onClick={copyURL}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
-                Copy link
-              </button>
+              <button onClick={copyURL}>Copy link</button>
             </li>
           </ul>
           <ul>
             <li className="delete">
-              <button
-                ref={fifthItemRef}
-                onClick={handleDeletebookmark}
-                onMouseEnter={handleMouseEnter}
-              >
-                Delete bookmark
-              </button>
+              <button onClick={handleDeletebookmark}>Delete bookmark</button>
             </li>
           </ul>
         </div>
       ) : linkID ? (
         <div
-          onKeyDown={handleFolderTabs}
           tabIndex="-1"
           ref={contextRef}
           className={css`
@@ -365,41 +279,24 @@ export const ContextMenu = ({
         >
           <ul>
             <li>
-              <button
-                ref={firstItemRef}
-                onClick={handleOpenAllTab}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
+              <button onClick={handleOpenAllTab}>
                 Open all <span className="lowercase">in</span> new tabs
               </button>
             </li>
             <li>
-              <button
-                ref={secondItemRef}
-                onClick={handleOpenAllWindow}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
+              <button onClick={handleOpenAllWindow}>
                 Open all <span className="lowercase">in</span> new window
               </button>
             </li>
           </ul>
           <ul>
             <li className="delete">
-              <button
-                ref={thirdItemRef}
-                onClick={handleDeleteFolder}
-                onMouseEnter={handleMouseEnter}
-              >
-                Delete folder
-              </button>
+              <button onClick={handleDeleteFolder}>Delete folder</button>
             </li>
           </ul>
         </div>
       ) : (
         <div
-          onKeyDown={handleMainTabs}
           tabIndex="-1"
           ref={contextRef}
           className={css`
@@ -408,36 +305,17 @@ export const ContextMenu = ({
         >
           <ul>
             <li>
-              <button
-                ref={firstItemRef}
-                onClick={handleopenOptions}
-                onContextMenu={handleContextMenu}
-                onMouseEnter={handleMouseEnter}
-              >
-                Customize
-              </button>
+              <button onClick={handleopenOptions}>Customize</button>
             </li>
           </ul>
           <ul>
             <li>
-              <button
-                ref={secondItemRef}
-                onClick={handleShowWhatsNew}
-                onMouseEnter={handleMouseEnter}
-              >
-                What's new
-              </button>
+              <button onClick={handleShowWhatsNew}>What's new</button>
             </li>
           </ul>
           <ul>
             <li>
-              <button
-                ref={thirdItemRef}
-                onClick={handleShowAbout}
-                onMouseEnter={handleMouseEnter}
-              >
-                About Toolbar Dial
-              </button>
+              <button onClick={handleShowAbout}>About Toolbar Dial</button>
             </li>
           </ul>
         </div>

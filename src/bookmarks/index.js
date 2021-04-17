@@ -70,7 +70,7 @@ export function Bookmarks() {
   }
 
   function handleEscapeContext(e) {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" || e.key === "Tab") {
       e.preventDefault();
       hideContextMenu();
     }
