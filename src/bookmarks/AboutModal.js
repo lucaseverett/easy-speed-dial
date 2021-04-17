@@ -16,10 +16,13 @@ export const AboutModal = ({ handleDismissModal, handleEscapeModal }) => {
         title: "About Toolbar Dial",
         width: "520px",
         height: "450px",
-        shiftTabFocus: () => document.querySelector("#github-repo-link"),
+        shiftTabFocus: () => {
+          let links = document.querySelectorAll("#about-modal a");
+          return links[links.length - 1];
+        },
       }}
     >
-      <div className={styles}>
+      <div className={styles} id="about-modal">
         <About />
       </div>
     </Modal>
