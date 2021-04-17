@@ -1,12 +1,5 @@
 import { css } from "@emotion/css";
-import {
-  defaultBtn,
-  defaultBtnLight,
-  defaultBtnDark,
-  dismissBtn,
-  dismissBtnLight,
-  dismissBtnDark,
-} from "../styles/buttons.js";
+import { defaultBtn, dismissBtn } from "../styles/buttons.js";
 import { useOptions } from "useOptions";
 import { appVersion } from "../common/version.js";
 
@@ -50,14 +43,12 @@ const styles = css`
   }
   button.whats-new {
     ${defaultBtn}
-    ${defaultBtnLight}
     :focus {
       box-shadow: 0 0 0 4px #7953d2;
     }
   }
   button.dismiss {
     ${dismissBtn}
-    ${dismissBtnLight}
     :hover {
       background-color: #7953d2;
     }

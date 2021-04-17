@@ -1,11 +1,7 @@
 import { css } from "@emotion/css";
 import { settingsScrollbarStyles } from "../styles/scrollbars.js";
-import {
-  defaultBtn,
-  defaultBtnLight,
-  defaultBtnDark,
-} from "../styles/buttons.js";
-import { select, selectLight, selectDark } from "../styles/inputs.js";
+import { defaultBtn } from "../styles/buttons.js";
+import { select } from "../styles/inputs.js";
 
 const switchWidth = 50;
 const switchPadding = 3;
@@ -14,6 +10,38 @@ const switchRadius = switchHeight / 2;
 const circleSize = switchHeight - switchPadding * 2;
 
 export const styles = css`
+  .color-scheme-light & {
+    --options-background-color: #bdbdbd;
+    --options-text-color: #000;
+    --options-box-shadow: 0 0 0 5px #bdbdbd, 0 0 0 6px #9e9e9e,
+      0 0 15px rgb(33, 33, 33, 0.5), 8px 8px 20px rgb(33, 33, 33, 0.5);
+    --header-background-color: #bdbdbd;
+    --main-background-color: #e0e0e0;
+    --main-border-color: #9e9e9e;
+    --btn-active-background-color: #bcbcbc;
+    --wallpaper-button-box-shadow-color: #9e9e9e;
+    --setting-wrapper-background-color: #eee;
+    --setting-wrapper-border-color: #bdbdbd;
+    --switch-background-color: #c2c2c2;
+    --switch-before-background-color: #f5f5f5;
+  }
+
+  .color-scheme-dark & {
+    --options-background-color: #373737;
+    --options-text-color: #e0e0e0;
+    --options-box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
+      10px 14px 13px rgb(0, 0, 0, 0.6);
+    --header-background-color: #373737;
+    --main-background-color: #424242;
+    --main-border-color: #212121;
+    --btn-active-background-color: #373737;
+    --wallpaper-button-box-shadow-color: #212121;
+    --setting-wrapper-background-color: #484848;
+    --setting-wrapper-border-color: #373737;
+    --switch-background-color: #616161;
+    --switch-before-background-color: #f5f5f5;
+  }
+
   font-family: "Roboto", sans-serif;
   height: 100vh;
   ${settingsScrollbarStyles}
@@ -26,26 +54,17 @@ export const styles = css`
     height: 100%;
     display: flex;
     flex-flow: column;
-  }
-  &.color-scheme-light #options {
-    background-color: #bdbdbd;
-    color: #000;
-  }
-  &.color-scheme-dark #options {
-    background-color: #373737;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #e0e0e0;
+    background-color: var(--options-background-color);
+    color: var(--options-text-color);
+    .color-scheme-dark & {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
   }
 
   header {
     padding: 16px 16px 16px 25px;
-  }
-  &.color-scheme-light header {
-    background-color: #bdbdbd;
-  }
-  &.color-scheme-dark header {
-    background-color: #373737;
+    background-color: var(--header-background-color);
   }
 
   header h1 {
@@ -60,17 +79,11 @@ export const styles = css`
     overflow: hidden;
     display: flex;
     height: 100%;
+    background-color: var(--main-background-color);
+    border-top: 1px solid var(--main-border-color);
     .setting-wrapper:last-of-type {
       padding-bottom: 25px;
     }
-  }
-  &.color-scheme-light main {
-    background-color: #e0e0e0;
-    border-top: 1px solid #9e9e9e;
-  }
-  &.color-scheme-dark main {
-    background-color: #424242;
-    border-top: 1px solid #212121;
   }
 
   .settings-content {
@@ -88,26 +101,12 @@ export const styles = css`
       text-align: left;
       margin: 0 0 1px 0;
 
+      &.active {
+        background-color: var(--btn-active-background-color);
+      }
+
       &.focus-visible {
         z-index: 10;
-      }
-    }
-  }
-  &.color-scheme-light .background-buttons {
-    button {
-      ${defaultBtnLight}
-
-      &.active {
-        background-color: #bcbcbc;
-      }
-    }
-  }
-  &.color-scheme-dark .background-buttons {
-    button {
-      ${defaultBtnDark}
-
-      &.active {
-        background-color: #373737;
       }
     }
   }
@@ -119,15 +118,8 @@ export const styles = css`
     margin-bottom: -20px;
   }
 
+  .wallpaper-button,
   .wallpaper-button-transparent {
-    width: 120px;
-    height: 90px;
-    border-radius: 4px;
-    border: none;
-    margin: 0 20px 20px 0;
-  }
-
-  .wallpaper-button {
     outline: none;
     width: 120px;
     height: 90px;
@@ -138,8 +130,24 @@ export const styles = css`
     background-size: cover;
     background-position: center;
     margin: 0 20px 20px 0;
+    box-shadow: 0 0 0 1px var(--wallpaper-button-box-shadow-color);
+    &:focus,
+    &:active {
+      box-shadow: 0 0 0 4px #64b5f6;
+    }
   }
   .wallpaper-button.selected {
+    box-shadow: 0 0 0 4px #1565c0;
+    :focus:not(.focus-visible) {
+      box-shadow: 0 0 0 4px #1565c0;
+    }
+    &.focus-visible {
+      box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #64b5f6;
+    }
+    ::before {
+      background-color: #1565c0;
+      color: #fff;
+    }
     ::before {
       position: absolute;
       top: 50%;
@@ -154,55 +162,9 @@ export const styles = css`
       transform: scaleX(-1) rotate(-35deg);
     }
   }
-  &.color-scheme-light {
-    .wallpaper-button {
-      box-shadow: 0 0 0 1px #9e9e9e;
-      &:focus,
-      &:active {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .wallpaper-button-transparent {
-      box-shadow: 0 0 0 1px #9e9e9e;
-    }
-    .wallpaper-button.selected {
-      box-shadow: 0 0 0 4px #1565c0;
-      :focus:not(.focus-visible) {
-        box-shadow: 0 0 0 4px #1565c0;
-      }
-      &.focus-visible {
-        box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #64b5f6;
-      }
-      ::before {
-        background-color: #1565c0;
-        color: #fff;
-      }
-    }
-  }
-  &.color-scheme-dark {
-    .wallpaper-button {
-      box-shadow: 0 0 0 1px #212121;
-      &:focus,
-      &:active {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .wallpaper-button-transparent {
-      box-shadow: 0 0 0 1px #212121;
-    }
-    .wallpaper-button.selected {
-      box-shadow: 0 0 0 4px #1565c0;
-      :focus:not(.focus-visible) {
-        box-shadow: 0 0 0 4px #1565c0;
-      }
-      &.focus-visible {
-        box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #64b5f6;
-      }
-      ::before {
-        background-color: #1565c0;
-        color: #fff;
-      }
-    }
+
+  .wallpaper-button-transparent {
+    cursor: initial;
   }
 
   #dark-wallpaper {
@@ -242,26 +204,13 @@ export const styles = css`
     ${defaultBtn}
     width: 100%;
   }
-  &.color-scheme-light button.custom {
-    ${defaultBtnLight}
-  }
-  &.color-scheme-dark button.custom {
-    ${defaultBtnDark}
-  }
 
   .setting-wrapper {
     padding: 25px 25px 25px;
     border-radius: 6px;
     margin: 25px;
-  }
-  &.color-scheme-light .setting-wrapper {
-    border: 1px solid #bdbdbd;
-    background-color: #eee;
-  }
-
-  &.color-scheme-dark .setting-wrapper {
-    border: 1px solid #373737;
-    background-color: #484848;
+    border: 1px solid var(--setting-wrapper-border-color);
+    background-color: var(--setting-wrapper-background-color);
   }
 
   .setting-wrapper.setting-group {
@@ -281,12 +230,6 @@ export const styles = css`
     ${select};
     max-width: 175px;
   }
-  &.color-scheme-light select {
-    ${selectLight};
-  }
-  &.color-scheme-dark select {
-    ${selectDark};
-  }
 
   .setting-option {
     &.select,
@@ -297,19 +240,6 @@ export const styles = css`
 
   .setting-option.select {
     position: relative;
-  }
-
-  .material-icons.arrow_drop_down {
-    position: absolute;
-    top: 5px;
-    right: 0;
-    pointer-events: none;
-  }
-  &.color-scheme-light .material-icons.arrow_drop_down {
-    color: #212121;
-  }
-  &.color-scheme-dark .material-icons.arrow_drop_down {
-    color: #f5f5f5;
   }
 
   .setting-description {
@@ -323,6 +253,9 @@ export const styles = css`
     display: block;
     position: relative;
     border-radius: ${switchRadius}px;
+    :focus-within {
+      box-shadow: 0 0 0 4px #64b5f6;
+    }
   }
   .switch-wrap input {
     opacity: 0;
@@ -337,6 +270,7 @@ export const styles = css`
     bottom: 0;
     border-radius: ${switchRadius}px;
     transition: 0.2s;
+    background-color: var(--switch-background-color);
   }
   .switch::before {
     content: "";
@@ -347,41 +281,13 @@ export const styles = css`
     width: ${circleSize}px;
     border-radius: 50%;
     transition: 0.2s;
+    background-color: var(--switch-before-background-color);
+  }
+  input:checked + .switch {
+    background-color: #1565c0;
   }
   input:checked + .switch::before {
     transform: translateX(${circleSize}px);
-  }
-  &.color-scheme-light {
-    .switch-wrap {
-      :focus-within {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .switch {
-      background-color: #c2c2c2;
-    }
-    .switch::before {
-      background-color: #f5f5f5;
-    }
-    input:checked + .switch {
-      background-color: #1565c0;
-    }
-  }
-  &.color-scheme-dark {
-    .switch-wrap {
-      :focus-within {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .switch {
-      background-color: #616161;
-    }
-    .switch::before {
-      background-color: #f5f5f5;
-    }
-    input:checked + .switch {
-      background-color: #1565c0;
-    }
   }
 
   @media (min-width: 797px) {
@@ -395,30 +301,17 @@ export const styles = css`
       border-radius: 6px;
       max-height: calc(100vh - 40px);
       height: initial;
+      box-shadow: var(--options-box-shadow);
     }
 
     main {
       border-radius: 6px;
       max-height: 949px;
+      border: 1px solid var(--main-border-color);
     }
 
     .setting-wrapper {
       width: 732px;
-    }
-
-    &.color-scheme-light main {
-      border: 1px solid #9e9e9e;
-    }
-    &.color-scheme-dark main {
-      border: 1px solid #212121;
-    }
-    &.color-scheme-light #options {
-      box-shadow: 0 0 0 5px #bdbdbd, 0 0 0 6px #9e9e9e,
-        0 0 15px rgb(33, 33, 33, 0.5), 8px 8px 20px rgb(33, 33, 33, 0.5);
-    }
-    &.color-scheme-dark #options {
-      box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
-        10px 14px 13px rgb(0, 0, 0, 0.6);
     }
 
     header {

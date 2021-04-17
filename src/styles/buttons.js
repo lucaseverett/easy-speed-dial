@@ -25,12 +25,12 @@ const defaultBtn = css`
   border-radius: 4px;
   border: none;
   cursor: pointer;
-  background-color: var(---btn-background-color);
+  background-color: var(--btn-background-color);
   color: var(---btn-text-color);
   :active,
   :hover {
     outline: none;
-    background-color: var(---btn-active-background-color);
+    background-color: var(--btn-active-background-color);
     color: var(---btn-active-text-color);
   }
   :disabled {
@@ -39,7 +39,7 @@ const defaultBtn = css`
   }
   :focus {
     outline: none;
-    box-shadow: 0 0 0 4px var(---btn-focus-box-shadow-color);
+    box-shadow: 0 0 0 4px var(--btn-focus-box-shadow-color);
   }
 `;
 

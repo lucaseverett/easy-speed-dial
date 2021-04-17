@@ -57,6 +57,15 @@ export const Settings = () => {
     }
   }, [wallpaper]);
 
+  useEffect(() => {
+    document.body.className =
+      themeOption === "System Theme"
+        ? colorScheme
+        : themeOption === "Light"
+        ? "color-scheme-light"
+        : "color-scheme-dark";
+  }, [themeOption, colorScheme]);
+
   function handleEscape(e) {
     if (e.key === "Escape") {
       e.preventDefault();
@@ -87,11 +96,6 @@ export const Settings = () => {
   return (
     <div
       className={[
-        themeOption === "System Theme"
-          ? colorScheme
-          : themeOption === "Light"
-          ? "color-scheme-light"
-          : "color-scheme-dark",
         isChrome ? "chrome" : "firefox",
         isMacOS ? "mac" : "windows",
         styles,

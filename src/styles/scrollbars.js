@@ -64,13 +64,18 @@ const modalScrollbarStyles = css`
 `;
 
 const settingsScrollbarStyles = css`
-  &.firefox.mac.color-scheme-dark .settings-content,
-  &.chrome.color-scheme-dark .settings-content {
-    ${themes.modalDark}
+  .color-scheme-light & {
+    &.firefox.mac .settings-content,
+    &.chrome .settings-content {
+      ${themes.light}
+    }
   }
-  &.firefox.mac.color-scheme-light .settings-content,
-  &.chrome.color-scheme-light .settings-content {
-    ${themes.light}
+
+  .color-scheme-dark & {
+    &.firefox.mac .settings-content,
+    &.chrome .settings-content {
+      ${themes.modalDark}
+    }
   }
 `;
 
