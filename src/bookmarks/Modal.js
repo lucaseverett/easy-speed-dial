@@ -157,7 +157,7 @@ export const Modal = ({
           }}
         >
           <header>
-            <h1 tabIndex="-1" ref={focusRef}>
+            <h1 tabIndex="-1" ref={focusRef} onKeyDown={handleTab}>
               {title}
             </h1>
             <button
