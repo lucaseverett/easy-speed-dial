@@ -19,7 +19,7 @@ const input = css`
 
   :focus {
     outline: none;
-    box-shadow: 0 0 0 4px #64b5f6;
+    box-shadow: 0 0 0 4px #90caf9;
   }
 `;
 

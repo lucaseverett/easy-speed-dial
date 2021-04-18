@@ -8,7 +8,7 @@ const defaultBtn = css`
     --btn-active-text-color: #000;
     --btn-hover-background-color: #bcbcbc;
     --btn-hover-text-color: #000;
-    --btn-focus-box-shadow-color: #aeaeae;
+    --btn-focus-box-shadow-color: #90caf9;
   }
 
   .color-scheme-dark & {
@@ -18,7 +18,7 @@ const defaultBtn = css`
     --btn-active-text-color: #f5f5f5;
     --btn-hover-background-color: #373737;
     --btn-hover-text-color: #000;
-    --btn-focus-box-shadow-color: #757575;
+    --btn-focus-box-shadow-color: #90caf9;
   }
 
   padding: 10px 10px 8px;

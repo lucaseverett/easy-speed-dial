@@ -105,7 +105,7 @@ export const styles = css`
         background-color: var(--btn-active-background-color);
       }
 
-      &.focus-visible {
+      &:focus {
         z-index: 10;
       }
     }
@@ -135,7 +135,7 @@ export const styles = css`
   .wallpaper-button {
     &:focus,
     &:active {
-      box-shadow: 0 0 0 4px #64b5f6;
+      box-shadow: 0 0 0 4px #90caf9;
     }
   }
   .wallpaper-button.selected {
@@ -144,7 +144,7 @@ export const styles = css`
       box-shadow: 0 0 0 4px #1565c0;
     }
     &.focus-visible {
-      box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #64b5f6;
+      box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #90caf9;
     }
     ::before {
       background-color: #1565c0;
@@ -256,7 +256,7 @@ export const styles = css`
     position: relative;
     border-radius: ${switchRadius}px;
     :focus-within {
-      box-shadow: 0 0 0 4px #64b5f6;
+      box-shadow: 0 0 0 4px #90caf9;
     }
   }
   .switch-wrap input {
