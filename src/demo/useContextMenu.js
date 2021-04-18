@@ -232,14 +232,12 @@ export const ContextMenu = ({
           </ul>
           <ul>
             <li>
-              <button onClick={copyURL} onMouseEnter={handleMouseEnter}>
-                Copy link
-              </button>
+              <button onClick={copyURL}>Copy link</button>
             </li>
           </ul>
           <ul>
             <li className="delete">
-              <button onMouseEnter={handleMouseEnter}>Delete bookmark</button>
+              <button onClick={handleDeleteBookmark}>Delete bookmark</button>
             </li>
           </ul>
         </div>
