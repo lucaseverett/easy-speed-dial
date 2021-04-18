@@ -306,7 +306,7 @@ export const Settings = () => {
                 <div className="setting-label">
                   <div className="setting-title">Default Folder</div>
                   <div className="setting-description">
-                    Choose what folder is used to display dials.
+                    Choose the folder used to display dials.
                   </div>
                 </div>
                 <div className="setting-option select">
@@ -322,17 +322,19 @@ export const Settings = () => {
               </div>
               <div className="setting-wrapper setting-group">
                 <div className="setting-label">
-                  <div className="setting-title">Theme</div>
+                  <div className="setting-title">Color Scheme</div>
                   <div className="setting-description">
                     Choose the colors used throughout Toolbar Dial. If this
-                    option is set to &quot;System Theme&quot;, colors will
-                    change based on the preference set for your computer.
+                    option is set to &quot;Automatic&quot;, colors will change
+                    based on the preference set for your device.
                   </div>
                 </div>
                 <div className="setting-option select">
                   <select onChange={handleThemeOption} value={themeOption}>
-                    {["System Theme", "Light", "Dark"].map((t) => (
-                      <option value={t}>{t}</option>
+                    {["Automatic", "Light", "Dark"].map((t) => (
+                      <option value={t === "Automatic" ? "System Theme" : t}>
+                        {t}
+                      </option>
                     ))}
                   </select>
                   <span className="material-icons arrow_drop_down">
@@ -393,10 +395,10 @@ export const Settings = () => {
               </div>
               <div className="setting-wrapper setting-group">
                 <div className="setting-label">
-                  <div className="setting-title">Use Title in Dial</div>
+                  <div className="setting-title">Use Name in Dial</div>
                   <div className="setting-description">
-                    Display the title of the bookmark instead of the URL in
-                    dial.
+                    The name of the bookmark will be displayed instead of the
+                    URL.
                   </div>
                 </div>
                 <div className="setting-option toggle">
