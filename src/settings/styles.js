@@ -45,6 +45,10 @@ export const styles = css`
   font-family: "Roboto", sans-serif;
   height: 100vh;
   ${settingsScrollbarStyles}
+  transition: color 0.15s ease-in-out,
+            background-color 0.15s ease-in-out,
+            background-image 0.15s ease-in-out, border 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
 
   .options-background {
     height: 100%;
@@ -101,11 +105,11 @@ export const styles = css`
       text-align: left;
       margin: 0 0 1px 0;
 
-      &.active {
-        background-color: var(--btn-active-background-color);
+      &.selected {
+        background-color: var(--btn-selected-background-color);
       }
 
-      &:focus {
+      &.focus-visible {
         z-index: 10;
       }
     }
@@ -255,14 +259,14 @@ export const styles = css`
     display: block;
     position: relative;
     border-radius: ${switchRadius}px;
-    :focus-within {
-      box-shadow: 0 0 0 4px #90caf9;
-    }
   }
   .switch-wrap input {
     opacity: 0;
     width: 0;
     height: 0;
+    &.focus-visible + div {
+      box-shadow: 0 0 0 4px #90caf9;
+    }
   }
   .switch {
     position: absolute;

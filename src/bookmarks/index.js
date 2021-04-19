@@ -129,6 +129,10 @@ export function Bookmarks() {
           ${mainScrollbarStyles}
           height: 100vh;
           font-family: "Roboto", sans-serif;
+          transition: color 0.15s ease-in-out,
+            background-color 0.15s ease-in-out,
+            background-image 0.15s ease-in-out, border 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
         `,
       ].join(" ")}
       onClick={hideContextMenu}

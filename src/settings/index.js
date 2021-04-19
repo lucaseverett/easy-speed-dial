@@ -127,31 +127,31 @@ export const Settings = () => {
                 <div className="background-buttons">
                   <button
                     onClick={() => setShowBackground("colors")}
-                    className={showBackground === "colors" ? "active" : ""}
+                    className={showBackground === "colors" ? "selected" : ""}
                   >
                     Colors
                   </button>
                   <button
                     onClick={() => setShowBackground("abstract")}
-                    className={showBackground === "abstract" ? "active" : ""}
+                    className={showBackground === "abstract" ? "selected" : ""}
                   >
                     Abstract
                   </button>
                   <button
                     onClick={() => setShowBackground("artistic")}
-                    className={showBackground === "artistic" ? "active" : ""}
+                    className={showBackground === "artistic" ? "selected" : ""}
                   >
                     Artistic
                   </button>
                   <button
                     onClick={() => setShowBackground("nature")}
-                    className={showBackground === "nature" ? "active" : ""}
+                    className={showBackground === "nature" ? "selected" : ""}
                   >
                     Nature
                   </button>
                   <button
                     onClick={() => setShowBackground("custom")}
-                    className={showBackground === "custom" ? "active" : ""}
+                    className={showBackground === "custom" ? "selected" : ""}
                   >
                     Custom
                   </button>

@@ -17,9 +17,8 @@ const input = css`
   background-color: var(--input-background-color);
   color: var(--input-text-color);
 
-  :focus {
-    outline: none;
-    box-shadow: 0 0 0 4px #90caf9;
+  &.focus-visible {
+    box-shadow: 0 0 0 4px #64b5f6;
   }
 `;
 
