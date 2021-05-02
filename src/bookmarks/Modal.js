@@ -100,7 +100,9 @@ export const Modal = ({
         box-shadow: var(--modal-box-shadow);
       }
       header {
-        padding: 5px 4px 9px 25px;
+        padding: 0 4px 0 25px;
+        margin-top: -5px;
+        height: 49px;
       }
       main {
         border-radius: 6px;
