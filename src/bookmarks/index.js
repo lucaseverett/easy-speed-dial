@@ -3,6 +3,7 @@ import { css } from "@emotion/css";
 import { Theme } from "./themes/default";
 import { AlertBanner } from "./AlertBanner.js";
 import { WhatsNew } from "./WhatsNew.js";
+import { AboutModal } from "./AboutModal.js";
 import { ContextMenu } from "useContextMenu";
 import { useOptions } from "useOptions";
 import { useBookmarks } from "useBookmarks";
@@ -14,10 +15,6 @@ const isMacOS = userAgent.includes("macintosh") ? true : false;
 const isChrome = userAgent.includes("chrome") ? true : false;
 
 export function Bookmarks() {
-  useEffect(() => {
-    document.title = "Toolbar Dial";
-  }, []);
-
   const { bookmarks, currentFolder, changeFolder } = useBookmarks();
   const {
     newTab,
@@ -73,7 +70,7 @@ export function Bookmarks() {
   }
 
   function handleEscapeContext(e) {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" || e.key === "Tab") {
       e.preventDefault();
       hideContextMenu();
     }
@@ -97,6 +94,11 @@ export function Bookmarks() {
   function handleShowWhatsNew() {
     hideContextMenu();
     setShowModal("whats-new");
+  }
+
+  function handleShowAbout() {
+    hideContextMenu();
+    setShowModal("about");
   }
 
   const focusRef = useRef(null);
@@ -127,6 +129,10 @@ export function Bookmarks() {
           ${mainScrollbarStyles}
           height: 100vh;
           font-family: "Roboto", sans-serif;
+          transition: color 0.15s ease-in-out,
+            background-color 0.15s ease-in-out,
+            background-image 0.15s ease-in-out, border 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
         `,
       ].join(" ")}
       onClick={hideContextMenu}
@@ -140,6 +146,7 @@ export function Bookmarks() {
             linkID,
             linkURL,
             handleShowWhatsNew,
+            handleShowAbout,
             handleEscapeContext,
             hideContextMenu,
           }}
@@ -157,6 +164,9 @@ export function Bookmarks() {
       )}
       {showModal === "whats-new" && (
         <WhatsNew {...{ handleDismissModal, handleEscapeModal }} />
+      )}
+      {showModal === "about" && (
+        <AboutModal {...{ handleDismissModal, handleEscapeModal }} />
       )}
       <Theme
         {...{

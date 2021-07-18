@@ -1,11 +1,7 @@
 import { css } from "@emotion/css";
 import { settingsScrollbarStyles } from "../styles/scrollbars.js";
-import {
-  defaultBtn,
-  defaultBtnLight,
-  defaultBtnDark,
-} from "../styles/buttons.js";
-import { select, selectLight, selectDark } from "../styles/inputs.js";
+import { defaultBtn } from "../styles/buttons.js";
+import { select } from "../styles/inputs.js";
 
 const switchWidth = 50;
 const switchPadding = 3;
@@ -14,9 +10,45 @@ const switchRadius = switchHeight / 2;
 const circleSize = switchHeight - switchPadding * 2;
 
 export const styles = css`
+  .color-scheme-light & {
+    --options-background-color: #bdbdbd;
+    --options-text-color: #000;
+    --options-box-shadow: 0 0 0 5px #bdbdbd, 0 0 0 6px #9e9e9e,
+      0 0 15px rgb(33, 33, 33, 0.5), 8px 8px 20px rgb(33, 33, 33, 0.5);
+    --header-background-color: #bdbdbd;
+    --main-background-color: #e0e0e0;
+    --main-border-color: #9e9e9e;
+    --btn-active-background-color: #bcbcbc;
+    --wallpaper-button-box-shadow-color: #9e9e9e;
+    --setting-wrapper-background-color: #eee;
+    --setting-wrapper-border-color: #bdbdbd;
+    --switch-background-color: #c2c2c2;
+    --switch-before-background-color: #f5f5f5;
+  }
+
+  .color-scheme-dark & {
+    --options-background-color: #373737;
+    --options-text-color: #e0e0e0;
+    --options-box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
+      10px 14px 13px rgb(0, 0, 0, 0.6);
+    --header-background-color: #373737;
+    --main-background-color: #424242;
+    --main-border-color: #212121;
+    --btn-active-background-color: #373737;
+    --wallpaper-button-box-shadow-color: #212121;
+    --setting-wrapper-background-color: #484848;
+    --setting-wrapper-border-color: #373737;
+    --switch-background-color: #616161;
+    --switch-before-background-color: #f5f5f5;
+  }
+
   font-family: "Roboto", sans-serif;
   height: 100vh;
   ${settingsScrollbarStyles}
+  transition: color 0.15s ease-in-out,
+            background-color 0.15s ease-in-out,
+            background-image 0.15s ease-in-out, border 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
 
   .options-background {
     height: 100%;
@@ -26,26 +58,17 @@ export const styles = css`
     height: 100%;
     display: flex;
     flex-flow: column;
-  }
-  &.color-scheme-light #options {
-    background-color: #bdbdbd;
-    color: #000;
-  }
-  &.color-scheme-dark #options {
-    background-color: #373737;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #e0e0e0;
+    background-color: var(--options-background-color);
+    color: var(--options-text-color);
+    .color-scheme-dark & {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
   }
 
   header {
     padding: 16px 16px 16px 25px;
-  }
-  &.color-scheme-light header {
-    background-color: #bdbdbd;
-  }
-  &.color-scheme-dark header {
-    background-color: #373737;
+    background-color: var(--header-background-color);
   }
 
   header h1 {
@@ -60,52 +83,77 @@ export const styles = css`
     overflow: hidden;
     display: flex;
     height: 100%;
+    background-color: var(--main-background-color);
+    border-top: 1px solid var(--main-border-color);
     .setting-wrapper:last-of-type {
       padding-bottom: 25px;
     }
   }
-  &.color-scheme-light main {
-    background-color: #e0e0e0;
-    border-top: 1px solid #9e9e9e;
-  }
-  &.color-scheme-dark main {
-    background-color: #424242;
-    border-top: 1px solid #212121;
-  }
 
   .settings-content {
-    padding: 0 25px;
     overflow: auto;
     outline: none;
   }
 
-  h2 {
-    font-size: 1rem;
-    margin: 0 0 20px;
-    font-weight: bold;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  .background-buttons {
+    margin: 5px 0 20px;
+
+    & button {
+      ${defaultBtn}
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 0 0 1px 0;
+
+      &.selected {
+        background-color: var(--btn-selected-background-color);
+      }
+
+      &.focus-visible {
+        z-index: 10;
+      }
+    }
   }
 
   .setting-option.wallpapers {
     display: flex;
     flex-wrap: wrap;
-    margin-right: -15px;
+    margin-right: -20px;
+    margin-bottom: -20px;
   }
 
-  button.wallpaper-button {
+  .wallpaper-button,
+  .wallpaper-button-transparent {
     outline: none;
-    width: 80px;
-    height: 60px;
+    width: 120px;
+    height: 90px;
     border-radius: 4px;
     border: none;
     cursor: pointer;
     position: relative;
     background-size: cover;
     background-position: center;
-    margin: 0 15px 15px 0;
+    margin: 0 20px 20px 0;
+    box-shadow: 0 0 0 1px var(--wallpaper-button-box-shadow-color);
+  }
+  .wallpaper-button {
+    &:focus,
+    &:active {
+      box-shadow: 0 0 0 4px #90caf9;
+    }
   }
   .wallpaper-button.selected {
+    box-shadow: 0 0 0 4px #1565c0;
+    :focus:not(.focus-visible) {
+      box-shadow: 0 0 0 4px #1565c0;
+    }
+    &.focus-visible {
+      box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #90caf9;
+    }
+    ::before {
+      background-color: #1565c0;
+      color: #fff;
+    }
     ::before {
       position: absolute;
       top: 50%;
@@ -120,49 +168,9 @@ export const styles = css`
       transform: scaleX(-1) rotate(-35deg);
     }
   }
-  &.color-scheme-light {
-    button.wallpaper-button {
-      box-shadow: 0 0 0 1px #9e9e9e;
-      &:focus,
-      &:active {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .wallpaper-button.selected {
-      box-shadow: 0 0 0 4px #1565c0;
-      :focus:not(.focus-visible) {
-        box-shadow: 0 0 0 4px #1565c0;
-      }
-      &.focus-visible {
-        box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #64b5f6;
-      }
-      ::before {
-        background-color: #1565c0;
-        color: #fff;
-      }
-    }
-  }
-  &.color-scheme-dark {
-    button.wallpaper-button {
-      box-shadow: 0 0 0 1px #212121;
-      &:focus,
-      &:active {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .wallpaper-button.selected {
-      box-shadow: 0 0 0 4px #1565c0;
-      :focus:not(.focus-visible) {
-        box-shadow: 0 0 0 4px #1565c0;
-      }
-      &.focus-visible {
-        box-shadow: 0 0 0 4px #1565c0, 0 0 0 8px #64b5f6;
-      }
-      ::before {
-        background-color: #1565c0;
-        color: #fff;
-      }
-    }
+
+  .wallpaper-button-transparent {
+    cursor: initial;
   }
 
   #dark-wallpaper {
@@ -193,85 +201,55 @@ export const styles = css`
     background-color: #f8bbd0;
   }
 
-  button.custom {
-    ${defaultBtn}
-  }
-  &.color-scheme-light button.custom {
-    ${defaultBtnLight}
-  }
-  &.color-scheme-dark button.custom {
-    ${defaultBtnDark}
+  .custom-group {
+    width: 120px;
+    margin: 0 20px 20px 0;
   }
 
-  .setting-label {
-    margin-bottom: 10px;
+  button.custom {
+    ${defaultBtn}
+    width: 100%;
   }
 
   .setting-wrapper {
-    padding: 25px 0;
-  }
-  &.color-scheme-light .setting-wrapper {
-    border-bottom: 1px solid #bdbdbd;
-  }
-
-  &.color-scheme-dark .setting-wrapper {
-    border-bottom: 1px solid #373737;
+    padding: 25px 25px 25px;
+    border-radius: 6px;
+    margin: 25px;
+    border: 1px solid var(--setting-wrapper-border-color);
+    background-color: var(--setting-wrapper-background-color);
   }
 
-  .setting-wrapper:last-of-type {
-    padding-bottom: 0;
-    border-bottom: none;
-  }
-
-  .setting-column-right .setting-group:last-of-type {
-    margin-bottom: 0;
-  }
-
-  .setting-group {
-    margin-bottom: 15px;
-  }
-
-  .setting-group.checkbox {
+  .setting-wrapper.setting-group {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    height: 34px;
-    margin-bottom: 10px;
-    .setting-label {
-      margin-bottom: 0;
-    }
+    align-items: center;
+  }
+
+  .setting-title {
+    font-weight: bold;
+    padding-bottom: 10px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   select {
     ${select};
-    width: 100%;
+    max-width: 175px;
   }
-  &.color-scheme-light select {
-    ${selectLight};
-  }
-  &.color-scheme-dark select {
-    ${selectDark};
+
+  .setting-option {
+    &.select,
+    &.toggle {
+      margin-left: 20px;
+    }
   }
 
   .setting-option.select {
     position: relative;
   }
 
-  .material-icons.arrow_drop_down {
-    position: absolute;
-    top: 5px;
-    right: 0;
-    pointer-events: none;
-  }
-  &.color-scheme-light .material-icons.arrow_drop_down {
-    color: #212121;
-  }
-  &.color-scheme-dark .material-icons.arrow_drop_down {
-    color: #f5f5f5;
-  }
-
   .setting-description {
-    display: block;
+    line-height: 1.5;
   }
 
   .switch-wrap {
@@ -286,6 +264,9 @@ export const styles = css`
     opacity: 0;
     width: 0;
     height: 0;
+    &.focus-visible + div {
+      box-shadow: 0 0 0 4px #90caf9;
+    }
   }
   .switch {
     position: absolute;
@@ -295,6 +276,7 @@ export const styles = css`
     bottom: 0;
     border-radius: ${switchRadius}px;
     transition: 0.2s;
+    background-color: var(--switch-background-color);
   }
   .switch::before {
     content: "";
@@ -305,59 +287,13 @@ export const styles = css`
     width: ${circleSize}px;
     border-radius: 50%;
     transition: 0.2s;
+    background-color: var(--switch-before-background-color);
+  }
+  input:checked + .switch {
+    background-color: #1565c0;
   }
   input:checked + .switch::before {
     transform: translateX(${circleSize}px);
-  }
-  &.color-scheme-light {
-    .switch-wrap {
-      :focus-within {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .switch {
-      background-color: #bdbdbd;
-    }
-    .switch::before {
-      background-color: #f5f5f5;
-    }
-    input:checked + .switch {
-      background-color: #1565c0;
-    }
-  }
-  &.color-scheme-dark {
-    .switch-wrap {
-      :focus-within {
-        box-shadow: 0 0 0 4px #64b5f6;
-      }
-    }
-    .switch {
-      background-color: #bdbdbd;
-    }
-    .switch::before {
-      background-color: #f5f5f5;
-    }
-    input:checked + .switch {
-      background-color: #1565c0;
-    }
-  }
-
-  &.color-scheme-light a {
-    color: inherit;
-  }
-
-  &.color-scheme-dark a {
-    color: inherit;
-  }
-  a {
-    :hover {
-      text-decoration: none;
-    }
-    :focus {
-      background-color: #90caf9;
-      color: #000;
-      outline: none;
-    }
   }
 
   @media (min-width: 797px) {
@@ -369,49 +305,42 @@ export const styles = css`
 
     #options {
       border-radius: 6px;
-      width: 797px;
       max-height: calc(100vh - 40px);
       height: initial;
+      box-shadow: var(--options-box-shadow);
     }
+
     main {
       border-radius: 6px;
+      max-height: 949px;
+      border: 1px solid var(--main-border-color);
     }
-    &.color-scheme-light main {
-      border: 1px solid #9e9e9e;
-    }
-    &.color-scheme-dark main {
-      border: 1px solid #212121;
-    }
-    &.color-scheme-light #options {
-      box-shadow: 0 0 0 5px #bdbdbd, 0 0 15px rgb(33, 33, 33, 0.5),
-        8px 8px 20px rgb(33, 33, 33, 0.5);
-    }
-    &.color-scheme-dark #options {
-      box-shadow: 0 0 0 5px #373737, 10px 14px 13px rgb(0, 0, 0, 0.6);
+
+    .setting-wrapper {
+      width: 732px;
     }
 
     header {
       padding: 6px 11px 11px 25px;
     }
-    select {
-      width: auto;
-    }
-    .setting-group.checkbox {
-      .setting-label {
-        width: 220px;
-      }
-    }
-    .setting-option.select {
-      display: inline-block;
-    }
-    .setting-columns {
+
+    .background-buttons {
       display: flex;
-    }
-    .setting-column-right {
-      padding-left: 100px;
-    }
-    .setting-group:last-of-type {
-      margin-bottom: 0;
+      button {
+        text-align: center;
+        margin: 0 1px 0 0;
+        :not(:first-of-type) {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        :not(:last-of-type) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+        :last-of-type {
+          margin-right: 0;
+        }
+      }
     }
   }
 `;

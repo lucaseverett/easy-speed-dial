@@ -1,11 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
 import { modalScrollbarStyles } from "../styles/scrollbars.js";
-import {
-  dismissBtn,
-  dismissBtnLight,
-  dismissBtnDark,
-} from "../styles/buttons.js";
+import { dismissBtn } from "../styles/buttons.js";
 
 export const Modal = ({
   handleDismissModal,
@@ -14,9 +10,7 @@ export const Modal = ({
   title,
   width,
   height,
-  dismissRef,
-  shiftTabRef,
-  tabRef,
+  shiftTabFocus,
 }) => {
   const styles = css`
     -webkit-font-smoothing: antialiased;
@@ -29,6 +23,25 @@ export const Modal = ({
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.8);
 
+    .color-scheme-light & {
+      --modal-background-color: #bdbdbd;
+      --modal-text-color: #000;
+      --modal-header-background-color: #bdbdbd;
+      --modal-main-background-color: #e0e0e0;
+      --modal-main-border-color: #9e9e9e;
+      --modal-box-shadow: 0 0 0 5px #bdbdbd, 10px 14px 13px rgb(0, 0, 0, 0.3);
+    }
+
+    .color-scheme-dark & {
+      --modal-background-color: #373737;
+      --modal-text-color: #e0e0e0;
+      --modal-header-background-color: #373737;
+      --modal-main-background-color: #424242;
+      --modal-main-border-color: #212121;
+      --modal-box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
+        10px 14px 13px rgb(0, 0, 0, 0.3);
+    }
+
     .modal-wrapper {
       height: 100%;
     }
@@ -37,14 +50,8 @@ export const Modal = ({
       display: flex;
       flex-flow: column;
       height: 100%;
-      .color-scheme-light & {
-        background-color: #bdbdbd;
-        color: #000;
-      }
-      .color-scheme-dark & {
-        background-color: #373737;
-        color: #e0e0e0;
-      }
+      background-color: var(--modal-background-color);
+      color: var(--modal-text-color);
     }
 
     header {
@@ -52,18 +59,14 @@ export const Modal = ({
       justify-content: space-between;
       align-items: center;
       padding: 12px 12px 12px 25px;
-      .color-scheme-light & {
-        background-color: #bdbdbd;
-      }
-      .color-scheme-dark & {
-        background-color: #373737;
-      }
+      background-color: var(--modal-header-background-color);
 
       h1 {
         margin: 0;
         font-size: 20px;
         margin: 0;
         font-weight: normal;
+        outline: none;
       }
     }
 
@@ -71,14 +74,8 @@ export const Modal = ({
       overflow: hidden;
       display: flex;
       height: 100%;
-    }
-    .color-scheme-light & main {
-      background-color: #e0e0e0;
-      border-top: 1px solid #9e9e9e;
-    }
-    .color-scheme-dark & main {
-      background-color: #424242;
-      border-top: 1px solid #212121;
+      background-color: var(--modal-main-background-color);
+      border-top: 1px solid var(--modal-main-border-color);
     }
 
     .scroll-box {
@@ -88,12 +85,6 @@ export const Modal = ({
 
     .dismiss {
       ${dismissBtn}
-      .color-scheme-light & {
-        ${dismissBtnLight}
-      }
-      .color-scheme-dark & {
-        ${dismissBtnDark}
-      }
     }
 
     @media (min-width: ${width}) {
@@ -106,24 +97,16 @@ export const Modal = ({
         max-height: calc(100vh - 40px);
         height: initial;
         border-radius: 6px;
-        .color-scheme-light & {
-          box-shadow: 0 0 0 5px #bdbdbd, 10px 14px 13px rgb(0, 0, 0, 0.3);
-        }
-        .color-scheme-dark & {
-          box-shadow: 0 0 0 5px #373737, 10px 14px 13px rgb(0, 0, 0, 0.3);
-        }
+        box-shadow: var(--modal-box-shadow);
       }
       header {
-        padding: 5px 4px 9px 25px;
+        padding: 0 4px 0 25px;
+        margin-top: -5px;
+        height: 49px;
       }
       main {
         border-radius: 6px;
-        .color-scheme-light & {
-          border: 1px solid #9e9e9e;
-        }
-        .color-scheme-dark & {
-          border: 1px solid #212121;
-        }
+        border: 1px solid var(--modal-main-border-color);
       }
       .scroll-box {
         max-height: ${height};
@@ -132,16 +115,24 @@ export const Modal = ({
     }
   `;
 
+  const focusRef = useRef(null);
+
+  useEffect(() => {
+    if (focusRef.current) {
+      focusRef.current.focus();
+    }
+  }, []);
+
   function handleTab(e) {
     if (e.shiftKey && e.key === "Tab") {
-      shiftTabRef.current.focus();
-      e.stopPropagation();
-      e.preventDefault();
-    } else if (e.key === "Tab") {
-      tabRef.current.focus();
+      shiftTabFocus().focus();
       e.stopPropagation();
       e.preventDefault();
     }
+  }
+
+  function focusDismissBtn() {
+    document.querySelector("#dismiss-btn").focus();
   }
 
   return (
@@ -168,19 +159,24 @@ export const Modal = ({
           }}
         >
           <header>
-            <h1>{title}</h1>
+            <h1 tabIndex="-1" ref={focusRef} onKeyDown={handleTab}>
+              {title}
+            </h1>
             <button
               className="dismiss"
-              title="Dismiss"
+              title="Close"
               onClick={handleDismissModal}
               onKeyDown={handleTab}
-              ref={dismissRef}
+              id="dismiss-btn"
             >
               <i className="material-icons close">close</i>
             </button>
           </header>
           <main>
-            <div className="scroll-box">{children}</div>
+            <div className="scroll-box" id="scroll-box">
+              {children}
+            </div>
+            <div tabIndex="0" onFocus={focusDismissBtn}></div>
           </main>
         </div>
       </div>

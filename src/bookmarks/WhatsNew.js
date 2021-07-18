@@ -1,11 +1,9 @@
-import { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
 import { Modal } from "./Modal.js";
 
 const styles = css`
   font-size: 16px;
   padding: 25px;
-  outline: none;
 
   h2 {
     margin: 20px 0 0;
@@ -64,23 +62,6 @@ const styles = css`
 `;
 
 export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
-  const focusRef = useRef(null);
-
-  const dismissRef = useRef(null);
-
-  useEffect(() => {
-    if (focusRef.current) {
-      focusRef.current.focus();
-    }
-  }, []);
-
-  function tabKey(e) {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      dismissRef.current.focus();
-    }
-  }
-
   return (
     <Modal
       {...{
@@ -89,18 +70,22 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
         title: "What's New",
         width: "470px",
         height: "450px",
-        dismissRef,
-        shiftTabRef: focusRef,
-        tabRef: focusRef,
+        shiftTabFocus: () => document.querySelector("#scroll-box"),
       }}
     >
-      <div
-        className="releases"
-        tabIndex="0"
-        ref={focusRef}
-        className={styles}
-        onKeyDown={tabKey}
-      >
+      <div className={styles} id="shift-focus">
+        <div>
+          <h2>Version 2.2</h2>
+          <h3>Changes</h3>
+          <ul>
+            <li>Changed layout of Options screen</li>
+            <li>Added new background images in Options</li>
+          </ul>
+          <h3>Resolved Issues</h3>
+          <ul>
+            <li>Minor bug fixes</li>
+          </ul>
+        </div>
         <div>
           <h2>Version 2.1</h2>
           <h3>Changes</h3>

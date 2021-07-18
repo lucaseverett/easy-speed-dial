@@ -1,92 +1,75 @@
 import { css } from "@emotion/css";
 
 const defaultBtn = css`
+  .color-scheme-light & {
+    --btn-background-color: #cfcfcf;
+    --btn-text-color: #000;
+    --btn-hover-background-color: #bcbcbc;
+    --btn-hover-text-color: #000;
+    --btn-focus-box-shadow-color: #90caf9;
+    --btn-selected-background-color: #bcbcbc;
+  }
+
+  .color-scheme-dark & {
+    --btn-background-color: #616161;
+    --btn-text-color: #f5f5f5;
+    --btn-hover-background-color: #373737;
+    --btn-hover-text-color: #f5f5f5;
+    --btn-focus-box-shadow-color: #90caf9;
+    --btn-selected-background-color: #373737;
+  }
+
   padding: 10px 10px 8px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
-  :active,
-  :hover {
+  background-color: var(--btn-background-color);
+  color: var(--btn-text-color);
+  :hover,
+  :active {
     outline: none;
+    background-color: var(--btn-hover-background-color);
+    color: var(--btn-hover-text-color);
   }
   :disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-  :focus {
+  &.focus-visible {
     outline: none;
-  }
-`;
-
-const defaultBtnLight = css`
-  background-color: #e0e0e0;
-  border: 1px solid #9e9e9e;
-  color: #000;
-  :active,
-  :hover {
-    background-color: #c7c7c7;
-    color: #000;
-  }
-  :focus {
-    box-shadow: 0 0 0 4px #aeaeae;
-  }
-`;
-
-const defaultBtnDark = css`
-  background-color: #494949;
-  border: 1px solid #212121;
-  color: #f5f5f5;
-  :active,
-  :hover {
-    background-color: #373737;
-    color: #f5f5f5;
-  }
-  :focus {
-    box-shadow: 0 0 0 4px #757575;
+    box-shadow: 0 0 0 4px var(--btn-focus-box-shadow-color);
   }
 `;
 
 const dismissBtn = css`
+  .color-scheme-light & {
+    --dismiss-btn-hover-background-color: #aeaeae;
+    --dismiss-btn-focus-box-shadow-color: #90caf9;
+  }
+
+  .color-scheme-dark & {
+    --dismiss-btn-hover-background-color: #424242;
+    --dismiss-btn-focus-box-shadow-color: #90caf9;
+  }
+
   background: transparent;
   border: none;
   padding: 3px;
   border-radius: 4px;
   color: inherit;
   cursor: pointer;
-  :focus {
-    outline: none;
-  }
+  :hover,
   :active {
     outline: none;
+    background-color: var(--dismiss-btn-hover-background-color);
+  }
+  &.focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--dismiss-btn-focus-box-shadow-color);
   }
   .close {
     vertical-align: middle;
   }
 `;
 
-const dismissBtnLight = css`
-  :hover {
-    background-color: #aeaeae;
-  }
-  :focus {
-    background-color: #aeaeae;
-  }
-`;
-
-const dismissBtnDark = css`
-  :hover {
-    background-color: #424242;
-  }
-  :focus {
-    background-color: #424242;
-  }
-`;
-
-export {
-  defaultBtn,
-  defaultBtnLight,
-  defaultBtnDark,
-  dismissBtn,
-  dismissBtnLight,
-  dismissBtnDark,
-};
+export { defaultBtn, dismissBtn };

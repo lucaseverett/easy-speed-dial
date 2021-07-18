@@ -1,0 +1,57 @@
+<svg id="Row_3" data-name="Row 3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #eee;
+      }
+
+      .cls-2 {
+        fill: #ffc107;
+      }
+
+      .cls-3 {
+        fill: #795548;
+      }
+
+      .cls-4 {
+        fill: #673ab7;
+      }
+
+      .cls-5 {
+        fill: #009688;
+      }
+
+      .cls-6 {
+        fill: #8bc34a;
+      }
+
+      .cls-7 {
+        fill: #9c27b0;
+      }
+
+      .cls-8 {
+        fill: #03a9f4;
+      }
+
+      .cls-9 {
+        fill: #00bcd4;
+      }
+
+      .cls-10 {
+        fill: #2196f3;
+      }
+    </style>
+  </defs>
+  <circle id="Border" cx="8" cy="8" r="8"/>
+  <circle id="Outer_Circle" data-name="Outer Circle" class="cls-1" cx="8" cy="8" r="7"/>
+  <circle id="Inner_Circle" data-name="Inner Circle" cx="8" cy="8" r="6"/>
+  <rect class="cls-2" x="9" y="9" width="2" height="2"/>
+  <rect class="cls-3" x="7" y="9" width="2" height="2"/>
+  <rect class="cls-4" x="5" y="9" width="2" height="2"/>
+  <rect class="cls-5" x="9" y="7" width="2" height="2"/>
+  <rect class="cls-6" x="7" y="7" width="2" height="2"/>
+  <rect class="cls-7" x="5" y="7" width="2" height="2"/>
+  <rect class="cls-8" x="9" y="5" width="2" height="2"/>
+  <rect class="cls-9" x="7" y="5" width="2" height="2"/>
+  <rect class="cls-10" x="5" y="5" width="2" height="2"/>
+</svg>
