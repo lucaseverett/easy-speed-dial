@@ -27,6 +27,7 @@ export function Bookmarks() {
     firstRun,
     showAlertBanner,
     hideAlertBanner,
+    showTitle,
     switchTitle,
   } = useOptions();
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -183,6 +184,7 @@ export function Bookmarks() {
               : defaultFolder === currentFolder.id,
           newTab,
           handleLinkContextMenu,
+          showTitle,
           switchTitle,
         }}
       />

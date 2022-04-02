@@ -41,12 +41,14 @@ const styles = css`
   }
 `;
 
-export const Title = ({ title }) => {
+export const Title = ({ showTitle, title }) => {
   return (
-    <div className={styles}>
-      <span className="title" title={title}>
-        {title}
-      </span>
-    </div>
+    showTitle && (
+      <div className={styles}>
+        <span className="title" title={title}>
+          {title}
+        </span>
+      </div>
+    )
   );
 };

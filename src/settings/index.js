@@ -23,6 +23,7 @@ export const Settings = () => {
     customImage,
     themeOption,
     maxColumns,
+    showTitle,
     switchTitle,
     handleWallpaper,
     handleNewTab,
@@ -31,6 +32,7 @@ export const Settings = () => {
     handleCustomColor,
     handleCustomImage,
     handleThemeOption,
+    handleShowTitle,
     handleSwitchTitle,
   } = useOptions();
 
@@ -395,10 +397,9 @@ export const Settings = () => {
               </div>
               <div className="setting-wrapper setting-group">
                 <div className="setting-label">
-                  <div className="setting-title">Use Name in Dial</div>
+                  <div className="setting-title">Switch Title &amp; URL</div>
                   <div className="setting-description">
-                    The name of the bookmark will be displayed instead of the
-                    URL.
+                    The title will be displayed in the dial instead of the URL.
                   </div>
                 </div>
                 <div className="setting-option toggle">
@@ -407,6 +408,24 @@ export const Settings = () => {
                       type="checkbox"
                       checked={switchTitle}
                       onChange={() => handleSwitchTitle(!switchTitle)}
+                    />
+                    <div className="switch"></div>
+                  </label>
+                </div>
+              </div>
+              <div className="setting-wrapper setting-group">
+                <div className="setting-label">
+                  <div className="setting-title">Show Title</div>
+                  <div className="setting-description">
+                    The title will be displayed beneath the dial.
+                  </div>
+                </div>
+                <div className="setting-option toggle">
+                  <label className="switch-wrap">
+                    <input
+                      type="checkbox"
+                      checked={showTitle}
+                      onChange={() => handleShowTitle(!showTitle)}
                     />
                     <div className="switch"></div>
                   </label>

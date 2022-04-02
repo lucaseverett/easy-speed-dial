@@ -75,6 +75,13 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => {
     >
       <div className={styles} id="shift-focus">
         <div>
+          <h2>Version 2.3</h2>
+          <h3>New features</h3>
+          <ul>
+            <li>Added option to hide title</li>
+          </ul>
+        </div>
+        <div>
           <h2>Version 2.2</h2>
           <h3>Changes</h3>
           <ul>
