@@ -17,6 +17,7 @@ export function ProvideOptions({ children }) {
   const [defaultFolder, setFolder] = useState();
   const [maxColumns, setMaxColumns] = useState();
   const [newTab, setNewTab] = useState();
+  const [showTitle, setShowTitle] = useState(true);
   const [switchTitle, setSwitchTitle] = useState(false);
   const [showAlertBanner, setShowAlertBanner] = useState(false);
   const [firstRun, setFirstRun] = useState(false);
@@ -85,6 +86,10 @@ export function ProvideOptions({ children }) {
     browser.storage.local.set({ [`${apiVersion}-new-tab`]: value });
   }
 
+  function handleShowTitle(value) {
+    browser.storage.local.set({ [`${apiVersion}-show-title`]: value });
+  }
+
   function handleSwitchTitle(value) {
     browser.storage.local.set({ [`${apiVersion}-switch-title`]: value });
   }
@@ -113,6 +118,8 @@ export function ProvideOptions({ children }) {
       setMaxColumns(change[`${apiVersion}-max-columns`]["newValue"]);
     } else if (change[`${apiVersion}-new-tab`]) {
       setNewTab(change[`${apiVersion}-new-tab`]["newValue"]);
+    } else if (change[`${apiVersion}-show-title`]) {
+      setShowTitle(change[`${apiVersion}-show-title`]["newValue"]);
     } else if (change[`${apiVersion}-switch-title`]) {
       setSwitchTitle(change[`${apiVersion}-switch-title`]["newValue"]);
     }
@@ -132,6 +139,7 @@ export function ProvideOptions({ children }) {
       let defaultFolder = results[`${apiVersion}-default-folder`] || "1";
       let maxColumns = results[`${apiVersion}-max-columns`] || "7";
       let newTab = results[`${apiVersion}-new-tab`] || false;
+      let showTitle = results[`${apiVersion}-show-title`] ?? true;
       let switchTitle = results[`${apiVersion}-switch-title`] || false;
 
       if (!lastVersion) {
@@ -159,6 +167,7 @@ export function ProvideOptions({ children }) {
       setFolder(defaultFolder);
       setMaxColumns(maxColumns);
       setNewTab(newTab);
+      setShowTitle(showTitle);
       setSwitchTitle(switchTitle);
     });
 
@@ -225,6 +234,7 @@ export function ProvideOptions({ children }) {
         customColor,
         customImage,
         themeOption,
+        showTitle,
         switchTitle,
         firstRun,
         handleWallpaper,
@@ -235,6 +245,7 @@ export function ProvideOptions({ children }) {
         handleCustomColor,
         handleCustomImage,
         handleThemeOption,
+        handleShowTitle,
         handleSwitchTitle,
         openOptions,
       }}

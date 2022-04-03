@@ -5,7 +5,7 @@
     "email": "lucas@lucaseverett.dev",
     "url": "https://lucaseverett.dev"
   },
-  "verion": "2.2",
+  "verion": "2.3",
   "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
   "homepage": "https://toolbardial.com",
   "keywords": [
@@ -14,42 +14,45 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@emotion/css": "^11.1.3",
+    "@emotion/css": "^11.7.1",
     "focus-visible": "^5.2.0",
     "fontawesome": "^5.6.3",
-    "localforage": "^1.9.0",
-    "normalize.css": "^8.0.1",
+    "localforage": "^1.10.0",
+    "modern-normalize": "^1.1.0",
     "random-material-color": "^1.0.5",
-    "react": "^17.0.2",
-    "react-colorful": "^5.2.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0",
-    "sortablejs": "^1.13.0",
-    "webextension-polyfill": "^0.8.0"
+    "react": "^18.0.0",
+    "react-colorful": "^5.5.1",
+    "sortablejs": "^1.15.0",
+    "webextension-polyfill": "^0.9.0"
   },
   "scripts": {
     "dev": "web-ext run --source-dir ./dist-firefox/",
-    "start": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel ./src/demo/index.html --open --no-cache --dist-dir dist-demo",
-    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox && cpy public/firefox-fix/* dist-firefox/dist && cpy public/thumbs/* dist-firefox && cpy public/icons/* dist-firefox && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --dist-dir dist-firefox",
-    "build:chrome": "rimraf dist-chrome && cpy public/chrome/* dist-chrome && cpy public/thumbs/* dist-chrome && cpy public/icons/* dist-chrome && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --no-cache --public-url ./ --dist-dir dist-chrome",
-    "build:demo": "rimraf dist-demo && cpy public/thumbs/* dist-demo && cross-env PROJECT=demo parcel build ./src/demo/*.html --no-cache --public-url ./ --dist-dir dist-demo",
+    "start": "rimraf dist-demo && cpy public/thumbs/* dist-demo --flat && cross-env PROJECT=demo parcel ./src/demo/index.html --open --no-cache --dist-dir dist-demo",
+    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox --flat && cpy public/firefox-fix/* dist-firefox/dist --flat && cpy public/thumbs/* dist-firefox --flat && cpy public/icons/* dist-firefox --flat && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --dist-dir dist-firefox",
+    "build:chrome": "rimraf dist-chrome && cpy public/chrome/* dist-chrome --flat && cpy public/thumbs/* dist-chrome --flat && cpy public/icons/* dist-chrome --flat && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --no-cache --public-url ./ --dist-dir dist-chrome",
+    "build:demo": "rimraf dist-demo && cpy public/thumbs/* dist-demo --flat && cross-env PROJECT=demo parcel build ./src/demo/*.html --no-cache --public-url ./ --dist-dir dist-demo",
     "format": "prettier --write 'src/**/*.js'"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/plugin-transform-react-jsx": "^7.13.12",
-    "@emotion/babel-plugin": "^11.3.0",
-    "@parcel/babel-preset-env": "^2.0.0-nightly.713",
+    "@emotion/babel-plugin": "^11.7.2",
     "babel-plugin-module-resolver": "^4.1.0",
-    "cpy-cli": "^3.1.1",
+    "cpy-cli": "^4.1.0",
     "cross-env": "^7.0.3",
-    "parcel": "^2.0.0-nightly.711",
-    "prettier": "^2.3.1",
+    "parcel": "^2.4.1",
+    "prettier": "^2.6.1",
     "rimraf": "^3.0.2",
-    "web-ext": "^6.1.0"
+    "web-ext": "^6.8.0"
   },
   "browserslist": [
     "defaults",
     "not IE 11"
-  ]
+  ],
+  "@parcel/transformer-css": {
+    "drafts": {
+      "nesting": true
+    },
+    "pseudoClasses": {
+      "focusVisible": "focus-visible"
+    }
+  }
 }

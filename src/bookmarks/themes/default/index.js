@@ -13,6 +13,7 @@ export const Theme = ({
   changeFolder,
   newTab,
   handleLinkContextMenu,
+  showTitle,
   switchTitle,
 }) => (
   <>
@@ -34,7 +35,10 @@ export const Theme = ({
           >
             <Box {...{ name, title, switchTitle, type }} />
             <Title
-              {...{ title: switchTitle && url ? name.join(".") : title }}
+              {...{
+                showTitle,
+                title: switchTitle && url ? name.join(".") : title,
+              }}
             />
           </Link>
         </Fragment>

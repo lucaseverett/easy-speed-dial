@@ -27,6 +27,7 @@ export function ProvideOptions({ children }) {
   const [defaultFolder, setFolder] = useState();
   const [maxColumns, setMaxColumns] = useState();
   const [newTab, setNewTab] = useReducer(parse, false);
+  const [showTitle, setShowTitle] = useReducer(parse, true);
   const [switchTitle, setSwitchTitle] = useReducer(parse, false);
   const [showAlertBanner, setShowAlertBanner] = useState(false);
   const [firstRun, setFirstRun] = useState(false);
@@ -93,6 +94,11 @@ export function ProvideOptions({ children }) {
     setNewTab(value);
   }
 
+  function handleShowTitle(value) {
+    localStorage.setItem(`${apiVersion}-show-title`, value);
+    setShowTitle(value);
+  }
+
   function handleSwitchTitle(value) {
     localStorage.setItem(`${apiVersion}-switch-title`, value);
     setSwitchTitle(value);
@@ -121,6 +127,8 @@ export function ProvideOptions({ children }) {
       setMaxColumns(newValue);
     } else if (key === `${apiVersion}-new-tab`) {
       setNewTab(newValue);
+    } else if (key === `${apiVersion}-show-title`) {
+      setShowTitle(newValue);
     } else if (key === `${apiVersion}-switch-title`) {
       setSwitchTitle(newValue);
     }
@@ -164,6 +172,7 @@ export function ProvideOptions({ children }) {
     setFolder(localStorage.getItem(`${apiVersion}-default-folder`) || "1");
     setMaxColumns(localStorage.getItem(`${apiVersion}-max-columns`) || "7");
     setNewTab(localStorage.getItem(`${apiVersion}-new-tab`) || false);
+    setShowTitle(localStorage.getItem(`${apiVersion}-show-title`) ?? true);
     setSwitchTitle(localStorage.getItem(`${apiVersion}-switch-title`) || false);
 
     window.addEventListener("storage", changeOptions);
@@ -227,6 +236,7 @@ export function ProvideOptions({ children }) {
         customColor,
         customImage,
         themeOption,
+        showTitle,
         switchTitle,
         firstRun,
         handleWallpaper,
@@ -237,6 +247,7 @@ export function ProvideOptions({ children }) {
         handleCustomColor,
         handleCustomImage,
         handleThemeOption,
+        handleShowTitle,
         handleSwitchTitle,
         openOptions,
       }}

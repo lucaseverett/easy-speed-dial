@@ -1,25 +1,9 @@
-@import "normalize.css";
+@import "npm:modern-normalize";
 @import "./fonts.css";
-
-body,
-html {
-  margin: 0;
-  padding: 0;
-}
 
 body {
   font-family: initial;
   font-size: initial;
-}
-
-html {
-  box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
 }
 
 * {
