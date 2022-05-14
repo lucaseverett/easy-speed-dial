@@ -28,15 +28,18 @@ export const Grid = ({ children, isRoot }) => {
 
   const styles = css`
     display: grid;
-    grid-template-columns: repeat(auto-fill, 210px);
+    grid-template-columns: repeat(auto-fill, 194px);
     max-width: ${maxColumns === "Unlimited"
       ? "100%"
-      : `${Number(maxColumns) * 210 + (Number(maxColumns) - 1) * 25 + 140}px`};
-    row-gap: 19px;
-    column-gap: 25px;
+      : `${Number(maxColumns) * 194 + (Number(maxColumns) - 1) * 41 + 140}px`};
+    row-gap: 27px;
+    .attach-title & {
+      row-gap: 40px;
+    }
+    column-gap: 41px;
     justify-content: center;
     margin: ${isRoot ? "70px auto" : "0 auto 70px"};
-    padding: 0 70px;
+    padding: 8px 70px 0;
     .sortable-ghost {
       visibility: hidden;
     }

@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { settingsScrollbarStyles } from "../styles/scrollbars.js";
+import scrollbarStyles from "../styles/scrollbars.js";
 import { defaultBtn } from "../styles/buttons.js";
 import { select } from "../styles/inputs.js";
 
@@ -44,11 +44,10 @@ export const styles = css`
 
   font-family: "Roboto", sans-serif;
   height: 100vh;
-  ${settingsScrollbarStyles}
-  transition: color 0.15s ease-in-out,
-            background-color 0.15s ease-in-out,
-            background-image 0.15s ease-in-out, border 0.15s ease-in-out,
-            box-shadow 0.15s ease-in-out;
+  ${scrollbarStyles}
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    background-image 0.15s ease-in-out, border 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 
   .options-background {
     height: 100%;

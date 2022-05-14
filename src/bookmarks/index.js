@@ -2,13 +2,12 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { css } from "@emotion/css";
 import { Theme } from "./themes/default";
 import { AlertBanner } from "./AlertBanner.js";
-import { WhatsNew } from "./WhatsNew.js";
-import { AboutModal } from "./AboutModal.js";
+import { WhatsNew } from "./WhatsNew";
+import { AboutModal } from "./AboutModal";
 import { ContextMenu } from "useContextMenu";
 import { useOptions } from "useOptions";
 import { useBookmarks } from "useBookmarks";
 import { wallpaperStyles } from "../wallpapers/styles.js";
-import { mainScrollbarStyles } from "../styles/scrollbars.js";
 
 const userAgent = navigator.userAgent.toLowerCase();
 const isMacOS = userAgent.includes("macintosh") ? true : false;
@@ -29,6 +28,7 @@ export function Bookmarks() {
     hideAlertBanner,
     showTitle,
     switchTitle,
+    attachTitle,
   } = useOptions();
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [linkID, setLinkID] = useState();
@@ -110,24 +110,38 @@ export function Bookmarks() {
     focusRef.current.focus();
   }, [currentFolder]);
 
+  useLayoutEffect(() => {
+    document.body.className = [
+      themeOption === "System Theme"
+        ? colorScheme
+        : themeOption === "Light"
+        ? "color-scheme-light"
+        : "color-scheme-dark",
+      wallpaper,
+      wallpaperStyles({ wallpaper, customColor, customImage }),
+      isChrome ? "chrome" : "firefox",
+      isMacOS ? "mac" : "windows",
+      showTitle ? "show-title" : "hide-title",
+      attachTitle ? "attach-title" : "normal-title",
+    ].join(" ");
+  }, [
+    themeOption,
+    colorScheme,
+    wallpaper,
+    customColor,
+    customImage,
+    showTitle,
+    attachTitle,
+  ]);
+
   return (
     <div
       ref={focusRef}
       tabIndex="-1"
       className={[
-        themeOption === "System Theme"
-          ? colorScheme
-          : themeOption === "Light"
-          ? "color-scheme-light"
-          : "color-scheme-dark",
-        wallpaper,
-        wallpaperStyles({ wallpaper, customColor, customImage }),
-        isChrome ? "chrome" : "firefox",
-        isMacOS ? "mac" : "windows",
         css`
           outline: 0;
           overflow: auto;
-          ${mainScrollbarStyles}
           height: 100vh;
           font-family: "Roboto", sans-serif;
           transition: color 0.15s ease-in-out,

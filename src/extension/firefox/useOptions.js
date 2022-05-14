@@ -17,6 +17,7 @@ export function ProvideOptions({ children }) {
   const [newTab, setNewTab] = useState();
   const [showTitle, setShowTitle] = useState(true);
   const [switchTitle, setSwitchTitle] = useState(false);
+  const [attachTitle, setAttachTitle] = useState(false);
   const [showAlertBanner, setShowAlertBanner] = useState(false);
   const [firstRun, setFirstRun] = useState(false);
 
@@ -91,6 +92,10 @@ export function ProvideOptions({ children }) {
     browser.storage.local.set({ [`${apiVersion}-switch-title`]: value });
   }
 
+  function handleAttachTitle(value) {
+    browser.storage.local.set({ [`${apiVersion}-attach-title`]: value });
+  }
+
   function hideAlertBanner() {
     setShowAlertBanner(false);
   }
@@ -119,6 +124,8 @@ export function ProvideOptions({ children }) {
       setShowTitle(change[`${apiVersion}-show-title`]["newValue"]);
     } else if (change[`${apiVersion}-switch-title`]) {
       setSwitchTitle(change[`${apiVersion}-switch-title`]["newValue"]);
+    } else if (change[`${apiVersion}-attach-title`]) {
+      setAttachTitle(change[`${apiVersion}-attach-title`]["newValue"]);
     }
   }
 
@@ -139,6 +146,7 @@ export function ProvideOptions({ children }) {
       let newTab = results[`${apiVersion}-new-tab`] || false;
       let showTitle = results[`${apiVersion}-show-title`] ?? true;
       let switchTitle = results[`${apiVersion}-switch-title`] || false;
+      let attachTitle = results[`${apiVersion}-attach-title`] || false;
 
       if (!lastVersion) {
         // store version upon first run
@@ -167,6 +175,7 @@ export function ProvideOptions({ children }) {
       setNewTab(newTab);
       setShowTitle(showTitle);
       setSwitchTitle(switchTitle);
+      setAttachTitle(attachTitle);
     });
 
     browser.storage.onChanged.addListener(changeOptions);
@@ -234,6 +243,7 @@ export function ProvideOptions({ children }) {
         themeOption,
         showTitle,
         switchTitle,
+        attachTitle,
         firstRun,
         handleWallpaper,
         handleNewTab,
@@ -245,6 +255,7 @@ export function ProvideOptions({ children }) {
         handleThemeOption,
         handleShowTitle,
         handleSwitchTitle,
+        handleAttachTitle,
         openOptions,
       }}
     >

@@ -1,9 +1,14 @@
 import { css } from "@emotion/css";
 
 const styles = css`
-  padding-top: 2px;
   text-align: center;
   font-size: 13px;
+  padding-top: 10px;
+
+  .attach-title & {
+    padding: 0;
+  }
+
   .title {
     text-overflow: ellipsis;
     .windows & {
@@ -22,21 +27,28 @@ const styles = css`
       padding: 3px 8px 2px;
     }
     border-radius: 10px;
+
     white-space: nowrap;
     overflow: hidden;
-    max-width: 194px;
     display: inline-block;
     .color-scheme-light & {
-      background-color: rgba(255, 255, 255, 0.8);
-      color: #424242;
+      background-color: rgba(245, 245, 245, 0.75);
+      color: #373737;
     }
     .color-scheme-dark & {
-      background-color: rgba(33, 33, 33, 0.8);
-      color: #e0e0e0;
+      background-color: rgba(55, 55, 55, 0.75);
+      color: #eeeeee;
     }
     a.focus-visible & {
       background-color: #90caf9;
       color: #424242;
+    }
+
+    max-width: 100%;
+    .attach-title & {
+      border-radius: 0 0 6px 6px;
+      width: 100%;
+      display: block;
     }
   }
 `;

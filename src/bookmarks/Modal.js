@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
-import { modalScrollbarStyles } from "../styles/scrollbars.js";
+import scrollbarStyles from "../styles/scrollbars.js";
 import { dismissBtn } from "../styles/buttons.js";
 
 export const Modal = ({
@@ -10,6 +10,7 @@ export const Modal = ({
   title,
   width,
   height,
+  initialFocus,
   shiftTabFocus,
 }) => {
   const styles = css`
@@ -29,7 +30,7 @@ export const Modal = ({
       --modal-header-background-color: #bdbdbd;
       --modal-main-background-color: #e0e0e0;
       --modal-main-border-color: #9e9e9e;
-      --modal-box-shadow: 0 0 0 5px #bdbdbd, 10px 14px 13px rgb(0, 0, 0, 0.3);
+      --modal-box-shadow: 10px 14px 13px rgb(0, 0, 0, 0.3);
     }
 
     .color-scheme-dark & {
@@ -38,8 +39,7 @@ export const Modal = ({
       --modal-header-background-color: #373737;
       --modal-main-background-color: #424242;
       --modal-main-border-color: #212121;
-      --modal-box-shadow: 0 0 0 5px #373737, 0 0 0 6px #484848,
-        10px 14px 13px rgb(0, 0, 0, 0.3);
+      --modal-box-shadow: 0 0 0 1px #484848, 10px 14px 13px rgb(0, 0, 0, 0.3);
     }
 
     .modal-wrapper {
@@ -80,7 +80,7 @@ export const Modal = ({
 
     .scroll-box {
       overflow: auto;
-      ${modalScrollbarStyles}
+      ${scrollbarStyles}
     }
 
     .dismiss {
@@ -96,13 +96,16 @@ export const Modal = ({
       .modal-content {
         max-height: calc(100vh - 40px);
         height: initial;
-        border-radius: 6px;
+        border-radius: 11px;
         box-shadow: var(--modal-box-shadow);
+        border-left: 5px solid var(--modal-header-background-color);
+        border-right: 5px solid var(--modal-header-background-color);
+        border-bottom: 5px solid var(--modal-header-background-color);
       }
       header {
         padding: 0 4px 0 25px;
-        margin-top: -5px;
         height: 49px;
+        border-radius: 6px;
       }
       main {
         border-radius: 6px;
@@ -118,7 +121,9 @@ export const Modal = ({
   const focusRef = useRef(null);
 
   useEffect(() => {
-    if (focusRef.current) {
+    if (initialFocus) {
+      initialFocus().focus();
+    } else if (focusRef.current) {
       focusRef.current.focus();
     }
   }, []);

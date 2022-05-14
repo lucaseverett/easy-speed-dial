@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
   "name": "Toolbar Dial",
-  "version": "2.3",
+  "version": "2.4",
   "permissions": ["bookmarks", "storage"],
-  "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
+  "description": "Toolbar Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.",
   "chrome_settings_overrides": {
     "homepage": "index.html"
   },

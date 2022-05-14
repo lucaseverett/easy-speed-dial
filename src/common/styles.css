@@ -4,12 +4,12 @@
 body {
   font-family: initial;
   font-size: initial;
-}
 
-* {
-  scrollbar-width: thin;
-}
+  &.color-scheme-dark {
+    color-scheme: dark;
+  }
 
-*::-webkit-scrollbar {
-  width: 7px;
+  &.color-scheme-light {
+    color-scheme: light;
+  }
 }

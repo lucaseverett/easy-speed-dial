@@ -29,6 +29,7 @@ export function ProvideOptions({ children }) {
   const [newTab, setNewTab] = useReducer(parse, false);
   const [showTitle, setShowTitle] = useReducer(parse, true);
   const [switchTitle, setSwitchTitle] = useReducer(parse, false);
+  const [attachTitle, setAttachTitle] = useReducer(parse, false);
   const [showAlertBanner, setShowAlertBanner] = useState(false);
   const [firstRun, setFirstRun] = useState(false);
 
@@ -104,6 +105,11 @@ export function ProvideOptions({ children }) {
     setSwitchTitle(value);
   }
 
+  function handleAttachTitle(value) {
+    localStorage.setItem(`${apiVersion}-attach-title`, value);
+    setAttachTitle(value);
+  }
+
   function hideAlertBanner() {
     setShowAlertBanner(false);
   }
@@ -131,6 +137,8 @@ export function ProvideOptions({ children }) {
       setShowTitle(newValue);
     } else if (key === `${apiVersion}-switch-title`) {
       setSwitchTitle(newValue);
+    } else if (key === `${apiVersion}-attach-title`) {
+      setAttachTitle(newValue);
     }
   }
 
@@ -174,18 +182,19 @@ export function ProvideOptions({ children }) {
     setNewTab(localStorage.getItem(`${apiVersion}-new-tab`) || false);
     setShowTitle(localStorage.getItem(`${apiVersion}-show-title`) ?? true);
     setSwitchTitle(localStorage.getItem(`${apiVersion}-switch-title`) || false);
+    setAttachTitle(localStorage.getItem(`${apiVersion}-attach-title`) || false);
 
     window.addEventListener("storage", changeOptions);
 
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addListener(systemThemeChanged);
+      .addEventListener("change", systemThemeChanged);
 
     return () => {
       window.removeEventListener("storage", changeOptions);
       window
         .matchMedia("(prefers-color-scheme: dark)")
-        .removeListener(systemThemeChanged);
+        .removeEventListener("change", systemThemeChanged);
     };
   }, []);
 
@@ -221,7 +230,7 @@ export function ProvideOptions({ children }) {
   }
 
   function openOptions() {
-    window.open("/options", "_blank");
+    window.open("/options.html", "_blank");
   }
 
   return (
@@ -238,6 +247,7 @@ export function ProvideOptions({ children }) {
         themeOption,
         showTitle,
         switchTitle,
+        attachTitle,
         firstRun,
         handleWallpaper,
         handleNewTab,
@@ -249,6 +259,7 @@ export function ProvideOptions({ children }) {
         handleThemeOption,
         handleShowTitle,
         handleSwitchTitle,
+        handleAttachTitle,
         openOptions,
       }}
     >

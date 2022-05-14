@@ -4,6 +4,17 @@ const styles = css`
   text-decoration: none;
   cursor: pointer;
   outline: none;
+
+  .attach-title & {
+    box-shadow: 0 3px 3px rgb(0, 0, 0, 0.2);
+    border-radius: 6px;
+
+    &.focus-visible {
+      box-shadow: 0 3px 3px rgb(0, 0, 0, 0.2);
+      outline: 5px solid #90caf9;
+      outline-offset: -5px;
+    }
+  }
 `;
 
 export const Link = ({

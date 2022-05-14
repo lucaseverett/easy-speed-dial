@@ -4,8 +4,7 @@ export const wallpapers = [
     title: "Sand Dune",
     filename: "SandDune.jpg",
     thumbnail: "SandDune_thumb.png",
-    url:
-      "https://pixabay.com/photos/sand-dune-background-nature-desert-2848098/",
+    url: "https://pixabay.com/photos/sand-dune-background-nature-desert-2848098/",
     category: "nature",
   },
   {
@@ -29,8 +28,7 @@ export const wallpapers = [
     title: "Beach Forest",
     filename: "BeachForest.jpg",
     thumbnail: "BeachForest_thumb.png",
-    url:
-      "https://www.pexels.com/photo/seashore-near-on-forest-trees-on-bird-s-eye-view-1123484/",
+    url: "https://www.pexels.com/photo/seashore-near-on-forest-trees-on-bird-s-eye-view-1123484/",
     category: "nature",
   },
   {
@@ -59,18 +57,18 @@ export const wallpapers = [
   },
   {
     id: "DesertDay",
-    title: "Desert Day",
-    filename: "DesertDay.png",
-    thumbnail: "DesertDay_thumb.png",
-    url: "https://stock.adobe.com/101124546",
+    title: "Dunes Day",
+    filename: "DunesDay.png",
+    thumbnail: "DunesDay_thumb.png",
+    url: "https://lucaseverett.dev",
     category: "nature",
   },
   {
     id: "DesertNight",
-    title: "Desert Night",
-    filename: "DesertNight.png",
-    thumbnail: "DesertNight_thumb.png",
-    url: "https://stock.adobe.com/315957514",
+    title: "Dunes Night",
+    filename: "DunesNight.png",
+    thumbnail: "DunesNight_thumb.png",
+    url: "https://lucaseverett.dev",
     category: "nature",
   },
   {
@@ -110,8 +108,7 @@ export const wallpapers = [
     title: "Abstract Purple",
     filename: "AbstractPurple.jpg",
     thumbnail: "AbstractPurple_thumb.png",
-    url:
-      "https://pixabay.com/illustrations/purple-abstract-background-1780371/",
+    url: "https://pixabay.com/illustrations/purple-abstract-background-1780371/",
     category: "abstract",
   },
   {

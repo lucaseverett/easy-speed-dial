@@ -1,11 +1,12 @@
-import { render } from "react-dom";
 import "../../common/styles.css";
+import { createRoot } from "react-dom/client";
 import { Settings } from "../../settings/index.js";
 import { ProvideOptions } from "./useOptions.js";
 import { ProvideBookmarks } from "./useBookmarks.js";
 import "focus-visible";
+const root = createRoot(document.querySelector("#app"));
 
-render(
+root.render(
   <ProvideOptions>
     <ProvideBookmarks>
       <Settings />

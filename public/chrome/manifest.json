@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Toolbar Dial",
-  "version": "2.3",
+  "version": "2.4",
   "permissions": ["bookmarks", "storage"],
-  "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
+  "description": "Toolbar Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
@@ -12,15 +12,15 @@
     "open_in_tab": true
   },
   "icons": {
-    "16": "16.svg",
-    "32": "32.svg",
-    "48": "48.svg",
-    "64": "64.svg",
-    "96": "96.svg",
-    "128": "128.svg",
-    "256": "256.svg",
-    "512": "512.svg",
-    "1024": "1024.svg"
+    "16": "16.png",
+    "32": "32.png",
+    "48": "48.png",
+    "64": "64.png",
+    "96": "96.png",
+    "128": "128.png",
+    "256": "256.png",
+    "512": "512.png",
+    "1024": "1024.png"
   },
   "author": "Lucas Everett",
   "homepage_url": "https://toolbardial.com"

@@ -12,12 +12,8 @@ export const ContextMenu = ({
   handleEscapeContext,
   hideContextMenu,
 }) => {
-  const {
-    openLinkTab,
-    openAllTab,
-    deleteFolder,
-    deleteBookmark,
-  } = useBookmarks();
+  const { openLinkTab, openAllTab, deleteFolder, deleteBookmark } =
+    useBookmarks();
   const { openOptions } = useOptions();
 
   const contextRef = useRef(null);
@@ -110,8 +106,8 @@ export const ContextMenu = ({
   }
 
   function handleopenOptions() {
-    hideContextMenu();
     openOptions();
+    hideContextMenu();
   }
 
   function copyURL() {
@@ -128,30 +124,36 @@ export const ContextMenu = ({
     position: absolute;
     top: ${top}px;
     left: ${left}px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
+    font-size: 14px;
     z-index: 1;
+    border-radius: 6px;
 
-    font-size: 12px;
     .firefox & button {
       text-transform: capitalize;
     }
-    box-shadow: 0 4px 3px rgb(0, 0, 0, 0.3);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
     white-space: nowrap;
     .lowercase {
       text-transform: lowercase;
     }
     ul {
       list-style: none;
-      padding: 5px 0;
+      padding: 3px;
       margin: 0;
     }
     li {
       button {
         text-align: left;
-        padding: 5px 20px;
+        padding: 6px;
         width: 100%;
         border: 0;
         background-color: transparent;
+        border-radius: 3px;
         :hover,
         :focus {
           background-color: #1565c0;

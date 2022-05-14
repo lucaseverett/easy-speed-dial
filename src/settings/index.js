@@ -6,7 +6,7 @@ import { wallpapers } from "../wallpapers";
 import { wallpaperStyles } from "../wallpapers/styles.js";
 import { css } from "@emotion/css";
 import { ColorPicker } from "./ColorPicker.js";
-import { About } from "../bookmarks/About.js";
+import { About } from "../bookmarks/AboutModal/About.js";
 
 const userAgent = navigator.userAgent.toLowerCase();
 const isMacOS = userAgent.includes("macintosh") ? true : false;
@@ -25,6 +25,7 @@ export const Settings = () => {
     maxColumns,
     showTitle,
     switchTitle,
+    attachTitle,
     handleWallpaper,
     handleNewTab,
     handleDefaultFolder,
@@ -34,6 +35,7 @@ export const Settings = () => {
     handleThemeOption,
     handleShowTitle,
     handleSwitchTitle,
+    handleAttachTitle,
   } = useOptions();
 
   const focusRef = useRef(null);
@@ -431,6 +433,26 @@ export const Settings = () => {
                   </label>
                 </div>
               </div>
+              {showTitle && (
+                <div className="setting-wrapper setting-group">
+                  <div className="setting-label">
+                    <div className="setting-title">Attach Title to Dial</div>
+                    <div className="setting-description">
+                      The title will be attached to the dial.
+                    </div>
+                  </div>
+                  <div className="setting-option toggle">
+                    <label className="switch-wrap">
+                      <input
+                        type="checkbox"
+                        checked={attachTitle}
+                        onChange={() => handleAttachTitle(!attachTitle)}
+                      />
+                      <div className="switch"></div>
+                    </label>
+                  </div>
+                </div>
+              )}
               <div className="setting-wrapper">
                 <About />
               </div>

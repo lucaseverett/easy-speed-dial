@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
-import logo from "url:../../public/icons/128.svg";
-import { appVersion } from "../common/version.js";
+import logo from "url:../../../public/icons/128.svg";
+import { appVersion } from "../../common/version.js";
 
 const styles = css`
   line-height: 1.5;
@@ -52,7 +52,7 @@ const styles = css`
 export const About = () => (
   <div className={styles}>
     <div className="about">
-      <img src={logo} />
+      <img src={logo} alt="Toolbar Dial" />
       <div>
         <p>Version {appVersion}</p>
         <p>

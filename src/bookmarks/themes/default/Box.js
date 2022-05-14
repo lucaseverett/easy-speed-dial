@@ -9,8 +9,6 @@ export const Box = ({ name, title, switchTitle, type }) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    margin: 8px;
     color: #fff;
 
     font-weight: 500;
@@ -23,11 +21,19 @@ export const Box = ({ name, title, switchTitle, type }) => {
       text-align: center;
       font-size: 80px;
     }
-    a.focus-visible & {
-      box-shadow: 0 4px 3px rgb(0, 0, 0, 0.3), inset 0 0 0 5px #90caf9;
+    .normal-title a.focus-visible & {
+      outline: 5px solid #90caf9;
+      outline-offset: -5px;
     }
-    box-shadow: 0 4px 3px rgb(0, 0, 0, 0.3);
     text-shadow: ${type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none"};
+
+    .normal-title & {
+      box-shadow: 0 3px 3px rgb(0, 0, 0, 0.2);
+    }
+
+    .attach-title.show-title & {
+      border-radius: 6px 6px 0 0;
+    }
   `;
 
   return (

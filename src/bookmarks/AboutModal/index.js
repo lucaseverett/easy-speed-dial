@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { Modal } from "./Modal.js";
+import { Modal } from "../Modal.js";
 import { About } from "./About.js";
 
 const styles = css`
