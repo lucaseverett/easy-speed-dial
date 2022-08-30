@@ -5,7 +5,7 @@
     "email": "lucas@lucaseverett.dev",
     "url": "https://lucaseverett.dev"
   },
-  "verion": "2.4",
+  "verion": "2.4.2",
   "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
   "homepage": "https://toolbardial.com",
   "keywords": [
@@ -14,16 +14,16 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@emotion/css": "^11.9.0",
+    "@emotion/css": "^11.10.0",
     "focus-visible": "^5.2.0",
     "fontawesome": "^5.6.3",
     "localforage": "^1.10.0",
     "modern-normalize": "^1.1.0",
     "random-material-color": "^1.0.5",
-    "react": "^18.1.0",
-    "react-colorful": "^5.5.1",
+    "react": "^18.2.0",
+    "react-colorful": "^5.6.1",
     "sortablejs": "^1.15.0",
-    "webextension-polyfill": "^0.9.0"
+    "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
     "dev": "web-ext run --source-dir ./dist-firefox/",
@@ -34,14 +34,15 @@
     "format": "prettier --write 'src/**/*.js'"
   },
   "devDependencies": {
-    "@emotion/babel-plugin": "^11.9.2",
+    "@emotion/babel-plugin": "^11.10.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "cpy-cli": "^4.1.0",
     "cross-env": "^7.0.3",
-    "parcel": "^2.5.0",
-    "prettier": "^2.6.2",
+    "parcel": "^2.7.0",
+    "prettier": "^2.7.1",
+    "process": "^0.11.10",
     "rimraf": "^3.0.2",
-    "web-ext": "^6.8.0"
+    "web-ext": "^7.2.0"
   },
   "browserslist": [
     "defaults",

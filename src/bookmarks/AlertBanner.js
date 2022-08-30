@@ -10,7 +10,7 @@ const styles = css`
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background-color: #4527a0;
+  background: linear-gradient(to right, #4527a0, #6a1b9a);
   color: #fff;
   font-size: 16px;
   .message {
@@ -43,17 +43,20 @@ const styles = css`
   }
   button.whats-new {
     ${defaultBtn}
-    :focus {
-      box-shadow: 0 0 0 4px #7953d2;
+
+    .color-scheme-light &, .color-scheme-dark & {
+      --btn-background-color: #7c43bd;
+      --btn-text-color: #fff;
+      --btn-hover-background-color: #9c4dcc;
+      --btn-hover-text-color: #fff;
+      --btn-focus-box-shadow-color: #fff;
+      --btn-selected-background-color: #bcbcbc;
     }
   }
   button.dismiss {
     ${dismissBtn}
     :hover {
-      background-color: #7953d2;
-    }
-    :focus {
-      background-color: #7953d2;
+      background-color: #9c4dcc;
     }
   }
   .buttons {

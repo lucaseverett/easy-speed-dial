@@ -74,6 +74,16 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => (
   >
     <div className={styles} id="shift-focus">
       <div>
+        <h2>Version 2.4.2</h2>
+        <h3>Changes</h3>
+        <ul>
+          <li>
+            The title is now centered when using the option Switch Title and
+            URL.
+          </li>
+        </ul>
+      </div>
+      <div>
         <h2>Version 2.4</h2>
         <h3>New features</h3>
         <ul>

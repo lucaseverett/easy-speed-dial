@@ -399,7 +399,7 @@ export const Settings = () => {
               </div>
               <div className="setting-wrapper setting-group">
                 <div className="setting-label">
-                  <div className="setting-title">Switch Title &amp; URL</div>
+                  <div className="setting-title">Switch Title and URL</div>
                   <div className="setting-description">
                     The title will be displayed in the dial instead of the URL.
                   </div>

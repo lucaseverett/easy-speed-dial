@@ -37,6 +37,7 @@ export const Name = ({ name, type }) => {
           padding: ${title ? "0" : padding ? "18px 0 3px" : "3px 0"};
           font-size: 24px;
           transform: ${scale ? `scale(${scale})` : "initial"};
+          text-align: center;
         `}
       >
         {children}
