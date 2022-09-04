@@ -1,0 +1,17 @@
+@import "modern-normalize";
+@import "fonts/roboto.css";
+
+body {
+  font-family: initial;
+  font-size: initial;
+}
+
+.scrollbars {
+  @nest .color-scheme-light & {
+    scrollbar-color: #8d8d8d #eeeeee;
+  }
+
+  @nest .color-scheme-dark & {
+    scrollbar-color: #9e9e9e #373737;
+  }
+}

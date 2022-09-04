@@ -1,0 +1,52 @@
+.About {
+  line-height: 1.5;
+
+  & .about {
+    display: flex;
+    align-items: center;
+  }
+
+  & .copyright {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  & .logo {
+    padding-right: 25px;
+
+    & svg {
+      display: block;
+    }
+  }
+
+  @nest .color-scheme-light & a {
+    color: inherit;
+  }
+
+  @nest .color-scheme-dark & a {
+    color: inherit;
+  }
+
+  & p {
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  & a {
+    &:hover {
+      text-decoration: none;
+    }
+
+    &:focus {
+      background-color: #90caf9;
+      color: #000;
+      outline: none;
+    }
+  }
+}

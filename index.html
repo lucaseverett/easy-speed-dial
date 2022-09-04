@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Toolbar Dial</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="src/common/favicon.ico" sizes="any" />
+    <link rel="icon" href="public/chrome/icons/32.png" type="image/png" />
+    <link rel="icon" href="public/firefox/icons/32.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="src/common/apple-touch-icon.png" />
+    <link
+      rel="preload"
+      href="src/styles/fonts/roboto-v30-vietnamese_latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-500.woff2"
+      as="font"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="src/styles/fonts/roboto-v30-vietnamese_latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.woff2"
+      as="font"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="src/styles/fonts/roboto-v30-vietnamese_latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.woff2"
+      as="font"
+      crossorigin
+    />
+    <style>
+      body {
+        background-color: #f5f5f5;
+
+        @media (prefers-color-scheme: dark) {
+          background-color: #212121;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="src/index.jsx" type="module"></script>
+  </body>
+</html>

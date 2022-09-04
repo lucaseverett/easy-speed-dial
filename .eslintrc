@@ -1,0 +1,9 @@
+{
+  "extends": ["eslint:recommended", "react-app", "plugin:jsx-a11y/recommended"],
+  "ignorePatterns": ["*.test.*"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "plugins": ["jsx-a11y"],
+  "root": true
+}

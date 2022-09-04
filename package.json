@@ -1,22 +1,21 @@
 {
   "name": "toolbar-dial",
-  "author": {
-    "name": "Lucas Everett",
-    "email": "lucas@lucaseverett.dev",
-    "url": "https://lucaseverett.dev"
+  "scripts": {
+    "build": "npm run build:demo",
+    "build:chrome": "cross-env PROJECT=chrome vite build",
+    "build:demo": "vite build",
+    "build:firefox": "cross-env PROJECT=firefox vite build",
+    "coverage": "vitest run --coverage",
+    "dev": "vite",
+    "format": "prettier --write 'index.html' 'options.html' 'src/**/*.{css,js,jsx}'",
+    "lint": "eslint --ext .js,.jsx src",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest"
   },
-  "verion": "2.4.2",
-  "description": "Toolbar Dial is a browser extension that replaces the New Tab page with a colorful grid of bookmarks and folders.",
-  "homepage": "https://toolbardial.com",
-  "keywords": [
-    "speed dial",
-    "toolbar dial"
-  ],
-  "license": "MIT",
   "dependencies": {
-    "@emotion/css": "^11.10.0",
-    "focus-visible": "^5.2.0",
-    "fontawesome": "^5.6.3",
+    "classnames": "^2.3.1",
     "localforage": "^1.10.0",
     "modern-normalize": "^1.1.0",
     "random-material-color": "^1.0.5",
@@ -25,35 +24,22 @@
     "sortablejs": "^1.15.0",
     "webextension-polyfill": "^0.10.0"
   },
-  "scripts": {
-    "dev": "web-ext run --source-dir ./dist-firefox/",
-    "start": "rimraf dist-demo && cpy public/thumbs/* dist-demo --flat && cross-env PROJECT=demo parcel ./src/demo/*.html --open --no-cache --dist-dir dist-demo",
-    "build:firefox": "rimraf dist-firefox && cpy public/firefox/* dist-firefox --flat && cpy public/firefox-fix/* dist-firefox/dist --flat && cpy public/thumbs/* dist-firefox --flat && cpy public/icons/* dist-firefox --flat && cross-env PROJECT=firefox parcel build ./src/extension/firefox/*.html --no-cache --public-url ./ --dist-dir dist-firefox",
-    "build:chrome": "rimraf dist-chrome && cpy public/chrome/* dist-chrome --flat && cpy public/thumbs/* dist-chrome --flat && cpy public/icons/* dist-chrome --flat && cross-env PROJECT=chrome parcel build ./src/extension/chrome/*.html --no-cache --public-url ./ --dist-dir dist-chrome",
-    "build:demo": "rimraf dist-demo && cpy public/thumbs/* dist-demo --flat && cross-env PROJECT=demo parcel build ./src/demo/*.html --no-cache --public-url ./ --dist-dir dist-demo",
-    "format": "prettier --write 'src/**/*.js'"
-  },
   "devDependencies": {
-    "@emotion/babel-plugin": "^11.10.0",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "cpy-cli": "^4.1.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@vitejs/plugin-react": "^2.0.1",
+    "@vitest/coverage-istanbul": "^0.22.1",
+    "@vitest/ui": "^0.22.1",
     "cross-env": "^7.0.3",
-    "parcel": "^2.7.0",
+    "eslint": "^8.23.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "jsdom": "^20.0.0",
+    "postcss-preset-env": "^7.8.0",
     "prettier": "^2.7.1",
-    "process": "^0.11.10",
-    "rimraf": "^3.0.2",
+    "vite": "^3.0.9",
+    "vitest": "^0.22.1",
     "web-ext": "^7.2.0"
-  },
-  "browserslist": [
-    "defaults",
-    "not IE 11"
-  ],
-  "@parcel/transformer-css": {
-    "drafts": {
-      "nesting": true
-    },
-    "pseudoClasses": {
-      "focusVisible": "focus-visible"
-    }
   }
 }

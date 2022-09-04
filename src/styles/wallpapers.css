@@ -1,0 +1,109 @@
+.Wallpapers {
+  min-height: 100vh;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  background-color: var(--background-color);
+
+  &.light-wallpaper {
+    --background-color: #f5f5f5;
+  }
+
+  &.dark-wallpaper {
+    --background-color: #212121;
+  }
+
+  &.pink-wallpaper {
+    --background-color: #f8bbd0;
+  }
+
+  &.green-wallpaper {
+    --background-color: #b2dfdb;
+  }
+
+  &.blue-wallpaper {
+    --background-color: #bbdefb;
+  }
+
+  &.brown-wallpaper {
+    --background-color: #d7ccc8;
+  }
+  &.yellow-wallpaper {
+    --background-color: #ffe082;
+  }
+
+  &.SandDune {
+    background-image: url(https://media.toolbardial.com/SandDune.jpg);
+  }
+
+  &.WavySand {
+    background-image: url(https://media.toolbardial.com/WavySand.jpg);
+  }
+
+  &.Galaxy {
+    background-image: url(https://media.toolbardial.com/Galaxy.jpg);
+  }
+
+  &.BeachForest {
+    background-image: url(https://media.toolbardial.com/BeachForest.jpg);
+  }
+
+  &.Water {
+    background-image: url(https://media.toolbardial.com/Water.jpg);
+  }
+
+  &.Flowers {
+    background-image: url(https://media.toolbardial.com/Flowers.jpg);
+  }
+
+  &.SnowCoveredMountainwithSunnySky {
+    background-image: url(https://media.toolbardial.com/SnowCoveredMountainwithSunnySky.jpg);
+  }
+
+  &.DesertDay {
+    background-image: url(https://media.toolbardial.com/DunesDay.png);
+  }
+
+  &.DesertNight {
+    background-image: url(https://media.toolbardial.com/DunesNight.png);
+  }
+
+  &.Crayons {
+    background-image: url(https://media.toolbardial.com/Crayons.jpg);
+    background-position: bottom;
+  }
+
+  &.Underwater {
+    background-image: url(https://media.toolbardial.com/Underwater.jpg);
+  }
+
+  &.HorizonLight {
+    background-image: url(https://media.toolbardial.com/HorizonLight.png);
+    background-position: bottom left;
+  }
+
+  &.HorizonDark {
+    background-image: url(https://media.toolbardial.com/HorizonDark.png);
+    background-position: bottom left;
+  }
+
+  &.AbstractPurple {
+    background-image: url(https://media.toolbardial.com/AbstractPurple.jpg);
+  }
+
+  &.Gradient1 {
+    background-image: url(https://media.toolbardial.com/RiceFlower.png);
+  }
+
+  &.Gradient2 {
+    background-image: url(https://media.toolbardial.com/ColumbiaBlue.png);
+  }
+
+  &.Gradient3 {
+    background-image: url(https://media.toolbardial.com/Fuchsia.png);
+  }
+
+  &.Gradient4 {
+    background-image: url(https://media.toolbardial.com/VioletBlue.png);
+  }
+}

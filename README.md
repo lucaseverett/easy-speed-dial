@@ -4,58 +4,92 @@
 
 Toolbar Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.
 
-## Features
+## Live Demo
 
-### Browser Bookmarks
+https://demo.toolbardial.com/
 
-Bookmarks and folders that you already have in the browser are used for display in the Toolbar Dial grid.
+## Installation
 
-### Ready to Use
+### Clone the repo
 
-No configuration is required, but many customizations are available.
+```sh
+git clone https://github.com/lucaseverett/toolbardial.git
+```
 
-### Custom Backgrounds
+### Install NPM dependencies
 
-A curated collection of backgrounds is available. You can also select a favorite photo from your device.
+```sh
+npm install
+```
 
-### Find a Perfect Background
+## Usage
 
-Toolbar Dial offers a curated collection of complementary background colors and images. Have a favorite photo of your family -- or vehicle? (We're not judging!) Browse your device and select a favorite photo to use as the background image. If you'd rather utilize a solid color background that doesn't distract you from the many choices of websites you have to visit, that's an option as well! Customize the color with the color picker, or enter the HEX code of your favorite color.
+### Start dev server
 
-### Dark Mode
+```sh
+npm run dev
+```
 
-Light and dark color schemes are available. Your device preference is used by default, but you can change it, if desired.
+### Run tests once
 
-## Frequently Asked Questions
+```sh
+npm run test
+```
 
-**Does Toolbar Dial respect my privacy?**
+### Run tests and watch for changes
 
-Yes, your privacy is respected. Bookmarks are stored on your device and never leave the browser. Toolbar Dial uses the bookmarks permission to access your bookmarks and folders for display, and it uses the storage permission to save a custom background image, if you choose to use one.
+```sh
+npm run test:watch
+```
 
-**Can I use an image as a dial's background?**
+### Run tests in browser
 
-At this time, no option is available for replacing a dial's background with a custom image.
+```sh
+npm run test:ui
+```
 
-**Can Toolbar Dial capture a screenshot of a website for a dial's background?**
+### View test coverage
 
-Because of the commitment to respect your privacy, Toolbar Dial will not capture a screenshot of a website for a dial's background.
+```sh
+npm run coverage
+```
 
-**Can I change the color of a dial?**
+## Linting
 
-At this time, it isn't possible, but an option to change the color of a dial is coming soon.
+### Lint with ESLint
 
-**How do I edit bookmarks and folders?**
+```sh
+npm run lint
+```
 
-The ability to edit bookmarks and folders within Toolbar Dial is coming soon, but you can already drag and drop to change their order.
+### Format with Prettier
 
-**How do I create a new dial?**
+```sh
+npm run format
+```
 
-Toolbar Dial uses browser bookmarks. To create a new dial, just bookmark a page as usual. The ability to create a new bookmark or folder within Toolbar Dial is coming soon.
+## Building
 
-**Where can I find customization options in Toolbar Dial?**
+### Build demo
 
-Right click anywhere on the Toolbar Dial page and select Customize in the menu that appears.
+```sh
+npm run build
+```
 
-**Why is this extension named Toolbar Dial?**
+### Preview demo build
 
-Toolbar Dial was originally a Firefox extension, and its name was inspired by the Bookmarks Toolbar — known as the Bookmarks Bar in Chrome. The name is a combination of Bookmarks Toolbar and Speed Dial.
+```sh
+npm run preview
+```
+
+### Build Chrome
+
+```sh
+npm run build:chrome
+```
+
+### Build Firefox
+
+```sh
+npm run build:firefox
+```
