@@ -13,6 +13,13 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => (
   >
     <div className="WhatsNew" id="shift-focus">
       <div>
+        <h2>Version 2.5.1</h2>
+        <h3>Resolved Issues</h3>
+        <ul>
+          <li>Minor bug fixes</li>
+        </ul>
+      </div>
+      <div>
         <h2>Version 2.5</h2>
         <h3>Resolved Issues</h3>
         <ul>

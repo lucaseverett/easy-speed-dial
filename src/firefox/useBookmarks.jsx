@@ -183,8 +183,23 @@ export function ProvideBookmarks({ children }) {
     gettingTree.then(logTree, onRejected);
   }
 
-  function moveBookmark({ id, from, to }) {
-    browser.bookmarks.move(id.toString(), { index: to });
+  const bookmarksRef = useRef();
+
+  useEffect(() => {
+    bookmarksRef.current = bookmarks;
+  }, [bookmarks]);
+
+  function moveBookmark({ id, to }) {
+    /*
+       Some bookmarks, such as separators, are filtered
+       from being displayed.
+       
+       bookmarksRef.current[to]["index"] accounts for the 
+       index considering filtered bookmarks.
+    */
+    browser.bookmarks.move(id.toString(), {
+      index: bookmarksRef.current[to]["index"],
+    });
   }
 
   function deleteBookmark(id) {
