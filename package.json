@@ -15,7 +15,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "classnames": "^2.3.1",
+    "classnames": "^2.3.2",
     "localforage": "^1.10.0",
     "modern-normalize": "^1.1.0",
     "random-material-color": "^1.0.5",
@@ -26,20 +26,20 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
+    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@vitejs/plugin-react": "^2.0.1",
-    "@vitest/coverage-istanbul": "^0.22.1",
-    "@vitest/ui": "^0.22.1",
+    "@vitejs/plugin-react": "^3.0.0",
+    "@vitest/coverage-istanbul": "^0.25.6",
+    "@vitest/ui": "^0.25.6",
     "cross-env": "^7.0.3",
-    "eslint": "^8.23.0",
+    "eslint": "^8.29.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-jsx-a11y": "^6.6.1",
-    "jsdom": "^20.0.0",
-    "postcss-preset-env": "^7.8.0",
-    "prettier": "^2.7.1",
-    "vite": "^3.0.9",
-    "vitest": "^0.22.1",
-    "web-ext": "^7.2.0"
+    "jsdom": "^20.0.3",
+    "postcss-preset-env": "^7.8.3",
+    "prettier": "^2.8.1",
+    "vite": "^4.0.0",
+    "vitest": "^0.25.6",
+    "web-ext": "^7.4.0"
   }
 }

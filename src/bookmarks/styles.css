@@ -198,6 +198,7 @@
     & .scroll-box {
       max-height: var(--modal-max-height);
       width: var(--modal-width);
+      outline: 0;
     }
   }
 }

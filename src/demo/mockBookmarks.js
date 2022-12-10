@@ -194,7 +194,7 @@ export const allBookmarks = {
         index: "",
       },
     ],
-    parentID: "0",
+    parentID: "",
     title: "Bookmarks Bar",
   },
   2: {

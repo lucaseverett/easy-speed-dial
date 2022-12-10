@@ -3,7 +3,5 @@ dist*
 *.log
 .cache
 .DS_Store
-firebase.json
-.firebase
-.firebaserc
 coverage
+.vercel

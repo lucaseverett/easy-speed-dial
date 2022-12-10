@@ -4,11 +4,11 @@ import {
   useContext,
   useState,
   useEffect,
+  useLayoutEffect,
   useRef,
 } from "react";
 import { filter } from "../common/filter.js";
 import { useOptions } from "./useOptions.jsx";
-import { usePrevious } from "../common/usePrevious.js";
 
 const BookmarksContext = createContext();
 
@@ -18,10 +18,10 @@ export function ProvideBookmarks({ children }) {
   const [bookmarks, setBookmarks] = useState([]);
   const [currentFolder, setCurrentFolder] = useState({});
   const [folders, setFolders] = useState([]);
+  const [isRoot, setIsRoot] = useState(true);
+  const [parentID, setParentID] = useState();
 
   const currentFolderRef = useRef();
-
-  const previousDefaultFolder = usePrevious(defaultFolder);
 
   useEffect(() => {
     getFolders();
@@ -39,16 +39,15 @@ export function ProvideBookmarks({ children }) {
 
   useEffect(() => {
     window.addEventListener("popstate", popState);
-    if (history.state) {
-      const { id, title } = history.state;
-      setCurrentFolder({
-        id,
-        title,
-      });
-      getBookmarks(id).then((bookmarks) => {
-        if (bookmarks) {
-          setBookmarks(bookmarks);
-        }
+    const session = sessionStorage.getItem("last-folder");
+    if (session) {
+      // restore from last session or history.state
+      // session is restored in current tab after clicking home button
+      changeFolder({
+        id: history.state ? history.state.id : JSON.parse(session).id,
+        pushState: false,
+        replaceState: history.state ? false : true,
+        saveSession: history.state ? true : false,
       });
     }
     return () => {
@@ -57,44 +56,37 @@ export function ProvideBookmarks({ children }) {
   }, []);
 
   useEffect(() => {
-    if (defaultFolder !== undefined && history.state === null) {
-      // first run
-      history.replaceState({ id: defaultFolder }, document.title);
-      setCurrentFolder({ id: defaultFolder });
-      getBookmarks(defaultFolder).then((bookmarks) => {
-        if (bookmarks) {
-          setBookmarks(bookmarks);
-        }
+    const session = sessionStorage.getItem("last-folder");
+    if (defaultFolder !== undefined && !session) {
+      // on first run
+      changeFolder({
+        id: defaultFolder,
+        pushState: false,
+        replaceState: true,
+        saveSession: true,
       });
-    } else if (
-      defaultFolder !== undefined &&
-      previousDefaultFolder !== undefined &&
-      previousDefaultFolder !== defaultFolder &&
-      history.state !== null
-    ) {
-      // default folder option changed
-      const id = defaultFolder;
-      history.replaceState({ id }, document.title);
-      getBookmarks(id).then((bookmarks) => {
-        if (bookmarks) {
-          setBookmarks(bookmarks);
-        }
-      });
-      setCurrentFolder({ id });
     }
   }, [defaultFolder]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     currentFolderRef.current = currentFolder;
-  }, [currentFolder]);
+    if (defaultFolder !== undefined) {
+      if (currentFolder.id === defaultFolder || !parentID) {
+        setIsRoot(true);
+      } else {
+        setIsRoot(false);
+      }
+    }
+  }, [currentFolder, defaultFolder]);
 
   function popState(e) {
-    const { id, title } = e.state;
-    getBookmarks(id).then(
-      (bookmarks) => setBookmarks(bookmarks || []),
-      setBookmarks([])
-    );
-    setCurrentFolder({ id, title });
+    // on forward/back buttons
+    changeFolder({
+      id: e.state.id,
+      pushState: false,
+      replaceState: false,
+      saveSession: true,
+    });
   }
 
   function debounce(func, wait, immediate) {
@@ -114,7 +106,7 @@ export function ProvideBookmarks({ children }) {
   const updateBookmarks = useCallback(
     debounce(
       () =>
-        getBookmarks(currentFolderRef.current.id).then((bookmarks) => {
+        getBookmarks(currentFolderRef.current.id).then(({ bookmarks }) => {
           if (bookmarks) {
             setBookmarks(bookmarks);
           }
@@ -128,19 +120,31 @@ export function ProvideBookmarks({ children }) {
     let bookmarks = [];
     let sort = (a, b) => a.index - b.index;
     try {
-      bookmarks = await browser.bookmarks.getChildren(folder);
+      bookmarks = await browser.bookmarks.getSubTree(folder);
     } catch (e) {
       console.log(e);
     }
-    return filter(bookmarks).sort(sort);
+    return {
+      id: bookmarks[0].id,
+      bookmarks: filter(bookmarks[0].children).sort(sort),
+      title: bookmarks[0].title,
+      parentID: bookmarks[0].parentId,
+    };
   }
 
-  function changeFolder(nextFolder) {
-    const { id, title } = nextFolder;
-    history.pushState({ id, title }, document.title);
-    getBookmarks(id).then((bookmarks) => {
+  function changeFolder({ id, pushState, replaceState, saveSession }) {
+    // Needs error handling
+    // If folder not found, display defaultFolder
+    // If defaultFolder doesn't exist, display root folder
+    // If issue with root folder, display error message
+    getBookmarks(id).then(({ bookmarks, title, parentID }) => {
       setBookmarks(bookmarks);
       setCurrentFolder({ id, title });
+      setParentID(parentID);
+      if (saveSession)
+        sessionStorage.setItem("last-folder", JSON.stringify({ id }));
+      if (pushState) history.pushState({ id }, document.title);
+      if (replaceState) history.replaceState({ id }, document.title);
     });
   }
 
@@ -193,7 +197,7 @@ export function ProvideBookmarks({ children }) {
     /*
        Some bookmarks, such as separators, are filtered
        from being displayed.
-       
+
        bookmarksRef.current[to]["index"] accounts for the 
        index considering filtered bookmarks.
     */
@@ -246,11 +250,13 @@ export function ProvideBookmarks({ children }) {
         deleteBookmark,
         deleteFolder,
         folders,
-        openLinkTab,
-        openLinkBackgroundTab,
         openAllWindow,
         openAllTab,
+        openLinkTab,
+        openLinkBackgroundTab,
         openLinkWindow,
+        isRoot,
+        parentID,
       }}
     >
       {children}

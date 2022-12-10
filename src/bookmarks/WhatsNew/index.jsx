@@ -13,6 +13,16 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => (
   >
     <div className="WhatsNew" id="shift-focus">
       <div>
+        <h2>Version 2.6</h2>
+        <h3>New features</h3>
+        <ul>
+          <li>
+            The last opened folder in a tab is now remembered and restored when
+            using the browser Home button.
+          </li>
+        </ul>
+      </div>
+      <div>
         <h2>Version 2.5.1</h2>
         <h3>Resolved Issues</h3>
         <ul>

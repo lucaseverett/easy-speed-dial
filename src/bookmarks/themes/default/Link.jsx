@@ -25,7 +25,12 @@ export const Link = ({
   const FolderLink = ({ children, id, title, changeFolder }) => {
     let handleClick = (e) => {
       e.preventDefault();
-      changeFolder({ id, title });
+      changeFolder({
+        id,
+        pushState: true,
+        replaceState: false,
+        saveSession: true,
+      });
     };
 
     return (

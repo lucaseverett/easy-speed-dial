@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useRef, memo } from "react";
+import { useState, useLayoutEffect, useRef, useCallback } from "react";
 
 import "./styles.css";
 import "../styles/buttons.css";
@@ -17,10 +17,10 @@ const isMacOS = userAgent.includes("macintosh") ? true : false;
 const isChrome = userAgent.includes("chrome") ? true : false;
 
 function Bookmarks() {
-  const { bookmarks, currentFolder, changeFolder } = useBookmarks();
+  const { bookmarks, currentFolder, changeFolder, isRoot, parentID } =
+    useBookmarks();
   const {
     newTab,
-    defaultFolder,
     colorScheme,
     wallpaper,
     customColor,
@@ -60,12 +60,15 @@ function Bookmarks() {
     handleContextMenu(e);
   }
 
-  function handleLinkContextMenu(e, { url = "", id = "" }) {
-    e.stopPropagation();
-    setLinkURL(url);
-    setLinkID(id);
-    handleContextMenu(e);
-  }
+  const handleLinkContextMenu = useCallback(
+    (e, { url = "", id = "" }) => {
+      e.stopPropagation();
+      setLinkURL(url);
+      setLinkID(id);
+      handleContextMenu(e);
+    },
+    [setLinkID, setLinkURL]
+  );
 
   function hideContextMenu() {
     setShowContextMenu(false);
@@ -189,14 +192,8 @@ function Bookmarks() {
           bookmarks,
           currentFolder,
           changeFolder,
-          isRoot:
-            currentFolder.id === undefined ||
-            currentFolder.title === undefined ||
-            defaultFolder === undefined
-              ? true
-              : currentFolder.title
-              ? false
-              : defaultFolder === currentFolder.id,
+          isRoot,
+          parentID,
           newTab,
           handleLinkContextMenu,
           showTitle,
@@ -206,7 +203,5 @@ function Bookmarks() {
     </div>
   );
 }
-
-Bookmarks = memo(Bookmarks);
 
 export { Bookmarks };

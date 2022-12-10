@@ -1,8 +1,14 @@
-import { createContext, useContext, useState, useEffect, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { filter } from "../common/filter.js";
 import { useOptions } from "./useOptions.jsx";
 import { allBookmarks } from "./mockBookmarks.js";
-import { usePrevious } from "../common/usePrevious.js";
 
 const BookmarksContext = createContext();
 
@@ -15,61 +21,75 @@ export function ProvideBookmarks({ children }) {
   const { defaultFolder } = useOptions();
   const [bookmarks, setBookmarks] = useState([]);
   const [currentFolder, setCurrentFolder] = useState({});
+  const [isRoot, setIsRoot] = useState(true);
+  const [parentID, setParentID] = useState();
+
+  const currentFolderRef = useRef(null);
 
   useEffect(() => {
     window.addEventListener("popstate", popState);
-    if (history.state) {
-      const { id, title } = history.state;
-      setCurrentFolder({
-        id,
-        title,
+    const session = sessionStorage.getItem("last-folder");
+    if (session) {
+      // restore from last session or history.state
+      // session is restored in current tab after clicking home button
+      changeFolder({
+        id: history.state ? history.state.id : JSON.parse(session).id,
+        pushState: false,
+        replaceState: history.state ? false : true,
+        saveSession: history.state ? true : false,
       });
-      setBookmarks(filter(allBookmarks[id].bookmarks));
     }
     return () => {
       window.removeEventListener("popstate", popState);
     };
   }, []);
 
-  const previousDefaultFolder = usePrevious(defaultFolder);
-
   useEffect(() => {
-    if (defaultFolder !== undefined && history.state === null) {
-      // first run
-      history.replaceState({ id: defaultFolder }, document.title);
-      setCurrentFolder({ id: defaultFolder });
-      setBookmarks(filter(allBookmarks[defaultFolder].bookmarks));
-    } else if (
-      defaultFolder !== undefined &&
-      previousDefaultFolder !== undefined &&
-      previousDefaultFolder !== defaultFolder &&
-      history.state !== null
-    ) {
-      // default folder option changed
-      const id = defaultFolder;
-      history.replaceState({ id }, document.title);
-      setBookmarks(filter(allBookmarks[id]["bookmarks"]));
-      setCurrentFolder({ id });
+    const session = sessionStorage.getItem("last-folder");
+    if (defaultFolder !== undefined && !session) {
+      // on first run
+      changeFolder({
+        id: defaultFolder,
+        pushState: false,
+        replaceState: true,
+        saveSession: true,
+      });
     }
   }, [defaultFolder]);
 
-  const currentFolderRef = useRef(null);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     currentFolderRef.current = currentFolder;
-  }, [currentFolder]);
+    if (defaultFolder !== undefined) {
+      if (currentFolder.id === defaultFolder || !parentID) {
+        setIsRoot(true);
+      } else {
+        setIsRoot(false);
+      }
+    }
+  }, [currentFolder, defaultFolder, parentID]);
 
   function popState(e) {
-    const { id, title } = e.state;
-    setBookmarks(filter(allBookmarks[id]["bookmarks"]));
-    setCurrentFolder({ id, title });
+    // on forward/back buttons
+    changeFolder({
+      id: e.state.id,
+      pushState: false,
+      replaceState: false,
+      saveSession: true,
+    });
   }
 
-  function changeFolder(nextFolder) {
-    const { id, title } = nextFolder;
-    history.pushState({ id, title }, document.title);
+  function changeFolder({ id, pushState, replaceState, saveSession }) {
+    // Needs error handling
+    // If folder not found, display defaultFolder
+    // If defaultFolder doesn't exist, display root folder
+    // If issue with root folder, display error message
     setBookmarks(filter(allBookmarks[id]["bookmarks"]));
-    setCurrentFolder({ id, title });
+    setCurrentFolder({ id, title: allBookmarks[id]["title"] });
+    setParentID(allBookmarks[id]["parentID"]);
+    if (saveSession)
+      sessionStorage.setItem("last-folder", JSON.stringify({ id }));
+    if (pushState) history.pushState({ id }, document.title);
+    if (replaceState) history.replaceState({ id }, document.title);
   }
 
   function moveBookmark({ id, from, to }) {
@@ -113,6 +133,8 @@ export function ProvideBookmarks({ children }) {
         folders,
         openLinkTab,
         openAllTab,
+        isRoot,
+        parentID,
       }}
     >
       {children}

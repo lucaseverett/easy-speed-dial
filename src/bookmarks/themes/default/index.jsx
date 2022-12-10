@@ -6,20 +6,20 @@ import { Title } from "./Title.jsx";
 import { Grid } from "./Grid.jsx";
 import { Link } from "./Link.jsx";
 import { Breadcrumbs } from "./Breadcrumbs.jsx";
+import { useBookmarks } from "useBookmarks";
+import { useOptions } from "useOptions";
 
-function Theme({
-  bookmarks,
-  currentFolder,
-  isRoot,
-  changeFolder,
-  newTab,
-  handleLinkContextMenu,
-  showTitle,
-  switchTitle,
-}) {
+function Theme({ handleLinkContextMenu }) {
+  const { bookmarks, currentFolder, changeFolder, isRoot, parentID } =
+    useBookmarks();
+
+  const { newTab, showTitle, switchTitle } = useOptions();
+
   return (
     <>
-      {!isRoot && <Breadcrumbs {...{ currentFolder, changeFolder }} />}
+      {!isRoot && (
+        <Breadcrumbs {...{ currentFolder, changeFolder, parentID }} />
+      )}
       <Grid {...{ currentFolder, isRoot }}>
         {bookmarks.map(({ title, url, type, name, id }) => (
           <Fragment key={id}>

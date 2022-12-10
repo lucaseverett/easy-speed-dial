@@ -1,13 +1,16 @@
-function goBack() {
-  history.back();
-}
-
-export const Breadcrumbs = ({ currentFolder }) => {
+export const Breadcrumbs = ({ currentFolder, changeFolder, parentID }) => {
   return (
     <div className="Breadcrumbs">
       <button
         title="Go to parent folder"
-        onClick={goBack}
+        onClick={() =>
+          changeFolder({
+            id: parentID,
+            pushState: true,
+            replaceState: false,
+            saveSession: true,
+          })
+        }
         onContextMenu={(e) => e.stopPropagation()}
       >
         <svg

@@ -76,7 +76,7 @@ export const Modal = ({
             </button>
           </header>
           <main>
-            <div className="scroll-box scrollbars" id="scroll-box">
+            <div className="scroll-box scrollbars" id="scroll-box" tabIndex="0">
               {children}
             </div>
             <div tabIndex="0" onFocus={focusDismissBtn}></div>
