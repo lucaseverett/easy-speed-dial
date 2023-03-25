@@ -223,14 +223,14 @@ export function ProvideBookmarks({ children }) {
   }
 
   function openAllTab(linkID) {
-    getBookmarks(linkID).then((bookmarks) => {
+    getBookmarks(linkID).then(({ bookmarks }) => {
       let links = bookmarks.filter((b) => b.url);
       links.forEach(({ url }) => openLinkTab(url));
     });
   }
 
   function openAllWindow(linkID) {
-    getBookmarks(linkID).then((bookmarks) => {
+    getBookmarks(linkID).then(({ bookmarks }) => {
       let links = bookmarks.filter((b) => b.url).map(({ url }) => url);
       openLinkWindow(links);
     });

@@ -212,6 +212,14 @@
   font-size: 16px;
   padding: 25px;
 
+  .firefox-only {
+    display: none;
+  }
+
+  @nest .firefox & .firefox-only {
+    display: initial;
+  }
+
   & h2 {
     margin: 20px 0 0;
     font-size: 16px;

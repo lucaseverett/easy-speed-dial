@@ -1,2 +1,2 @@
 // For displaying Alert Banner (change for every release)
-export const appVersion = "2.6";
+export const appVersion = "2.6.1";

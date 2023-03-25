@@ -12,6 +12,16 @@ export const WhatsNew = ({ handleDismissModal, handleEscapeModal }) => (
     }}
   >
     <div className="WhatsNew" id="shift-focus">
+      <div className="firefox-only">
+        <h2>Version 2.6.1</h2>
+        <h3>Resolved Issues</h3>
+        <ul>
+          <li>
+            Fixed bug that prevented the "Open All in New Tabs" and "Open All in
+            New Window" context menu options from working.
+          </li>
+        </ul>
+      </div>
       <div>
         <h2>Version 2.6</h2>
         <h3>New features</h3>
