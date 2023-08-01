@@ -1,9 +1,24 @@
 {
-  "extends": ["eslint:recommended", "react-app", "plugin:jsx-a11y/recommended"],
+  "env": { "browser": true, "es6": true, "node": true },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "globals": {
+    "browser": "readonly",
+    "__PROJECT__": "readonly"
+  },
   "ignorePatterns": ["*.test.*"],
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
-  "plugins": ["jsx-a11y"],
-  "root": true
+  "root": true,
+  "rules": {
+    "react/prop-types": "off"
+  }
 }

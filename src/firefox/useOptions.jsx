@@ -1,4 +1,14 @@
-import { useState, useContext, createContext, useEffect, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useContext,
+  createContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+import localForage from "localforage";
+import browser from "webextension-polyfill";
 
 import { appVersion } from "../common/version.js";
 
@@ -14,7 +24,7 @@ export function ProvideOptions({ children }) {
   const [colorScheme, setColorScheme] = useState(
     window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "color-scheme-dark"
-      : "color-scheme-light"
+      : "color-scheme-light",
   );
   const [themeOption, setThemeOption] = useState("System Theme");
   const [defaultFolder, setFolder] = useState();
@@ -26,52 +36,74 @@ export function ProvideOptions({ children }) {
   const [showAlertBanner, setShowAlertBanner] = useState(false);
   const [firstRun, setFirstRun] = useState(false);
 
-  function handleWallpaper(wallpaper) {
+  const handleWallpaper = useCallback((wallpaper) => {
     browser.storage.local.set({ [`${apiVersion}-wallpaper`]: wallpaper });
-  }
+  }, []);
 
-  function handleCustomColor(value) {
-    handleWallpaper("custom-color");
-    browser.storage.local.set({ [`${apiVersion}-custom-color`]: value });
-  }
+  const handleCustomColor = useCallback(
+    (value) => {
+      handleWallpaper("custom-color");
+      browser.storage.local.set({ [`${apiVersion}-custom-color`]: value });
+    },
+    [handleWallpaper],
+  );
 
-  function handleCustomImage() {
+  const handleCustomImage = useCallback(() => {
     const i = document.createElement("input");
     i.type = "File";
     i.onchange = (e) => {
       const image = e.target.files[0];
-      browser.storage.local.set({ "custom-image": image });
+      if (__PROJECT__ === "chrome") {
+        localForage.setItem("custom-image", image);
+        browser.storage.local.set({
+          "custom-image": `custom-image${Math.floor(Math.random() * 10000)}`,
+        });
+      } else {
+        browser.storage.local.set({ "custom-image": image });
+      }
       handleWallpaper(`custom-image${Math.floor(Math.random() * 10000)}`);
     };
     i.click();
-  }
+  }, [handleWallpaper]);
 
   function getCustomImage() {
-    browser.storage.local
-      .get({ "custom-image": "" })
-      .then(({ "custom-image": image }) => {
+    if (__PROJECT__ === "chrome") {
+      localForage.getItem("custom-image").then((image) => {
         if (image) {
           const imageURI = URL.createObjectURL(image);
           setCustomImage(imageURI);
         }
       });
-  }
-
-  function handleThemeOption(e) {
-    browser.storage.local.set({
-      [`${apiVersion}-theme-option`]: e.target.value,
-    });
-    setThemeOption(e.target.value);
-    if (wallpaper === "dark-wallpaper" || wallpaper === "light-wallpaper") {
-      e.target.value === "System Theme"
-        ? colorScheme === "color-scheme-dark"
-          ? handleWallpaper("dark-wallpaper")
-          : handleWallpaper("light-wallpaper")
-        : e.target.value === "Dark"
-        ? handleWallpaper("dark-wallpaper")
-        : handleWallpaper("light-wallpaper");
+    } else {
+      browser.storage.local
+        .get({ "custom-image": "" })
+        .then(({ "custom-image": image }) => {
+          if (image) {
+            const imageURI = URL.createObjectURL(image);
+            setCustomImage(imageURI);
+          }
+        });
     }
   }
+
+  const handleThemeOption = useCallback(
+    (e) => {
+      browser.storage.local.set({
+        [`${apiVersion}-theme-option`]: e.target.value,
+      });
+      setThemeOption(e.target.value);
+      if (wallpaper === "dark-wallpaper" || wallpaper === "light-wallpaper") {
+        e.target.value === "System Theme"
+          ? colorScheme === "color-scheme-dark"
+            ? handleWallpaper("dark-wallpaper")
+            : handleWallpaper("light-wallpaper")
+          : e.target.value === "Dark"
+          ? handleWallpaper("dark-wallpaper")
+          : handleWallpaper("light-wallpaper");
+      }
+    },
+    [wallpaper, colorScheme, handleWallpaper],
+  );
 
   function handleDefaultFolder(e) {
     browser.storage.local.set({
@@ -110,7 +142,7 @@ export function ProvideOptions({ children }) {
       setWallpaper(
         change[`${apiVersion}-wallpaper`]["newValue"].includes("custom-image")
           ? "custom-image"
-          : change[`${apiVersion}-wallpaper`]["newValue"]
+          : change[`${apiVersion}-wallpaper`]["newValue"],
       );
     } else if (change["custom-image"]) {
       getCustomImage();
@@ -146,7 +178,8 @@ export function ProvideOptions({ children }) {
       const themeOption =
         results[`${apiVersion}-theme-option`] || "System Theme";
       const defaultFolder =
-        results[`${apiVersion}-default-folder`] || "toolbar_____";
+        results[`${apiVersion}-default-folder`] ||
+        (__PROJECT__ === "chrome" ? "1" : "toolbar_____");
       const maxColumns = results[`${apiVersion}-max-columns`] || "7";
       const newTab = results[`${apiVersion}-new-tab`] || false;
       const showTitle = results[`${apiVersion}-show-title`] ?? true;
@@ -164,7 +197,7 @@ export function ProvideOptions({ children }) {
       }
 
       setWallpaper(
-        wallpaper.includes("custom-image") ? "custom-image" : wallpaper
+        wallpaper.includes("custom-image") ? "custom-image" : wallpaper,
       );
       getCustomImage();
       setCustomColor(customColor);
@@ -189,6 +222,7 @@ export function ProvideOptions({ children }) {
         .matchMedia("(prefers-color-scheme: dark)")
         .removeEventListener("change", systemThemeChanged);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const wallpaperRef = useRef();
@@ -209,7 +243,7 @@ export function ProvideOptions({ children }) {
       // This is neccessary to detect theme changes that happened while set to Light or Dark when switching back to Automatic.
       if (themeOption === "System Theme") {
         const matches = window.matchMedia(
-          "(prefers-color-scheme: dark)"
+          "(prefers-color-scheme: dark)",
         ).matches;
         if (
           wallpaperRef.current === "dark-wallpaper" ||
@@ -229,7 +263,7 @@ export function ProvideOptions({ children }) {
         }
       }
     }
-  }, [themeOption]);
+  }, [handleWallpaper, themeOption]);
 
   function systemThemeChanged(e) {
     if (themeOptionRef.current === "System Theme") {
@@ -257,36 +291,57 @@ export function ProvideOptions({ children }) {
     });
   }
 
+  const contextValue = useMemo(
+    () => ({
+      newTab,
+      defaultFolder,
+      colorScheme,
+      wallpaper,
+      maxColumns,
+      showAlertBanner,
+      customColor,
+      customImage,
+      themeOption,
+      showTitle,
+      switchTitle,
+      attachTitle,
+      firstRun,
+      handleWallpaper,
+      handleNewTab,
+      handleDefaultFolder,
+      handleMaxColumns,
+      hideAlertBanner,
+      handleCustomColor,
+      handleCustomImage,
+      handleThemeOption,
+      handleShowTitle,
+      handleSwitchTitle,
+      handleAttachTitle,
+      openOptions,
+    }),
+    [
+      attachTitle,
+      colorScheme,
+      customColor,
+      customImage,
+      defaultFolder,
+      firstRun,
+      handleCustomColor,
+      handleCustomImage,
+      handleThemeOption,
+      handleWallpaper,
+      maxColumns,
+      newTab,
+      showAlertBanner,
+      showTitle,
+      switchTitle,
+      themeOption,
+      wallpaper,
+    ],
+  );
+
   return (
-    <OptionsContext.Provider
-      value={{
-        newTab,
-        defaultFolder,
-        colorScheme,
-        wallpaper,
-        maxColumns,
-        showAlertBanner,
-        customColor,
-        customImage,
-        themeOption,
-        showTitle,
-        switchTitle,
-        attachTitle,
-        firstRun,
-        handleWallpaper,
-        handleNewTab,
-        handleDefaultFolder,
-        handleMaxColumns,
-        hideAlertBanner,
-        handleCustomColor,
-        handleCustomImage,
-        handleThemeOption,
-        handleShowTitle,
-        handleSwitchTitle,
-        handleAttachTitle,
-        openOptions,
-      }}
-    >
+    <OptionsContext.Provider value={contextValue}>
       {children}
     </OptionsContext.Provider>
   );

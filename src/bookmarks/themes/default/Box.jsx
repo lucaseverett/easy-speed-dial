@@ -1,7 +1,9 @@
+import { memo } from "react";
+
 import { Name } from "./Name.jsx";
 import { dialColors } from "./dialColors.js";
 
-export const Box = ({ name, title, switchTitle, type }) => {
+export const Box = memo(function Box({ name, title, switchTitle, type }) {
   return (
     <div
       className="Box"
@@ -11,8 +13,12 @@ export const Box = ({ name, title, switchTitle, type }) => {
           type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none",
       }}
     >
-      {type.match(/(file|link)/) ? (
-        <Name {...{ name: switchTitle ? [title] : name, type }} />
+      {type === "link" ? (
+        <Name
+          {...{
+            name: switchTitle ? (title ? [title] : [name.join(".")]) : name,
+          }}
+        />
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -25,4 +31,4 @@ export const Box = ({ name, title, switchTitle, type }) => {
       )}
     </div>
   );
-};
+});

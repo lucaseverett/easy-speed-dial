@@ -1,13 +1,12 @@
-import { useState, useLayoutEffect, useRef, useCallback } from "react";
+import { memo, useLayoutEffect, useRef } from "react";
 
 import "./styles.css";
+import "../styles/inputs.css";
 import "../styles/buttons.css";
 import "../styles/wallpapers.css";
-import { Theme } from "./themes/default/index.jsx";
+import { Theme } from "./themes/default";
 import { AlertBanner } from "./AlertBanner.jsx";
-import { WhatsNew } from "./WhatsNew/index.jsx";
-import { AboutModal } from "./AboutModal/index.jsx";
-import { ContextMenu } from "useContextMenu";
+import { ContextMenu, useContextMenu } from "./useContextMenu.jsx";
 import { useOptions } from "useOptions";
 import { useBookmarks } from "useBookmarks";
 import classNames from "classnames";
@@ -16,11 +15,9 @@ const userAgent = navigator.userAgent.toLowerCase();
 const isMacOS = userAgent.includes("macintosh") ? true : false;
 const isChrome = userAgent.includes("chrome") ? true : false;
 
-function Bookmarks() {
-  const { bookmarks, currentFolder, changeFolder, isRoot, parentID } =
-    useBookmarks();
+export const Bookmarks = memo(function Bookmarks() {
+  const { currentFolder } = useBookmarks();
   const {
-    newTab,
     colorScheme,
     wallpaper,
     customColor,
@@ -30,178 +27,83 @@ function Bookmarks() {
     showAlertBanner,
     hideAlertBanner,
     showTitle,
-    switchTitle,
     attachTitle,
   } = useOptions();
-  const [showContextMenu, setShowContextMenu] = useState(false);
-  const [linkID, setLinkID] = useState();
-  const [linkURL, setLinkURL] = useState();
-  const [menuCoords, setMenuCoords] = useState();
-  const [showModal, setShowModal] = useState();
-
-  function handleScroll() {
-    if (showContextMenu) {
-      hideContextMenu();
-    }
-  }
-
-  function handleContextMenu(e) {
-    e.preventDefault();
-    setMenuCoords({
-      pageX: e.pageX,
-      pageY: e.pageY,
-    });
-    setShowContextMenu(true);
-  }
-
-  function handleWallpaperContextMenu(e) {
-    setLinkURL();
-    setLinkID();
-    handleContextMenu(e);
-  }
-
-  const handleLinkContextMenu = useCallback(
-    (e, { url = "", id = "" }) => {
-      e.stopPropagation();
-      setLinkURL(url);
-      setLinkID(id);
-      handleContextMenu(e);
-    },
-    [setLinkID, setLinkURL]
-  );
-
-  function hideContextMenu() {
-    setShowContextMenu(false);
-    setLinkURL();
-    setLinkID();
-  }
-
-  function handleEscapeContext(e) {
-    if (e.key === "Escape" || e.key === "Tab") {
-      e.preventDefault();
-      hideContextMenu();
-    }
-  }
-
-  function handleEscapeModal(e) {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      setShowModal();
-    }
-  }
+  const { hideContextMenu } = useContextMenu();
 
   function handleDismissAlertBanner() {
     hideAlertBanner();
   }
 
-  function handleDismissModal() {
-    setShowModal();
-  }
-
-  function handleShowWhatsNew() {
+  useLayoutEffect(() => {
+    // Resets focus and scrolls to the top upon changing folders
     hideContextMenu();
-    setShowModal("whats-new");
-  }
+    focusRef.current.scrollTop = 0;
+    focusRef.current.focus();
+  }, [currentFolder, hideContextMenu]);
 
-  function handleShowAbout() {
-    hideContextMenu();
-    setShowModal("about");
-  }
+  useLayoutEffect(() => {
+    document.documentElement.className = classNames(
+      themeOption === "System Theme"
+        ? colorScheme
+        : themeOption === "Light"
+        ? "color-scheme-light"
+        : "color-scheme-dark",
+      wallpaper,
+      "Wallpapers",
+      isChrome ? "chrome" : "firefox",
+      isMacOS ? "mac" : "windows",
+      showTitle ? "show-title" : "hide-title",
+      attachTitle ? "attach-title" : "normal-title",
+    );
+    document.documentElement.style.backgroundImage =
+      wallpaper === "custom-image" && customImage
+        ? `url(${customImage})`
+        : null;
+    document.documentElement.style.setProperty(
+      "--background-color",
+      wallpaper === "custom-color" && customColor
+        ? customColor
+        : wallpaper
+        ? null
+        : themeOption === "System Theme"
+        ? colorScheme === "color-scheme-dark"
+          ? "#212121"
+          : "#f5f5f5"
+        : themeOption === "Light"
+        ? "#f5f5f5"
+        : "#212121",
+    );
+  }, [
+    attachTitle,
+    colorScheme,
+    customColor,
+    customImage,
+    showTitle,
+    themeOption,
+    wallpaper,
+  ]);
 
   const focusRef = useRef(null);
 
-  useLayoutEffect(() => {
-    // Resets focus and scrolls to the top upon changing folders
-    focusRef.current.scrollTop = 0;
-    focusRef.current.focus();
-  }, [currentFolder]);
-
   return (
-    <div
-      ref={focusRef}
-      tabIndex="-1"
-      className={classNames(
-        "Bookmarks",
-        themeOption === "System Theme"
-          ? colorScheme
-          : themeOption === "Light"
-          ? "color-scheme-light"
-          : "color-scheme-dark",
-        wallpaper,
-        "Wallpapers",
-        isChrome ? "chrome" : "firefox",
-        isMacOS ? "mac" : "windows",
-        showTitle ? "show-title" : "hide-title",
-        attachTitle ? "attach-title" : "normal-title"
-      )}
-      style={{
-        backgroundImage:
-          wallpaper === "custom-image" && customImage
-            ? `url(${customImage})`
-            : false,
-        "--background-color":
-          wallpaper === "custom-color" && customColor
-            ? customColor
-            : wallpaper
-            ? false
-            : themeOption === "System Theme"
-            ? colorScheme === "color-scheme-dark"
-              ? "#212121"
-              : "#f5f5f5"
-            : themeOption === "Light"
-            ? "#f5f5f5"
-            : themeOption === "Dark"
-            ? "#212121"
-            : false,
-      }}
-      onClick={hideContextMenu}
-      onContextMenu={handleWallpaperContextMenu}
-      onScroll={handleScroll}
-    >
-      {showContextMenu && (
-        <ContextMenu
-          {...{
-            menuCoords,
-            linkID,
-            linkURL,
-            handleShowWhatsNew,
-            handleShowAbout,
-            handleEscapeContext,
-            hideContextMenu,
-          }}
-        />
-      )}
-      {showAlertBanner && (
-        <AlertBanner
-          {...{
-            handleDismissAlertBanner,
-            handleShowWhatsNew,
-            hideContextMenu,
-            firstRun,
-          }}
-        />
-      )}
-      {showModal === "whats-new" && (
-        <WhatsNew {...{ handleDismissModal, handleEscapeModal }} />
-      )}
-      {showModal === "about" && (
-        <AboutModal {...{ handleDismissModal, handleEscapeModal }} />
-      )}
-      <Theme
-        {...{
-          bookmarks,
-          currentFolder,
-          changeFolder,
-          isRoot,
-          parentID,
-          newTab,
-          handleLinkContextMenu,
-          showTitle,
-          switchTitle,
-        }}
-      />
-    </div>
+    <ContextMenu>
+      <div
+        className="Bookmarks"
+        tabIndex="-1"
+        ref={focusRef}
+        onScroll={hideContextMenu}
+      >
+        {showAlertBanner && (
+          <AlertBanner
+            {...{
+              handleDismissAlertBanner,
+              firstRun,
+            }}
+          />
+        )}
+        <Theme />
+      </div>
+    </ContextMenu>
   );
-}
-
-export { Bookmarks };
+});

@@ -1,3 +1,30 @@
+:root {
+  --btn-background-color: #cfcfcf;
+  --btn-text-color: #000;
+  --btn-hover-background-color: #bcbcbc;
+  --btn-hover-text-color: #000;
+  --btn-focus-color: #42a5f5;
+  --btn-selected-background-color: #bcbcbc;
+  --dismiss-btn-hover-background-color: #c62828;
+  --dismiss-btn-hover-fill-color: #fff;
+  --dismiss-btn-focus-outline-color: #ef5350;
+  --submit-btn-background-color: #1565c0;
+  --submit-btn-hover-background-color: #0d47a1;
+
+  &.color-scheme-dark,
+  .color-scheme-dark {
+    --btn-background-color: #616161;
+    --btn-text-color: #f5f5f5;
+    --btn-hover-background-color: #373737;
+    --btn-hover-text-color: #f5f5f5;
+    --btn-focus-color: #64b5f6;
+    --btn-selected-background-color: #424242;
+    --dismiss-btn-hover-background-color: #d32f2f;
+    --dismiss-btn-hover-fill-color: #fff;
+    --dismiss-btn-focus-outline-color: #e57373;
+  }
+}
+
 .btn {
   padding: 10px 10px 8px;
   border-radius: 4px;
@@ -17,24 +44,7 @@
 
   &:focus-visible {
     outline: 4px solid var(--btn-focus-color);
-  }
-
-  @nest .color-scheme-light & {
-    --btn-background-color: #cfcfcf;
-    --btn-text-color: #000;
-    --btn-hover-background-color: #bcbcbc;
-    --btn-hover-text-color: #000;
-    --btn-focus-color: #90caf9;
-    --btn-selected-background-color: #bcbcbc;
-  }
-
-  @nest .color-scheme-dark & {
-    --btn-background-color: #616161;
-    --btn-text-color: #f5f5f5;
-    --btn-hover-background-color: #373737;
-    --btn-hover-text-color: #f5f5f5;
-    --btn-focus-color: #90caf9;
-    --btn-selected-background-color: #373737;
+    outline-offset: 0; /* shows border with outline in Safari desktop */
   }
 
   &.defaultBtn {
@@ -48,11 +58,11 @@
   }
 
   &.submitBtn {
-    background-color: #1565c0;
+    background-color: var(--submit-btn-background-color);
     color: #fff;
 
     &:hover {
-      background-color: #0d47a1;
+      background-color: var(--submit-btn-hover-background-color);
       color: #fff;
     }
   }
@@ -66,6 +76,10 @@
 
     &:hover {
       background-color: var(--dismiss-btn-hover-background-color);
+
+      & svg {
+        fill: var(--dismiss-btn-hover-fill-color);
+      }
     }
 
     &:active {
@@ -73,17 +87,7 @@
     }
 
     &:focus-visible {
-      outline: 4px solid var(--dismiss-btn-focus-color);
-    }
-
-    @nest .color-scheme-light & {
-      --dismiss-btn-hover-background-color: #aeaeae;
-      --dismiss-btn-focus-color: #90caf9;
-    }
-
-    @nest .color-scheme-dark & {
-      --dismiss-btn-hover-background-color: #424242;
-      --dismiss-btn-focus-color: #90caf9;
+      outline: 4px solid var(--dismiss-btn-focus-outline-color);
     }
   }
 }

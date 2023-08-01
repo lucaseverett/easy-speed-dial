@@ -20,11 +20,11 @@
     }
   }
 
-  @nest .color-scheme-light & a {
+  .color-scheme-light & a {
     color: inherit;
   }
 
-  @nest .color-scheme-dark & a {
+  .color-scheme-dark & a {
     color: inherit;
   }
 
@@ -44,9 +44,12 @@
     }
 
     &:focus {
-      background-color: #90caf9;
-      color: #000;
-      outline: none;
+      outline: 4px solid #42a5f5;
+      outline-offset: 2px;
+
+      &.color-scheme-dark & {
+        outline-color: #90caf9;
+      }
     }
   }
 }

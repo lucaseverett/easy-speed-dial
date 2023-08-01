@@ -1,11 +1,17 @@
-export const Breadcrumbs = ({ currentFolder, changeFolder, parentID }) => {
+import { memo } from "react";
+
+export const Breadcrumbs = memo(function Breadcrumbs({
+  currentFolder,
+  changeFolder,
+  parentId,
+}) {
   return (
     <div className="Breadcrumbs">
       <button
         title="Go to parent folder"
         onClick={() =>
           changeFolder({
-            id: parentID,
+            id: parentId,
             pushState: true,
             replaceState: false,
             saveSession: true,
@@ -27,4 +33,4 @@ export const Breadcrumbs = ({ currentFolder, changeFolder, parentID }) => {
       </button>
     </div>
   );
-};
+});

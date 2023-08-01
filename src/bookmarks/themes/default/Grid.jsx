@@ -1,14 +1,15 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import Sortable from "sortablejs";
 
 import { useBookmarks } from "useBookmarks";
 import { useOptions } from "useOptions";
 
-export const Grid = ({ children, isRoot }) => {
+export const Grid = memo(function Grid({ children, isRoot }) {
   const { moveBookmark } = useBookmarks();
   const { maxColumns } = useOptions();
 
   useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
     const sortable = Sortable.create(document.getElementById("sortable"), {
       animation: 150,
       delay: 100,
@@ -24,6 +25,7 @@ export const Grid = ({ children, isRoot }) => {
         });
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -43,4 +45,4 @@ export const Grid = ({ children, isRoot }) => {
       {children}
     </div>
   );
-};
+});

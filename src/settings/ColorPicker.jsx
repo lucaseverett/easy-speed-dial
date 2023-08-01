@@ -1,7 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 
-export function ColorPicker({ customColor, handleCustomColor, left, top }) {
+export const ColorPicker = memo(function ColorPicker({
+  customColor,
+  handleCloseColorPicker,
+  handleCustomColor,
+  left,
+  top,
+}) {
   const [color, setColor] = useState(customColor || "#ffffff");
 
   function changeColor(color) {
@@ -9,60 +15,57 @@ export function ColorPicker({ customColor, handleCustomColor, left, top }) {
     setColor(color);
   }
 
-  const focusRef = useRef(null);
+  const pickerRef = useRef(null);
 
   useEffect(() => {
-    // set focus to color picker popup
-    if (focusRef.current) {
-      focusRef.current.focus();
-    }
+    // set focus to color picker
+    pickerRef.current.querySelector(".react-colorful__interactive").focus();
   }, []);
 
-  function handleTab(e) {
-    if (e.key === "Tab" && e.shiftKey) {
+  function handleKeyDown(e) {
+    e.stopPropagation();
+    if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      focusRef.current.lastChild.focus();
-    }
-  }
-
-  function handleTabInput(e) {
-    if (e.key === "Tab" && !e.shiftKey) {
+      handleCloseColorPicker();
+    } else if (
+      e.key === "Tab" &&
+      e.shiftKey &&
+      e.target.getAttribute("aria-label") === "Color"
+    ) {
       e.preventDefault();
-      focusRef.current.focus();
-    } else if (e.shiftKey) {
-      e.stopPropagation();
+      pickerRef.current.lastChild.focus();
+    } else if (
+      e.key === "Tab" &&
+      !e.shiftKey &&
+      e.target.nodeName === "INPUT"
+    ) {
+      e.preventDefault();
+      pickerRef.current.querySelector(".react-colorful__interactive").focus();
     }
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/no-noninteractive-element-interactions
     <div
       className="ColorPicker"
       style={{
-        "--picker-top": `${top + 4}px`,
-        "--picker-left": `${left - 6}px`,
+        "--picker-top": `${top}px`,
+        "--picker-left": `${left}px`,
       }}
       onMouseDown={(e) => {
         e.stopPropagation();
       }}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-      onKeyDown={handleTab}
-      tabIndex="0"
-      ref={focusRef}
+      onKeyDown={handleKeyDown}
+      ref={pickerRef}
+      role="application"
     >
-      <HexColorPicker
-        color={color}
-        onChange={changeColor}
-        onKeyDown={(e) => e.stopPropagation()}
-      />
+      <HexColorPicker color={color} onChange={changeColor} />
       <HexColorInput
         color={color}
         onChange={changeColor}
-        onKeyDown={handleTabInput}
         className="input"
+        prefixed={true}
       />
     </div>
   );
-}
+});

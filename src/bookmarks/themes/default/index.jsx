@@ -9,8 +9,8 @@ import { Breadcrumbs } from "./Breadcrumbs.jsx";
 import { useBookmarks } from "useBookmarks";
 import { useOptions } from "useOptions";
 
-function Theme({ handleLinkContextMenu }) {
-  const { bookmarks, currentFolder, changeFolder, isRoot, parentID } =
+export const Theme = memo(function Theme() {
+  const { bookmarks, currentFolder, changeFolder, isRoot, parentId } =
     useBookmarks();
 
   const { newTab, showTitle, switchTitle } = useOptions();
@@ -18,7 +18,7 @@ function Theme({ handleLinkContextMenu }) {
   return (
     <>
       {!isRoot && (
-        <Breadcrumbs {...{ currentFolder, changeFolder, parentID }} />
+        <Breadcrumbs {...{ currentFolder, changeFolder, parentId }} />
       )}
       <Grid {...{ currentFolder, isRoot }}>
         {bookmarks.map(({ title, url, type, name, id }) => (
@@ -32,14 +32,13 @@ function Theme({ handleLinkContextMenu }) {
                 changeFolder,
                 currentFolder,
                 newTab,
-                handleLinkContextMenu,
               }}
             >
               <Box {...{ name, title, switchTitle, type }} />
               <Title
                 {...{
                   showTitle,
-                  title: switchTitle && url ? name.join(".") : title,
+                  title: switchTitle || !title ? name.join(".") : title,
                 }}
               />
             </Link>
@@ -48,8 +47,4 @@ function Theme({ handleLinkContextMenu }) {
       </Grid>
     </>
   );
-}
-
-Theme = memo(Theme);
-
-export { Theme };
+});

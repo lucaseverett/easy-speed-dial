@@ -1,38 +1,53 @@
-export const filter = (bookmarks) => {
-  const getLinkName = (name) => {
-    try {
-      name = /:\/\/(?:www\.)?(.*?)(?:\?|\/|$)/i.exec(name)[1].toLowerCase();
-    } finally {
-      return name.split(".");
-    }
-  };
+export function filter(bookmarks) {
+  function getLinkName(url) {
+    // Split by '://'
+    let protocolSplit = url.split("://");
+    let parts = [];
 
-  const getFileName = (name) => {
-    name = /:\/\/.*\/(.*?)$/i.exec(name)[1].toLowerCase();
-    return name.split(".");
-  };
+    // If '://' exists in the url
+    if (protocolSplit[1]) {
+      let domainPathSplit = protocolSplit[1].split("/");
+      let domainParts = domainPathSplit[0].split(".");
 
-  const getType = (url) => {
-    if (/^(http|ftp)/i.test(url)) {
-      return "link";
+      // Check if first part is 'www', if yes then remove it
+      if (domainParts[0] === "www") {
+        domainParts.shift();
+      }
+
+      if (domainParts.length > 3) {
+        parts = [
+          domainParts[0],
+          domainParts[1],
+          domainParts.slice(2).join("."),
+        ];
+      } else {
+        parts = domainParts;
+      }
     } else {
-      return "file";
+      // For URLs like "mailto:user@example.com", return everything after first ':'
+      let colonIndex = url.indexOf(":");
+      if (colonIndex !== -1) {
+        parts = [url.substring(colonIndex + 1)];
+      } else {
+        parts = [url];
+      }
     }
-  };
+
+    return parts;
+  }
 
   return bookmarks
     .filter(
       ({ url = "", type }) =>
-        !url.match(/^(javascript|place|about|chrome|edge|file):/i) &&
-        type !== "separator"
+        !url.match(/^(javascript|place|about|chrome|edge|file|data|blob):/i) &&
+        type !== "separator",
     )
-    .map(({ title, url, id, parentID, index }) => {
+    .map(({ title, url, id, parentId, index }) => {
       if (url) {
-        let type = getType(url);
-        let name = type === "link" ? getLinkName(url) : getFileName(url);
-        return { title, url, type, name, id, parentID, index };
+        let name = getLinkName(url);
+        return { title, url, type: "link", name, id, parentId, index };
       } else {
-        return { type: "folder", title, name: [title], id, parentID, index };
+        return { type: "folder", title, name: [title], id, parentId, index };
       }
     });
-};
+}

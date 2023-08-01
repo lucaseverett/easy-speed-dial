@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { memo, useLayoutEffect, useRef, useState } from "react";
 
-export const Name = ({ name, type }) => {
+export const Name = memo(function Name({ name }) {
   const Small = ({ children, align }) => (
     <div
       className="Small"
@@ -12,7 +12,7 @@ export const Name = ({ name, type }) => {
     </div>
   );
 
-  const Domain = ({ children, padding = false, title = false }) => {
+  function Domain({ children, padding = false, title = false }) {
     const [scale, setScale] = useState();
     const domainRef = useRef(null);
     useLayoutEffect(() => {
@@ -38,9 +38,9 @@ export const Name = ({ name, type }) => {
         {children}
       </div>
     );
-  };
+  }
 
-  if (type === "file" || name.length === 1) {
+  if (name.length === 1) {
     name = <Domain {...{ title: true }}>{name.join(".")}</Domain>;
   } else if (name.length === 3 && name[0].length < name[1].length) {
     name = name.map((n, i) => {
@@ -105,4 +105,4 @@ export const Name = ({ name, type }) => {
   }
 
   return <div>{name}</div>;
-};
+});

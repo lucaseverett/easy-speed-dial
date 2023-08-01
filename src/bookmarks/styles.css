@@ -38,7 +38,7 @@
         text-decoration: none;
       }
 
-      &:focus {
+      &:focus-visible {
         background-color: #7953d2;
         outline: none;
       }
@@ -75,20 +75,98 @@
 }
 
 .Bookmarks {
-  outline: 0;
-  overflow: auto;
   height: 100vh;
-  font-family: "Roboto", sans-serif;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    background-image 0.15s ease-in-out, border 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+  outline: none;
+  overflow: auto;
+}
 
-  &.color-scheme-dark {
-    color-scheme: dark;
+.ContextMenu {
+  position: absolute;
+  top: var(--context-menu-top);
+  left: var(--context-menu-left);
+  font-family: system-ui;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--cm-border-color);
+  background-color: var(--cm-background-color);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  user-select: none;
+  white-space: nowrap;
+
+  &:focus {
+    outline: none;
   }
 
-  &.color-scheme-light {
-    color-scheme: light;
+  & .lowercase {
+    text-transform: lowercase;
+  }
+
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 3px 0;
+  }
+
+  & li {
+    display: flex;
+  }
+
+  & li button {
+    text-align: left;
+    padding: 6px;
+    margin: 0 3px;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    border-radius: 3px;
+    color: var(--cm-color);
+
+    .firefox & {
+      text-transform: capitalize;
+    }
+
+    &.selected {
+      background-color: #1565c0;
+      color: var(--cm-hover-color);
+      outline: none;
+    }
+  }
+
+  & li.separator {
+    border-bottom: 1px solid var(--cm-border-color);
+    height: 0;
+    margin: 3px 0;
+    border-radius: 0;
+  }
+
+  & li.delete button {
+    color: var(--cm-delete-color);
+
+    &:hover,
+    &:focus {
+      background-color: var(--cm-delete-hover-background-color);
+      color: var(--cm-hover-color);
+    }
+  }
+
+  .color-scheme-light & {
+    --cm-border-color: #bdbdbd;
+    --cm-background-color: #eee;
+    --cm-color: #000;
+    --cm-hover-color: #fff;
+    --cm-delete-color: #c62828;
+    --cm-delete-hover-background-color: #c62828;
+  }
+
+  .color-scheme-dark & {
+    --cm-border-color: #6d6d6d;
+    --cm-background-color: #424242;
+    --cm-color: #fff;
+    --cm-hover-color: #fff;
+    --cm-delete-color: #ef9a9a;
+    --cm-delete-hover-background-color: #c62828;
   }
 }
 
@@ -103,7 +181,7 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.8);
 
-  @nest .color-scheme-light & {
+  .color-scheme-light & {
     --modal-background-color: #bdbdbd;
     --modal-text-color: #000;
     --modal-header-background-color: #bdbdbd;
@@ -112,7 +190,7 @@
     --modal-box-shadow: 10px 14px 13px rgb(0, 0, 0, 0.3);
   }
 
-  @nest .color-scheme-dark & {
+  .color-scheme-dark & {
     --modal-background-color: #373737;
     --modal-text-color: #e0e0e0;
     --modal-header-background-color: #373737;
@@ -122,10 +200,6 @@
   }
 
   & .modal-wrapper {
-    height: 100%;
-  }
-
-  & .modal-content {
     display: flex;
     flex-flow: column;
     height: 100%;
@@ -133,7 +207,7 @@
     color: var(--modal-text-color);
   }
 
-  & header {
+  & .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -149,9 +223,8 @@
     }
   }
 
-  & main {
+  & .modal-content {
     overflow: hidden;
-    display: flex;
     height: 100%;
     background-color: var(--modal-main-background-color);
     border-top: 1px solid var(--modal-main-border-color);
@@ -159,6 +232,20 @@
 
   & .scroll-box {
     overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  & .scroll-focus:focus-visible {
+    .color-scheme-light & {
+      --btn-focus-color: #1565c0;
+    }
+
+    .color-scheme-dark & {
+      --btn-focus-color: #64b5f6;
+    }
+
+    outline: 4px solid var(--btn-focus-color);
+    outline-offset: -4px;
   }
 
   & .dismiss {
@@ -167,14 +254,12 @@
     fill: var(--modal-text-color);
   }
 
-  &.desktop {
-    & .modal-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  @media (min-width: 535px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    & .modal-content {
+    & .modal-wrapper {
       max-height: calc(100vh - 40px);
       height: initial;
       border-radius: 11px;
@@ -184,21 +269,51 @@
       border-bottom: 5px solid var(--modal-header-background-color);
     }
 
-    & header {
+    & .header {
       padding: 0 4px 0 25px;
       height: 49px;
       border-radius: 6px;
     }
 
-    & main {
+    & .modal-content {
       border-radius: 6px;
       border: 1px solid var(--modal-main-border-color);
     }
 
     & .scroll-box {
-      max-height: var(--modal-max-height);
-      width: var(--modal-width);
-      outline: 0;
+      width: var(--modal-width, 520px);
+      max-height: var(--modal-max-height, 450px);
+    }
+  }
+}
+
+.BookmarkModal {
+  font-size: 16px;
+  margin: 25px;
+
+  & form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+
+    & label {
+      margin-bottom: 10px;
+    }
+
+    & input:first-of-type:not(:last-of-type) {
+      margin-bottom: 20px;
+    }
+
+    & .buttons {
+      display: flex;
+      margin-top: 30px;
+      gap: 10px;
+      width: 100%;
+
+      & .btn {
+        flex-grow: 1;
+      }
     }
   }
 }
@@ -216,19 +331,19 @@
     display: none;
   }
 
-  @nest .firefox & .firefox-only {
-    display: initial;
+  .firefox & .firefox-only {
+    display: block;
   }
 
   & h2 {
     margin: 20px 0 0;
     font-size: 16px;
 
-    @nest .color-scheme-light & {
+    .color-scheme-light & {
       color: #1565c0;
     }
 
-    @nest .color-scheme-dark & {
+    .color-scheme-dark & {
       color: #64b5f6;
     }
   }
@@ -252,11 +367,11 @@
   }
 
   & div {
-    @nest .color-scheme-light & {
+    .color-scheme-light & {
       border-top: 1px solid #bdbdbd;
     }
 
-    @nest .color-scheme-dark & {
+    .color-scheme-dark & {
       border-top: 1px solid #373737;
     }
 

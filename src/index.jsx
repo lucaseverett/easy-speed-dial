@@ -1,9 +1,13 @@
 import React from "react";
-import "./styles/styles.css";
 import { createRoot } from "react-dom/client";
+
+import "./styles/styles.css";
 import { Bookmarks } from "./bookmarks/index.jsx";
 import { ProvideOptions } from "useOptions";
 import { ProvideBookmarks } from "useBookmarks";
+import { ProvideContextMenu } from "./bookmarks/useContextMenu.jsx";
+import { ProvideModals } from "./bookmarks/useModals.jsx";
+
 const root = createRoot(document.querySelector("#app"));
 
 // Make <button> focus consistent across browsers
@@ -17,8 +21,12 @@ root.render(
   <React.StrictMode>
     <ProvideOptions>
       <ProvideBookmarks>
-        <Bookmarks />
+        <ProvideModals>
+          <ProvideContextMenu>
+            <Bookmarks />
+          </ProvideContextMenu>
+        </ProvideModals>
       </ProvideBookmarks>
     </ProvideOptions>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

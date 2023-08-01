@@ -1,3 +1,8 @@
+:root {
+  --dial-box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.12),
+    1px 2px 3px rgba(0, 0, 0, 0.12);
+}
+
 .Box {
   border-radius: 6px;
   height: 130px;
@@ -16,20 +21,20 @@
     fill: #fff;
   }
 
-  @nest .windows & {
+  .windows & {
     font-weight: bold;
   }
 
-  @nest .normal-title a:focus-visible & {
+  .normal-title :focus-visible:is(a, button) & {
     outline: 5px solid #90caf9;
     outline-offset: -5px;
   }
 
-  @nest .normal-title & {
-    box-shadow: 0 3px 3px rgb(0, 0, 0, 0.2);
+  .normal-title & {
+    box-shadow: var(--dial-box-shadow);
   }
 
-  @nest .attach-title.show-title & {
+  .attach-title.show-title & {
     border-radius: 6px 6px 0 0;
   }
 }
@@ -69,13 +74,13 @@
       height: 17px;
     }
 
-    @nest .color-scheme-light & {
+    .color-scheme-light & {
       color: #424242;
       fill: #424242;
       background-color: rgba(255, 255, 255, 0.8);
     }
 
-    @nest .color-scheme-dark & {
+    .color-scheme-dark & {
       color: #e0e0e0;
       fill: #e0e0e0;
       background-color: rgba(35, 35, 35, 0.8);
@@ -105,7 +110,7 @@
     visibility: hidden;
   }
 
-  @nest .attach-title & {
+  .attach-title & {
     row-gap: 40px;
   }
 }
@@ -115,12 +120,18 @@
   cursor: pointer;
   outline: none;
 
-  @nest .attach-title & {
-    box-shadow: 0 3px 3px rgb(0, 0, 0, 0.2);
+  button& {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .attach-title & {
+    box-shadow: var(--dial-box-shadow);
     border-radius: 6px;
 
     &:focus-visible {
-      box-shadow: 0 3px 3px rgb(0, 0, 0, 0.2);
+      box-shadow: var(--dial-box-shadow);
       outline: 5px solid #90caf9;
       outline-offset: -5px;
     }
@@ -150,7 +161,7 @@
   padding-top: 10px;
   position: relative;
 
-  @nest .attach-title & {
+  .attach-title & {
     padding-top: 0;
   }
 
@@ -162,43 +173,43 @@
     display: inline-block;
     max-width: 100%;
 
-    @nest .windows & {
+    .windows & {
       font-weight: 500;
     }
 
-    @nest .windows.firefox & {
+    .windows.firefox & {
       padding: 3px 8px 3px;
     }
 
-    @nest .windows.chrome & {
+    .windows.chrome & {
       padding: 4px 8px 3px;
     }
 
-    @nest .mac.chrome & {
+    .mac.chrome & {
       padding: 4px 8px 2px;
     }
 
-    @nest .mac.firefox & {
+    .mac.firefox & {
       padding: 3px 8px 2px;
     }
 
-    @nest .color-scheme-light & {
+    .color-scheme-light & {
       background-color: rgba(245, 245, 245, 0.75);
       color: #373737;
     }
 
-    @nest .color-scheme-dark & {
+    .color-scheme-dark & {
       background-color: rgba(55, 55, 55, 0.75);
       color: #eeeeee;
     }
 
-    @nest .attach-title & {
+    .attach-title & {
       border-radius: 0 0 6px 6px;
       width: 100%;
       display: block;
     }
 
-    @nest a:focus-visible & {
+    :focus-visible:is(a, button) & {
       background-color: #90caf9;
       color: #424242;
     }

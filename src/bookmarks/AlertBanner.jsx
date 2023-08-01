@@ -1,23 +1,24 @@
-import { useOptions } from "useOptions";
+import { memo } from "react";
+
 import { appVersion } from "../common/version.js";
 import { CloseBtn } from "./Close.jsx";
+import { useModals } from "./useModals.jsx";
 
-export const AlertBanner = ({
+export const AlertBanner = memo(function AlertBanner({
   handleDismissAlertBanner,
-  handleShowWhatsNew,
-  hideContextMenu,
   firstRun,
-}) => {
-  const { openOptions } = useOptions();
+}) {
+  const { handleShowModal } = useModals();
 
-  function handleContextMenu(e) {
-    hideContextMenu();
-    e.preventDefault();
-    e.stopPropagation();
+  function handleShowWhatsNew() {
+    handleShowModal({
+      modal: "whats-new",
+      restoreFocusRef: "#whats-new-button",
+    });
   }
 
   return (
-    <div className="AlertBanner" onContextMenu={handleContextMenu}>
+    <div className="AlertBanner" onContextMenu={(e) => e.stopPropagation()}>
       {firstRun ? (
         <>
           <div className="banner">
@@ -32,7 +33,10 @@ export const AlertBanner = ({
             <div className="message">
               <strong>Welcome to Toolbar Dial {appVersion}!</strong> You can set
               a background color or image, among other customizations, in{" "}
-              <a onClick={openOptions}>Options</a>.
+              <a href="options.html" target="_blank">
+                Options
+              </a>
+              .
             </div>
           </div>
           <div className="buttons">
@@ -67,8 +71,9 @@ export const AlertBanner = ({
               className="btn defaultBtn whats-new"
               title="Learn More"
               onClick={handleShowWhatsNew}
+              id="whats-new-button"
             >
-              What's New
+              What&apos;s New
             </button>
             <button
               className="btn dismissBtn dismiss"
@@ -82,4 +87,4 @@ export const AlertBanner = ({
       )}
     </div>
   );
-};
+});

@@ -1,88 +1,113 @@
-import { useEffect, useRef } from "react";
-import { CloseBtn } from "./Close.jsx";
-import classNames from "classnames";
+import { memo, useEffect, useRef, useState } from "react";
 
-export const Modal = ({
-  handleDismissModal,
-  handleEscapeModal,
+import { CloseBtn } from "./Close.jsx";
+import { useModals } from "./useModals.jsx";
+
+export const Modal = memo(function Memo({
   children,
-  title,
-  width,
   height,
   initialFocus,
-  shiftTabFocus,
-}) => {
-  const focusRef = useRef(null);
+  title,
+  width,
+}) {
+  const modalRef = useRef(null);
+  const [focusItems, setFocusItems] = useState(null);
+  const { handleDismissModal } = useModals();
+
+  const focusableElements = [
+    "a[href]",
+    "area[href]",
+    'input:not([disabled]):not([type="hidden"])',
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "button:not([disabled])",
+    '[tabindex]:not([tabindex="-1"]',
+  ];
+
+  useEffect(() => {
+    // Get array of all focusable elements
+    const focusableItems = [
+      ...modalRef.current.querySelectorAll(focusableElements.join(",")),
+    ].reduce((acc, element) => {
+      if (getComputedStyle(element).display !== "none") {
+        acc.push(element);
+      }
+      return acc;
+    }, []);
+    setFocusItems(focusableItems);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (initialFocus) {
-      initialFocus().focus();
-    } else if (focusRef.current) {
-      focusRef.current.focus();
+      // Focus provided initialFocus
+      modalRef.current.querySelector(initialFocus).focus();
+    } else if (modalRef.current) {
+      // Focus first focusable element
+      focusItems?.[0].focus();
     }
-  }, []);
+  }, [focusItems, initialFocus]);
 
   function handleTab(e) {
-    if (e.shiftKey && e.key === "Tab") {
-      shiftTabFocus().focus();
-      e.stopPropagation();
+    if (e.key === "Escape") {
+      handleDismissModal();
+    } else if (
+      e.shiftKey &&
+      e.key === "Tab" &&
+      document.activeElement === focusItems[0]
+    ) {
       e.preventDefault();
+      e.stopPropagation();
+      focusItems[focusItems.length - 1].focus();
+    } else if (
+      !e.shiftKey &&
+      e.key === "Tab" &&
+      document.activeElement === focusItems[focusItems.length - 1]
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      focusItems[0].focus();
     }
-  }
-
-  function focusDismissBtn() {
-    document.querySelector("#dismiss-btn").focus();
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
-      onKeyDown={handleEscapeModal}
       onMouseDown={(e) => {
-        e.stopPropagation();
-        if (e.button !== 2) handleDismissModal();
-      }}
-      onContextMenu={(e) => {
-        e.stopPropagation();
         e.preventDefault();
+        handleDismissModal();
       }}
-      className={classNames(
-        "Modal",
-        window.matchMedia(`(min-width: ${width})`).matches ? "desktop" : false
-      )}
-      style={{ "--modal-max-height": height, "--modal-width": width }}
+      className="Modal"
+      style={{
+        "--modal-max-height": height || null,
+        "--modal-width": width || null,
+      }}
     >
-      <div className="modal-wrapper">
-        <div
-          className="modal-content"
-          onMouseDown={(e) => {
-            e.stopPropagation();
-          }}
-          onContextMenu={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <header>
-            <h1 tabIndex="-1" ref={focusRef} onKeyDown={handleTab}>
-              {title}
-            </h1>
-            <button
-              className="btn dismissBtn dismiss"
-              title="Close"
-              onClick={handleDismissModal}
-              onKeyDown={handleTab}
-              id="dismiss-btn"
-            >
-              <CloseBtn />
-            </button>
-          </header>
-          <main>
-            <div className="scroll-box scrollbars" id="scroll-box" tabIndex="0">
-              {children}
-            </div>
-            <div tabIndex="0" onFocus={focusDismissBtn}></div>
-          </main>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
+      <div
+        className="modal-wrapper"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        ref={modalRef}
+        onKeyDown={handleTab}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <div className="header">
+          <h1 id="modal-title">{title}</h1>
+          <button
+            className="btn dismissBtn dismiss"
+            title="Close"
+            onClick={handleDismissModal}
+            id="dismiss-btn"
+          >
+            <CloseBtn />
+          </button>
+        </div>
+        <div className="modal-content">
+          <div className="scroll-box scrollbars">{children}</div>
         </div>
       </div>
     </div>
   );
-};
+});
