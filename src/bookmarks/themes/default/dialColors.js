@@ -30,6 +30,8 @@ const colors = {
   "foxnews.com": "#283593",
   "gamepedia.com": "#f57c00",
   "genius.com": "#fbc02d",
+  "github.com": "#616161",
+  "gitlab.com": "#e64a19",
   "google.": "#689f38",
   "glassdoor.com": "#616161",
   "gmail.com": "#d32f2f",
@@ -98,7 +100,7 @@ export function dialColors(domain) {
   domain = domain.join(".");
   // if domain matches key, return color
   for (const key of Object.keys(colors)) {
-    if (new RegExp(`^(www\\.)?${key}`).test(domain)) {
+    if (new RegExp(`^(.*\\.)?${key}`).test(domain)) {
       return colors[key];
     }
   }
