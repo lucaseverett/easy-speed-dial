@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Toolbar Dial",
-  "version": "2.7",
-  "permissions": ["bookmarks", "storage"],
-  "description": "Toolbar Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.",
+  "name": "Easy Speed Dial",
+  "version": "2.8",
+  "permissions": ["bookmarks", "storage", "unlimitedStorage"],
+  "description": "Easy Speed Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
   "options_ui": {
-    "page": "options.html",
+    "page": "settings.html",
     "open_in_tab": true
   },
   "icons": {

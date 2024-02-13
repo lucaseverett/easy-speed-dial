@@ -1,11 +1,15 @@
-import { defineConfig } from "vite";
+import { resolve } from "path";
+
 import react from "@vitejs/plugin-react";
 import postcssPresetEnv from "postcss-preset-env";
-import { resolve } from "path";
+import { defineConfig } from "vite";
 
 const PROJECT = process.env.PROJECT || "demo";
 
-const resolveFile = (file) => `/src/${PROJECT}/${file}.jsx`;
+const resolveFile = (file) =>
+  ["chrome", "firefox"].includes(PROJECT)
+    ? `#stores/${file}/extension`
+    : `#stores/${file}/web`;
 
 export default defineConfig({
   build: {
@@ -13,39 +17,26 @@ export default defineConfig({
     rollupOptions: {
       input: [
         resolve(__dirname, "index.html"),
-        resolve(__dirname, "options.html"),
+        resolve(__dirname, "settings.html"),
       ],
     },
+    target: "esnext",
   },
   css: {
     postcss: {
-      plugins: [postcssPresetEnv({ stage: 1 })],
+      plugins: [postcssPresetEnv()],
     },
   },
   define: {
-    __PROJECT__: JSON.stringify(PROJECT),
+    __CHROME__: PROJECT === "chrome",
+    __FIREFOX__: PROJECT === "firefox",
   },
   plugins: [react()],
   publicDir: `public/${PROJECT}`,
   resolve: {
     alias: {
-      useOptions: () => resolveFile("useOptions"),
-      useBookmarks: () => resolveFile("useBookmarks"),
+      "#stores/useSettings/web": resolveFile("useSettings"),
+      "#stores/useBookmarks/web": resolveFile("useBookmarks"),
     },
-  },
-  server: {
-    host: "0.0.0.0",
-    open: true,
-  },
-  test: {
-    coverage: {
-      provider: "istanbul",
-    },
-    deps: {
-      inline: ["localforage"],
-    },
-    environment: "jsdom",
-    globals: true,
-    setupFiles: "./setupTests/setup.js",
   },
 });

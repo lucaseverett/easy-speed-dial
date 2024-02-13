@@ -1,7 +1,4 @@
 node_modules
 dist*
-*.log
-.cache
 .DS_Store
-coverage
 .vercel

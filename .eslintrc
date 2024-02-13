@@ -9,8 +9,8 @@
     "prettier"
   ],
   "globals": {
-    "browser": "readonly",
-    "__PROJECT__": "readonly"
+    "__CHROME__": "readonly",
+    "__FIREFOX__": "readonly"
   },
   "ignorePatterns": ["*.test.*"],
   "parserOptions": {
@@ -19,6 +19,11 @@
   },
   "root": true,
   "rules": {
-    "react/prop-types": "off"
+    "no-else-return": "warn",
+    "no-unneeded-ternary": "warn",
+    "no-unused-vars": "warn",
+    "prefer-const": "warn",
+    "react/prop-types": "off",
+    "react/self-closing-comp": "warn"
   }
 }

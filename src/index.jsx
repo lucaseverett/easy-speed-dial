@@ -1,32 +1,33 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 
-import "./styles/styles.css";
-import { Bookmarks } from "./bookmarks/index.jsx";
-import { ProvideOptions } from "useOptions";
-import { ProvideBookmarks } from "useBookmarks";
-import { ProvideContextMenu } from "./bookmarks/useContextMenu.jsx";
-import { ProvideModals } from "./bookmarks/useModals.jsx";
+import { bookmarks } from "#stores/useBookmarks";
+import { settings } from "#stores/useSettings";
+import { Bookmarks } from "./Bookmarks/index";
 
-const root = createRoot(document.querySelector("#app"));
+const session = sessionStorage.getItem("last-folder");
+if (!location.hash && session && session !== settings.defaultFolder) {
+  // Load from session when clicking browser home button.
+  history.replaceState(null, null, `#${session}`);
+  bookmarks.changeFolder(session);
+} else if (location.hash) {
+  // Load from hash when reloading page.
+  bookmarks.changeFolder(location.hash.slice(1));
+} else {
+  // Load default folder on first load.
+  history.replaceState(null, null, `#${settings.defaultFolder}`);
+  bookmarks.changeFolder(settings.defaultFolder);
+}
 
-// Make <button> focus consistent across browsers
-document.querySelector("#app").addEventListener("click", function (event) {
-  if (event.target.matches("button")) {
-    event.target.focus();
-  }
+// Change folder when hash changes. (Browser back/forward buttons.)
+window.addEventListener("hashchange", () => {
+  bookmarks.changeFolder(location.hash.slice(1));
 });
 
+const domNode = document.getElementById("root");
+const root = createRoot(domNode);
 root.render(
   <React.StrictMode>
-    <ProvideOptions>
-      <ProvideBookmarks>
-        <ProvideModals>
-          <ProvideContextMenu>
-            <Bookmarks />
-          </ProvideContextMenu>
-        </ProvideModals>
-      </ProvideBookmarks>
-    </ProvideOptions>
+    <Bookmarks />
   </React.StrictMode>,
 );

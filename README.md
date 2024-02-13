@@ -1,22 +1,22 @@
 <div style="text-align:center"><img src ="screenshot.png" /></div>
 
-# Toolbar Dial
+# Easy Speed Dial
 
-Toolbar Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.
+Easy Speed Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.
 
 ## Live Demo
 
-https://demo.toolbardial.com/
+https://demo.easyspeeddial.com/
 
 ## Installation
 
 ### Clone the repo
 
 ```sh
-git clone https://github.com/lucaseverett/toolbardial.git
+git clone https://github.com/lucaseverett/easy-speed-dial.git
 ```
 
-### Install NPM dependencies
+### Install packages
 
 ```sh
 npm install
@@ -42,18 +42,6 @@ npm run test
 npm run test:watch
 ```
 
-### Run tests in browser
-
-```sh
-npm run test:ui
-```
-
-### View test coverage
-
-```sh
-npm run coverage
-```
-
 ## Linting
 
 ### Lint with ESLint
@@ -70,13 +58,13 @@ npm run format
 
 ## Building
 
-### Build demo
+### Build web demo
 
 ```sh
 npm run build
 ```
 
-### Preview demo build
+### Preview web build
 
 ```sh
 npm run preview

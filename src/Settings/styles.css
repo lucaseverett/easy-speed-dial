@@ -1,0 +1,318 @@
+@import "../styles/global.css";
+
+:root {
+  color-scheme: light;
+  --options-background-color: #eee;
+  --options-text-color: #000;
+  --options-box-shadow: 8px 8px 20px rgb(33, 33, 33, 0.5);
+  --options-outer-border-color: #e0e0e0;
+  --options-inner-border-color: #9e9e9e;
+  --header-background-color: #bdbdbd;
+  --wallpaper-button-box-shadow-color: #9e9e9e;
+  --wallpaper-button-focus-outline-color: #42a5f5;
+  --wallpaper-button-selected-outline-color: #1565c0;
+  --setting-wrapper-border-color: #9e9e9e;
+  --switch-background-color: #c2c2c2;
+  --switch-before-background-color: #f5f5f5;
+  --switch-focus-outline-color: #42a5f5;
+  --switch-checked-background-color: #1565c0;
+
+  &.color-scheme-dark,
+  .color-scheme-dark {
+    color-scheme: dark;
+    --options-background-color: #484848;
+    --options-text-color: #e0e0e0;
+    --options-box-shadow: 10px 14px 13px rgb(0, 0, 0, 0.6);
+    --options-outer-border-color: #424242;
+    --options-inner-border-color: #212121;
+    --header-background-color: #373737;
+    --wallpaper-button-box-shadow-color: #212121;
+    --wallpaper-button-focus-outline-color: #64b5f6;
+    --wallpaper-button-selected-outline-color: #1565c0;
+    --setting-wrapper-border-color: #373737;
+    --switch-background-color: #616161;
+    --switch-before-background-color: #f5f5f5;
+  }
+}
+
+.options-wrapper {
+  height: 100%;
+}
+
+.options-content {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  background-color: var(--options-background-color);
+  color: var(--options-text-color);
+
+  .color-scheme-dark & {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.settings-content {
+  outline: none;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0;
+  padding: 10px 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--header-background-color);
+}
+
+.background-buttons {
+  margin: 20px 0;
+  display: flex;
+  gap: 1px;
+
+  button {
+    width: 100%;
+
+    &.selected {
+      background-color: var(--btn-selected-background-color);
+    }
+
+    &:focus-visible {
+      z-index: 10;
+    }
+
+    &:not(:first-of-type) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    &:not(:last-of-type) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+
+.setting-option.wallpapers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.wallpaper-button,
+.wallpaper-button-transparent {
+  outline: none;
+  width: 120px;
+  height: 90px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 0 1px var(--wallpaper-button-box-shadow-color);
+}
+
+.wallpaper-button {
+  &:focus-visible {
+    outline: 4px solid var(--wallpaper-button-focus-outline-color);
+    outline-offset: 4px;
+  }
+}
+
+.wallpaper-button.selected {
+  outline: 4px solid var(--wallpaper-button-selected-outline-color);
+
+  &:focus-visible {
+    box-shadow: 0 0 0 8px var(--wallpaper-button-selected-outline-color);
+    outline-color: var(--wallpaper-button-focus-outline-color);
+  }
+
+  &::before {
+    background-color: #1565c0;
+    color: #fff;
+  }
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    content: "L";
+    height: 24px;
+    width: 24px;
+    padding-top: 2px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border-radius: 50%;
+    transform: scaleX(-1) rotate(-35deg);
+  }
+}
+
+.wallpaper-button-transparent {
+  cursor: initial;
+}
+
+#dark-wallpaper {
+  background-color: #212121;
+}
+
+#light-wallpaper {
+  background-color: #f5f5f5;
+}
+
+#blue-wallpaper {
+  background-color: #bbdefb;
+}
+
+#brown-wallpaper {
+  background-color: #d7ccc8;
+}
+
+#yellow-wallpaper {
+  background-color: #ffe082;
+}
+
+#green-wallpaper {
+  background-color: #b2dfdb;
+}
+
+#pink-wallpaper {
+  background-color: #f8bbd0;
+}
+
+.custom-group {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+button.custom {
+  width: 100%;
+}
+
+.setting-wrapper {
+  margin: 0 20px;
+  padding: 30px 0;
+
+  &:first-of-type {
+    padding-top: 20px;
+  }
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid var(--setting-wrapper-border-color);
+  }
+
+  &.about {
+    display: grid;
+    place-items: center;
+  }
+}
+
+.setting-wrapper.setting-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.setting-title {
+  font-weight: bold;
+  padding-bottom: 10px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+select {
+  max-width: 175px;
+}
+
+.setting-option {
+  &.select,
+  &.toggle {
+    margin-left: 20px;
+  }
+
+  &.select {
+    position: relative;
+  }
+
+  &.reset,
+  &.backup-restore {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.setting-description {
+  line-height: 1.5;
+}
+
+.switch-root {
+  all: unset;
+  display: flex;
+  place-items: center;
+  width: 50px;
+  height: 28px;
+  background-color: var(--switch-background-color);
+  border-radius: 14px;
+  outline: none;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 4px solid var(--switch-focus-outline-color);
+  }
+
+  &[data-state="checked"] {
+    background-color: var(--switch-checked-background-color);
+  }
+}
+
+.switch-thumb {
+  width: 22px;
+  height: 22px;
+  background-color: var(--switch-before-background-color);
+  border-radius: 50%;
+  transition: 0.2s;
+  transform: translateX(3px);
+
+  &[data-state="checked"] {
+    transform: translateX(25px);
+  }
+}
+
+@media (min-width: 797px) {
+  .Options {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .options-wrapper {
+    border: 5px solid var(--options-outer-border-color);
+    outline: 1px solid var(--options-inner-border-color);
+    box-shadow: var(--options-box-shadow);
+    max-height: calc(100vh - 100px);
+    border-radius: 10px;
+  }
+
+  .options-content {
+    height: initial;
+    overflow: hidden;
+    border: 1px solid var(--options-inner-border-color);
+    height: 100%;
+    border-radius: 5px;
+  }
+
+  .setting-wrapper {
+    max-width: 680px;
+  }
+
+  .settings-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+  }
+}

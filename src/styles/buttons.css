@@ -7,7 +7,6 @@
   --btn-selected-background-color: #bcbcbc;
   --dismiss-btn-hover-background-color: #c62828;
   --dismiss-btn-hover-fill-color: #fff;
-  --dismiss-btn-focus-outline-color: #ef5350;
   --submit-btn-background-color: #1565c0;
   --submit-btn-hover-background-color: #0d47a1;
 
@@ -21,7 +20,6 @@
     --btn-selected-background-color: #424242;
     --dismiss-btn-hover-background-color: #d32f2f;
     --dismiss-btn-hover-fill-color: #fff;
-    --dismiss-btn-focus-outline-color: #e57373;
   }
 }
 
@@ -68,26 +66,43 @@
   }
 
   &.dismissBtn {
-    background: transparent;
-    border: none;
-    padding: 3px;
-    border-radius: 4px;
-    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    padding: 0;
+
+    div {
+      height: 30px;
+      width: 30px;
+      position: relative;
+      display: grid;
+      place-items: center;
+
+      &:before,
+      &:after {
+        position: absolute;
+        width: 2px;
+        content: "";
+        height: 22px;
+        background-color: currentColor;
+      }
+
+      &:before {
+        transform: rotate(45deg);
+      }
+
+      &:after {
+        transform: rotate(-45deg);
+      }
+    }
 
     &:hover {
       background-color: var(--dismiss-btn-hover-background-color);
-
-      & svg {
-        fill: var(--dismiss-btn-hover-fill-color);
-      }
+      color: var(--dismiss-btn-hover-fill-color);
     }
 
     &:active {
       filter: brightness(0.9);
-    }
-
-    &:focus-visible {
-      outline: 4px solid var(--dismiss-btn-focus-outline-color);
     }
   }
 }
