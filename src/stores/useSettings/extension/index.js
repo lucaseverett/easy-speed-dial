@@ -172,8 +172,10 @@ export const settings = makeAutoObservable({
     } else {
       set(settings.dialColors, id, value);
     }
+    // Object spread is needed for Firefox to clone the object. Chrome works without it.
+    // This seems to be a difference in how structured clone is handled in the two browsers.
     browser.storage.local.set({
-      [`${apiVersion}-dial-colors`]: settings.dialColors,
+      [`${apiVersion}-dial-colors`]: { ...settings.dialColors },
     });
     bc.postMessage({
       dialColors: { ...settings.dialColors },
