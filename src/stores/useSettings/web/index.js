@@ -311,11 +311,14 @@ export const settings = makeAutoObservable({
           settings.handleCustomColor(backup.customColor);
           settings.handleDefaultFolder(backup.defaultFolder);
           localForage.setItem(`${apiVersion}-dial-colors`, backup.dialColors);
-          localForage.setItem(`${apiVersion}-dial-images`, backup.dialImages);
+          localForage.setItem(
+            `${apiVersion}-dial-images`,
+            backup.dialImages || {},
+          );
           settings.dialColors = backup.dialColors;
-          settings.dialImages = backup.dialImages;
+          settings.dialImages = backup.dialImages || {};
           bc.postMessage({ dialColors: backup.dialColors });
-          bc.postMessage({ dialImages: backup.dialImages });
+          bc.postMessage({ dialImages: backup.dialImages || {} });
           settings.handleMaxColumns(backup.maxColumns);
           settings.handleNewTab(backup.newTab);
           settings.handleShowTitle(backup.showTitle);
