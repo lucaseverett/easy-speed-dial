@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { bookmarks } from "#stores/useBookmarks";
 import { contextMenu } from "#stores/useContextMenu";
 import { modals } from "#stores/useModals";
+import { settings } from "#stores/useSettings";
 
 export const ContextMenu = observer(function ContextMenu() {
   const contextMenuRef = useRef();
@@ -192,6 +193,39 @@ export const ContextMenu = observer(function ContextMenu() {
             </>
           )}
           <Separator />
+          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") ? (
+            <>
+              <li>
+                <button
+                  role="menuitem"
+                  onClick={handleSelectThumbnail}
+                  onMouseEnter={handleMouseEnter}
+                >
+                  Select custom thumbnail
+                </button>
+              </li>
+              <li>
+                <button
+                  role="menuitem"
+                  onClick={handleClearThumbnail}
+                  onMouseEnter={handleMouseEnter}
+                >
+                  Clear custom thumbnail
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <button
+                role="menuitem"
+                onClick={handleSelectThumbnail}
+                onMouseEnter={handleMouseEnter}
+              >
+                Select custom thumbnail
+              </button>
+            </li>
+          )}
+          <Separator />
           <li>
             <button
               role="menuitem"
@@ -244,6 +278,39 @@ export const ContextMenu = observer(function ContextMenu() {
                 </button>
               </li>{" "}
             </>
+          )}
+          <Separator />
+          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") ? (
+            <>
+              <li>
+                <button
+                  role="menuitem"
+                  onClick={handleSelectThumbnail}
+                  onMouseEnter={handleMouseEnter}
+                >
+                  Select custom thumbnail
+                </button>
+              </li>
+              <li>
+                <button
+                  role="menuitem"
+                  onClick={handleClearThumbnail}
+                  onMouseEnter={handleMouseEnter}
+                >
+                  Clear custom thumbnail
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <button
+                role="menuitem"
+                onClick={handleSelectThumbnail}
+                onMouseEnter={handleMouseEnter}
+              >
+                Select custom thumbnail
+              </button>
+            </li>
           )}
           <Separator />
           <li>
@@ -322,6 +389,11 @@ export const ContextMenu = observer(function ContextMenu() {
   );
 });
 
+function handleClearThumbnail() {
+  contextMenu.closeContextMenu();
+  settings.handleClearThumbnail(contextMenu.focusAfterClosed.dataset.id);
+}
+
 function handleCopyURL() {
   contextMenu.closeContextMenu();
   navigator.clipboard.writeText(contextMenu.focusAfterClosed.href);
@@ -365,6 +437,11 @@ function handleOpenLinkTab() {
 function handleOpenSettings() {
   contextMenu.closeContextMenu();
   window.open("/settings.html", "_blank");
+}
+
+function handleSelectThumbnail() {
+  contextMenu.closeContextMenu();
+  settings.handleSelectThumbnail(contextMenu.focusAfterClosed.dataset.id);
 }
 
 function handleShowAbout() {

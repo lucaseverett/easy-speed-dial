@@ -37,7 +37,8 @@ export const bookmarks = makeAutoObservable({
       (bookmark) => bookmark.id === id,
     );
     if (indexToRemove !== -1) bookmarks.bookmarks.splice(indexToRemove, 1);
-    settings.handleDialColors(id, "");
+    settings.handleClearColor(id);
+    settings.handleClearThumbnail(id);
   },
   deleteFolder(id) {
     browser.bookmarks.removeTree(id);
@@ -45,7 +46,8 @@ export const bookmarks = makeAutoObservable({
       (bookmark) => bookmark.id === id,
     );
     if (indexToRemove !== -1) bookmarks.bookmarks.splice(indexToRemove, 1);
-    settings.handleDialColors(id, "");
+    settings.handleClearColor(id);
+    settings.handleClearThumbnail(id);
   },
   moveBookmark({ id, from, to }) {
     const bookmark = bookmarks.bookmarks.find((b) => b.id === id);

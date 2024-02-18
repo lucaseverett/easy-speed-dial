@@ -1,8 +1,8 @@
-<div style="text-align:center"><img src ="screenshot.png" /></div>
+<div style="text-align:center"><img src ="screenshot.webp" /></div>
 
 # Easy Speed Dial
 
-Easy Speed Dial is an extension for modern browsers that replaces the new tab page with a colorful grid of your bookmarks and folders.
+Easy Speed Dial is a browser extension that replaces the new tab page with a colorful grid of your bookmarks and folders.
 
 ## Live Demo
 

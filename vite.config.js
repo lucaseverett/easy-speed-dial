@@ -13,6 +13,7 @@ const resolveFile = (file) =>
 
 export default defineConfig({
   build: {
+    assetsInlineLimit: 0,
     outDir: `dist-${PROJECT}`,
     rollupOptions: {
       input: [

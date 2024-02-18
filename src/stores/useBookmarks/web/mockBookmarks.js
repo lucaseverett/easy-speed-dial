@@ -1,43 +1,93 @@
 import { browser } from "./browser.bookmarks";
+import amazonThumbnail from "./images/amazon.svg";
+import bestBuyThumbnail from "./images/bestbuy.svg";
+import bookingThumbnail from "./images/booking.svg";
+import disneyThumbnail from "./images/disney.svg";
+import ebayThumbnail from "./images/ebay.svg";
+import expediaThumbnail from "./images/expedia.svg";
+import grubhubThumbnail from "./images/grubhub.svg";
+import hotelsThumbnail from "./images/hotels.svg";
+import targetThumbnail from "./images/target.svg";
+import walmartThumbnail from "./images/walmart.svg";
+import youTubeThumbnail from "./images/youtube.svg";
 
-const bookmarks = [
-  ["https://www.google.com", "Google", "3d9912ed-4b31-4415-bf96-7ccc427349a7"],
+export const bookmarks = [
+  [
+    "https://www.amazon.com",
+    "Amazon",
+    "87b397bd-0566-4483-b21a-076bac23206b",
+    "#232F3E",
+    amazonThumbnail,
+  ],
+  [
+    "https://www.bestbuy.com",
+    "Best Buy",
+    "74c2e0b3-97be-4d6c-8aac-b58d90a09b86",
+    "#0046be",
+    bestBuyThumbnail,
+  ],
+  [
+    "https://www.booking.com",
+    "Booking.com",
+    "3d9912ed-4b31-4415-bf96-7ccc427349a7",
+    "#003b95",
+    bookingThumbnail,
+  ],
+  [
+    "https://www.disneyplus.com",
+    "Disney+",
+    "5516b9ca-cbc0-46d1-b384-c8e213281b84",
+    "#020E40",
+    disneyThumbnail,
+  ],
+  [
+    "https://www.ebay.com",
+    "eBay",
+    "5408ac78-311a-4c9e-b859-38ea04f739fa",
+    "#fff",
+    ebayThumbnail,
+  ],
+  [
+    "https://www.expedia.com",
+    "Expedia",
+    "cd1ff3d3-f6d8-4b10-a802-b6ce9037559b",
+    "#fff",
+    expediaThumbnail,
+  ],
+  [
+    "https://www.grubhub.com",
+    "Grubhub",
+    "60f78b1c-7082-4dbc-89c8-7bb82bb6c67f",
+    "#fff",
+    grubhubThumbnail,
+  ],
+  [
+    "https://www.hotels.com",
+    "Hotels.com",
+    "8b98dfe2-a7d4-47a4-8ffe-3b70966c6be8",
+    "#fff",
+    hotelsThumbnail,
+  ],
+  [
+    "https://www.target.com",
+    "Target",
+    "74038f98-fb5d-4e73-ba4f-e2cb23593787",
+    "#fff",
+    targetThumbnail,
+  ],
+  [
+    "https://www.walmart.com",
+    "Walmart",
+    "6de4bf83-1499-40ef-8506-5313593d2d2a",
+    "#0071dc",
+    walmartThumbnail,
+  ],
   [
     "https://www.youtube.com",
     "YouTube",
     "e3b67ddb-87b7-4e05-99f6-112285e87ef4",
-  ],
-  [
-    "https://www.facebook.com",
-    "Facebook",
-    "5408ac78-311a-4c9e-b859-38ea04f739fa",
-  ],
-  ["https://www.amazon.com", "Amazon", "87b397bd-0566-4483-b21a-076bac23206b"],
-  ["https://www.yahoo.com", "Yahoo", "60f78b1c-7082-4dbc-89c8-7bb82bb6c67f"],
-  ["https://www.reddit.com", "Reddit", "6de4bf83-1499-40ef-8506-5313593d2d2a"],
-  [
-    "https://www.wikipedia.org",
-    "Wikipedia",
-    "8b98dfe2-a7d4-47a4-8ffe-3b70966c6be8",
-  ],
-  [
-    "https://www.instagram.com",
-    "Instagram",
-    "5516b9ca-cbc0-46d1-b384-c8e213281b84",
-  ],
-  ["https://www.ebay.com", "eBay", "cd1ff3d3-f6d8-4b10-a802-b6ce9037559b"],
-];
-
-const otherBookmarks = [
-  [
-    "https://lucaseverett.dev",
-    "Lucas Everett",
-    "a1146c3c-6890-4dbd-b0c1-57f7a976faeb",
-  ],
-  [
-    "https://toolbardial.com",
-    "Easy Speed Dial",
-    "ce160173-0b97-446d-ab4d-3c202221cbc9",
+    "#fff",
+    youTubeThumbnail,
   ],
 ];
 
@@ -179,26 +229,11 @@ bookmarks.forEach((b) => {
   browser.bookmarks.create({ url: b[0], title: b[1], id: b[2], parentId: "1" });
 });
 
-const otherBookmarksFolder = browser.bookmarks.create({
-  title: "Other Bookmarks",
-  id: "12335f16-cd20-45f0-9b01-db6d8b055c61",
-  parentId: "1",
-});
-
-otherBookmarks.forEach((b) => {
-  browser.bookmarks.create({
-    url: b[0],
-    title: b[1],
-    id: b[2],
-    parentId: otherBookmarksFolder.id,
-  });
-});
-
 if (process.env.NODE_ENV === "development") {
   const topSitesUSFolder = browser.bookmarks.create({
     title: "Top Sites - US",
     id: "a1e0e978-6fcf-48ec-a968-e88fcf021faf",
-    parentId: otherBookmarksFolder.id,
+    parentId: "1",
   });
 
   topSitesUS.forEach((b) => {
@@ -212,7 +247,7 @@ if (process.env.NODE_ENV === "development") {
   const topSitesGlobalFolder = browser.bookmarks.create({
     title: "Top Sites - Global",
     id: "5d311f7f-d4e4-43b1-a87b-98b159bafe8d",
-    parentId: otherBookmarksFolder.id,
+    parentId: "1",
   });
 
   topSitesGlobal.forEach((b) => {

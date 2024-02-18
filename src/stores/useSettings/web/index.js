@@ -2,6 +2,7 @@ import localForage from "localforage";
 import { makeAutoObservable, remove, set } from "mobx";
 
 import { apiVersion, appVersion } from "#common/version";
+import { bookmarks as mockBookmarks } from "#stores/useBookmarks/web/mockBookmarks";
 import {
   base64ToBlob,
   blobToBase64,
@@ -51,6 +52,14 @@ wallpaper = wallpaper?.includes("custom-image")
     (window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark-wallpaper"
       : "light-wallpaper");
+const dialColors =
+  (await localForage.getItem(`${apiVersion}-dial-colors`)) || {};
+const dialImages =
+  (await localForage.getItem(`${apiVersion}-dial-images`)) || {};
+mockBookmarks.forEach((b) => {
+  dialColors[b[2]] = b[3];
+  dialImages[b[2]] = b[4];
+});
 
 // Handle changes from the Settings page between open tabs.
 const bc = new BroadcastChannel("easy-settings");
@@ -71,6 +80,7 @@ const defaultSettings = {
   customImage: "",
   defaultFolder: "1",
   dialColors: {},
+  dialImages: {},
   firstRun: !lastVersion,
   maxColumns: "7",
   newTab: false,
@@ -94,10 +104,8 @@ export const settings = makeAutoObservable({
   defaultFolder:
     localStorage.getItem(`${apiVersion}-default-folder`) ||
     defaultSettings.defaultFolder,
-  dialColors: parse(
-    localStorage.getItem(`${apiVersion}-dial-colors`),
-    defaultSettings.dialColors,
-  ),
+  dialColors,
+  dialImages,
   firstRun: defaultSettings.firstRun,
   maxColumns:
     localStorage.getItem(`${apiVersion}-max-columns`) ||
@@ -124,6 +132,28 @@ export const settings = makeAutoObservable({
     settings.attachTitle = value;
     bc.postMessage({ attachTitle: value });
   },
+  handleClearColor(id) {
+    if (settings.dialColors[id]) {
+      remove(settings.dialColors, id);
+      localForage.setItem(`${apiVersion}-dial-colors`, {
+        ...settings.dialColors,
+      });
+      bc.postMessage({
+        dialColors: { ...settings.dialColors },
+      });
+    }
+  },
+  handleClearThumbnail(id) {
+    if (settings.dialImages[id]) {
+      remove(settings.dialImages, id);
+      localForage.setItem(`${apiVersion}-dial-images`, {
+        ...settings.dialImages,
+      });
+      bc.postMessage({
+        dialImages: { ...settings.dialImages },
+      });
+    }
+  },
   handleCustomColor(value) {
     localStorage.setItem(`${apiVersion}-custom-color`, value);
     settings.customColor = value;
@@ -149,15 +179,10 @@ export const settings = makeAutoObservable({
     bc.postMessage({ defaultFolder: value });
   },
   handleDialColors(id, value) {
-    if (value === "") {
-      remove(settings.dialColors, id);
-    } else {
-      set(settings.dialColors, id, value);
-    }
-    localStorage.setItem(
-      `${apiVersion}-dial-colors`,
-      JSON.stringify(settings.dialColors),
-    );
+    set(settings.dialColors, id, value);
+    localForage.setItem(`${apiVersion}-dial-colors`, {
+      ...settings.dialColors,
+    });
     bc.postMessage({
       dialColors: { ...settings.dialColors },
     });
@@ -171,6 +196,20 @@ export const settings = makeAutoObservable({
     localStorage.setItem(`${apiVersion}-new-tab`, value);
     settings.newTab = value;
     bc.postMessage({ newTab: value });
+  },
+  handleSelectThumbnail(id) {
+    const i = document.createElement("input");
+    i.type = "File";
+    i.onchange = async (e) => {
+      const image = e.target.files[0];
+      const base64 = await blobToBase64(image);
+      settings.dialImages = { ...settings.dialImages, [id]: base64 };
+      localForage.setItem(`${apiVersion}-dial-images`, {
+        ...settings.dialImages,
+      });
+      bc.postMessage({ dialImages: { ...settings.dialImages } });
+    };
+    i.click();
   },
   handleShowTitle(value) {
     localStorage.setItem(`${apiVersion}-show-title`, value);
@@ -211,15 +250,29 @@ export const settings = makeAutoObservable({
     }
   },
   resetDialColors() {
-    localStorage.setItem(`${apiVersion}-dial-colors`, "{}");
-    settings.dialColors = {};
-    bc.postMessage({ dialColors: {} });
+    localForage.setItem(`${apiVersion}-dial-colors`, {});
+    const dialColors = {};
+    mockBookmarks.forEach((b) => {
+      dialColors[b[2]] = b[3];
+    });
+    settings.dialColors = dialColors;
+    bc.postMessage({ dialColors });
+  },
+  resetDialImages() {
+    localForage.removeItem(`${apiVersion}-dial-images`);
+    const dialImages = {};
+    mockBookmarks.forEach((b) => {
+      dialImages[b[2]] = b[4];
+    });
+    settings.dialImages = dialImages;
+    bc.postMessage({ dialImages });
   },
   resetSettings() {
     settings.handleAttachTitle(defaultSettings.attachTitle);
     settings.handleCustomColor(defaultSettings.customColor);
     settings.resetCustomImage();
     settings.resetDialColors();
+    settings.resetDialImages();
     settings.resetWallpaper();
     settings.handleDefaultFolder(defaultSettings.defaultFolder);
     settings.handleMaxColumns(defaultSettings.maxColumns);
@@ -257,12 +310,12 @@ export const settings = makeAutoObservable({
           settings.handleAttachTitle(backup.attachTitle);
           settings.handleCustomColor(backup.customColor);
           settings.handleDefaultFolder(backup.defaultFolder);
-          localStorage.setItem(
-            `${apiVersion}-dial-colors`,
-            JSON.stringify(backup.dialColors),
-          );
+          localForage.setItem(`${apiVersion}-dial-colors`, backup.dialColors);
+          localForage.setItem(`${apiVersion}-dial-images`, backup.dialImages);
           settings.dialColors = backup.dialColors;
+          settings.dialImages = backup.dialImages;
           bc.postMessage({ dialColors: backup.dialColors });
+          bc.postMessage({ dialImages: backup.dialImages });
           settings.handleMaxColumns(backup.maxColumns);
           settings.handleNewTab(backup.newTab);
           settings.handleShowTitle(backup.showTitle);
@@ -283,6 +336,7 @@ export const settings = makeAutoObservable({
       customImage: settings.customImage,
       defaultFolder: settings.defaultFolder,
       dialColors: settings.dialColors,
+      dialImages: settings.dialImages,
       maxColumns: settings.maxColumns,
       newTab: settings.newTab,
       showTitle: settings.showTitle,

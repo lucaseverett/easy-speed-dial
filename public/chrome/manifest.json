@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Easy Speed Dial",
-  "version": "2.8",
+  "version": "2.9",
   "permissions": ["bookmarks", "storage", "unlimitedStorage"],
   "description": "Easy Speed Dial replaces the new tab page with a colorful grid of your bookmarks and folders.",
   "chrome_url_overrides": {
@@ -23,5 +23,5 @@
     "1024": "icons/1024.png"
   },
   "author": "Lucas Everett",
-  "homepage_url": "https://toolbardial.com"
+  "homepage_url": "https://easyspeeddial.com"
 }

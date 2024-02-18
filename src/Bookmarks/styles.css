@@ -433,8 +433,6 @@
   color: #fff;
   font-weight: 500;
   overflow: hidden;
-  background-color: var(--dial-background-color);
-  text-shadow: var(--dial-text-shadow);
 
   .folder {
     width: 80px;

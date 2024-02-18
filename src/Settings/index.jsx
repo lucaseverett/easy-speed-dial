@@ -247,7 +247,7 @@ export const Settings = observer(function Settings() {
                         className="btn defaultBtn custom customColor"
                         onClick={colorPicker.openColorPicker}
                       >
-                        Choose Color
+                        Select Color
                       </button>
                       {colorPicker.isOpen && (
                         <ColorPicker
@@ -296,7 +296,7 @@ export const Settings = observer(function Settings() {
                             className="btn defaultBtn custom"
                             onClick={handleCustomImage}
                           >
-                            Open Image
+                            Select Image
                           </button>
                         </>
                       )}

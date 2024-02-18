@@ -12,6 +12,7 @@ export const Dial = observer(function Dial(props) {
       data-id={props.id}
       data-title={props.title}
       data-type={props.type}
+      data-thumbnail={settings.dialImages[props.id] ? "" : null}
       rel={props.type === "bookmark" ? "noreferrer" : undefined}
       className="Link"
       target={
@@ -22,34 +23,36 @@ export const Dial = observer(function Dial(props) {
       <div
         className="Box"
         style={{
-          "--dial-background-color":
-            settings.dialColors[props.id] || dialColors(props.name),
-          "--dial-text-shadow":
+          background: settings.dialImages[props.id]
+            ? `${settings.dialColors[props.id] || dialColors(props.name)} url("${settings.dialImages[props.id]}") center/cover no-repeat`
+            : `${settings.dialColors[props.id] || dialColors(props.name)}`,
+          textShadow:
             props.type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none",
         }}
       >
-        {props.type === "bookmark" ? (
-          <div>
-            <Name
-              {...{
-                name: settings.switchTitle
-                  ? props.title
-                    ? [props.title]
-                    : [props.name.join(".")]
-                  : props.name,
-              }}
-            />
-          </div>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="folder"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M9.17 6l2 2H20v10H4V6h5.17M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
-          </svg>
-        )}
+        {!settings.dialImages[props.id] &&
+          (props.type === "bookmark" ? (
+            <div>
+              <Name
+                {...{
+                  name: settings.switchTitle
+                    ? props.title
+                      ? [props.title]
+                      : [props.name.join(".")]
+                    : props.name,
+                }}
+              />
+            </div>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="folder"
+            >
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M9.17 6l2 2H20v10H4V6h5.17M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+            </svg>
+          ))}
       </div>
       <Title {...{ title: props.title, name: props.name }} />
     </a>

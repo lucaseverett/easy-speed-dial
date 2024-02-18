@@ -14,6 +14,14 @@ export function WhatsNewModal() {
       <div className="scroll-focus" tabIndex="0">
         <div className="WhatsNew">
           <div>
+            <h2>Version 2.9</h2>
+            <h3>New features</h3>
+            <ul>
+              <li>&quot;Select custom thumbnail&quot; (context menu)</li>
+              <li>&quot;Clear custom thumbnail&quot; (context menu)</li>
+            </ul>
+          </div>
+          <div>
             <h2>Version 2.8</h2>
             <h3>New features</h3>
             <ul>

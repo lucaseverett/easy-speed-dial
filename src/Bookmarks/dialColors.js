@@ -31,7 +31,7 @@ const colors = {
   "foxnews.com": "#283593",
   "gamepedia.com": "#f57c00",
   "genius.com": "#fbc02d",
-  "github.com": "#616161",
+  "github.com|github.dev|github.io": "#616161",
   "gitlab.com": "#e64a19",
   "google.": "#689f38",
   "glassdoor.com": "#616161",

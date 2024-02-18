@@ -96,6 +96,7 @@ const defaultSettings = {
   customImage: "",
   defaultFolder: "",
   dialColors: {},
+  dialImages: {},
   firstRun: !lastVersion,
   maxColumns: "7",
   newTab: false,
@@ -123,6 +124,8 @@ export const settings = makeAutoObservable({
     storage[`${apiVersion}-default-folder`] || defaultSettings.defaultFolder,
   dialColors:
     storage[`${apiVersion}-dial-colors`] || defaultSettings.dialColors,
+  dialImages:
+    storage[`${apiVersion}-dial-images`] || defaultSettings.dialImages,
   firstRun: defaultSettings.firstRun,
   maxColumns:
     storage[`${apiVersion}-max-columns`] || defaultSettings.maxColumns,
@@ -138,6 +141,24 @@ export const settings = makeAutoObservable({
     browser.storage.local.set({ [`${apiVersion}-attach-title`]: value });
     settings.attachTitle = value;
     bc.postMessage({ attachTitle: value });
+  },
+  handleClearColor(id) {
+    if (settings.dialColors[id]) {
+      remove(settings.dialColors, id);
+      browser.storage.local.set({
+        [`${apiVersion}-dial-colors`]: { ...settings.dialColors },
+      });
+      bc.postMessage({ dialColors: { ...settings.dialColors } });
+    }
+  },
+  handleClearThumbnail(id) {
+    if (settings.dialImages[id]) {
+      remove(settings.dialImages, id);
+      browser.storage.local.set({
+        [`${apiVersion}-dial-images`]: { ...settings.dialImages },
+      });
+      bc.postMessage({ dialImages: { ...settings.dialImages } });
+    }
   },
   handleCustomColor(value) {
     browser.storage.local.set({ [`${apiVersion}-custom-color`]: value });
@@ -167,13 +188,7 @@ export const settings = makeAutoObservable({
     bc.postMessage({ defaultFolder: value });
   },
   handleDialColors(id, value) {
-    if (value === "") {
-      remove(settings.dialColors, id);
-    } else {
-      set(settings.dialColors, id, value);
-    }
-    // Object spread is needed for Firefox to clone the object. Chrome works without it.
-    // This seems to be a difference in how structured clone is handled in the two browsers.
+    set(settings.dialColors, id, value);
     browser.storage.local.set({
       [`${apiVersion}-dial-colors`]: { ...settings.dialColors },
     });
@@ -190,6 +205,20 @@ export const settings = makeAutoObservable({
     browser.storage.local.set({ [`${apiVersion}-new-tab`]: value });
     settings.newTab = value;
     bc.postMessage({ newTab: value });
+  },
+  handleSelectThumbnail(id) {
+    const i = document.createElement("input");
+    i.type = "File";
+    i.onchange = async (e) => {
+      const image = e.target.files[0];
+      const base64 = await blobToBase64(image);
+      settings.dialImages = { ...settings.dialImages, [id]: base64 };
+      browser.storage.local.set({
+        [`${apiVersion}-dial-images`]: { ...settings.dialImages },
+      });
+      bc.postMessage({ dialImages: { ...settings.dialImages } });
+    };
+    i.click();
   },
   handleShowTitle(value) {
     browser.storage.local.set({ [`${apiVersion}-show-title`]: value });
@@ -234,11 +263,17 @@ export const settings = makeAutoObservable({
     settings.dialColors = {};
     bc.postMessage({ dialColors: {} });
   },
+  resetDialImages() {
+    browser.storage.local.remove(`${apiVersion}-dial-images`);
+    settings.dialImages = {};
+    bc.postMessage({ dialImages: {} });
+  },
   resetSettings() {
     settings.handleAttachTitle(defaultSettings.attachTitle);
     settings.handleCustomColor(defaultSettings.customColor);
     settings.resetCustomImage();
     settings.resetDialColors();
+    settings.resetDialImages();
     settings.resetWallpaper();
     settings.handleDefaultFolder(defaultSettings.defaultFolder);
     settings.handleMaxColumns(defaultSettings.maxColumns);
@@ -281,8 +316,13 @@ export const settings = makeAutoObservable({
           browser.storage.local.set({
             [`${apiVersion}-dial-colors`]: backup.dialColors,
           });
+          browser.storage.local.set({
+            [`${apiVersion}-dial-images`]: backup.dialImages,
+          });
           settings.dialColors = backup.dialColors;
+          settings.dialImages = backup.dialImages;
           bc.postMessage({ dialColors: backup.dialColors });
+          bc.postMessage({ dialImages: backup.dialImages });
           settings.handleMaxColumns(backup.maxColumns);
           settings.handleNewTab(backup.newTab);
           settings.handleShowTitle(backup.showTitle);
@@ -303,6 +343,7 @@ export const settings = makeAutoObservable({
       customImage: settings.customImage,
       defaultFolder: settings.defaultFolder,
       dialColors: settings.dialColors,
+      dialImages: settings.dialImages,
       maxColumns: settings.maxColumns,
       newTab: settings.newTab,
       showTitle: settings.showTitle,

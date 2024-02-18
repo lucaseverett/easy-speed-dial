@@ -44,7 +44,11 @@ export const BookmarkModal = observer(function BookmarkModal() {
       // Add custom dial color if it doesn't match default dial color.
       // Remove custom dial color if it matches default dial color.
       const color = dialColor !== defaultDialColor ? customDialColor : "";
-      settings.handleDialColors(modals.focusAfterClosed?.dataset.id, color);
+      if (color) {
+        settings.handleDialColors(modals.focusAfterClosed?.dataset.id, color);
+      } else {
+        settings.handleClearColor(modals.focusAfterClosed?.dataset.id);
+      }
       if (
         ((bookmarkType === "folder" || bookmarkType === "bookmark") &&
           bookmarkTitle !== modals.focusAfterClosed?.dataset.title) ||

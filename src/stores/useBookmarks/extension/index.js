@@ -32,11 +32,13 @@ export const bookmarks = makeAutoObservable({
   },
   deleteBookmark(id) {
     browser.bookmarks.remove(id);
-    settings.handleDialColors(id, "");
+    settings.handleClearColor(id);
+    settings.handleClearThumbnail(id);
   },
   deleteFolder(id) {
     browser.bookmarks.removeTree(id);
-    settings.handleDialColors(id, "");
+    settings.handleClearColor(id);
+    settings.handleClearThumbnail(id);
   },
   moveBookmark({ id, from, to }) {
     /*
