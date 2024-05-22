@@ -104,6 +104,7 @@ const defaultSettings = {
   showTitle: true,
   switchTitle: false,
   themeOption: "System Theme",
+  titleFontSize: 12,
   wallpaper: "",
 };
 
@@ -136,6 +137,8 @@ export const settings = makeAutoObservable({
     storage[`${apiVersion}-switch-title`] ?? defaultSettings.switchTitle,
   themeOption:
     storage[`${apiVersion}-theme-option`] || defaultSettings.themeOption,
+  titleFontSize:
+    storage[`${apiVersion}-title-font-size`] || defaultSettings.titleFontSize,
   wallpaper,
   handleAttachTitle(value) {
     browser.storage.local.set({ [`${apiVersion}-attach-title`]: value });
@@ -242,6 +245,11 @@ export const settings = makeAutoObservable({
     );
     bc.postMessage({ themeOption: value });
   },
+  handleTitleFontSize(value) {
+    browser.storage.local.set({ [`${apiVersion}-title-font-size`]: value });
+    settings.titleFontSize = value;
+    bc.postMessage({ titleFontSize: value });
+  },
   handleWallpaper(value) {
     browser.storage.local.set({ [`${apiVersion}-wallpaper`]: value });
     settings.wallpaper = value;
@@ -281,6 +289,7 @@ export const settings = makeAutoObservable({
     settings.handleShowTitle(defaultSettings.showTitle);
     settings.handleSwitchTitle(defaultSettings.switchTitle);
     settings.handleThemeOption(defaultSettings.themeOption);
+    settings.handleTitleFontSize(defaultSettings.titleFontSize);
   },
   resetWallpaper() {
     settings.handleWallpaper(
@@ -349,6 +358,7 @@ export const settings = makeAutoObservable({
       showTitle: settings.showTitle,
       switchTitle: settings.switchTitle,
       themeOption: settings.themeOption,
+      titleFontSize: settings.titleFontSize,
       wallpaper: settings.wallpaper,
     };
     const { [`${apiVersion}-custom-image`]: image } =

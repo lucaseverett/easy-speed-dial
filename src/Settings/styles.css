@@ -227,6 +227,11 @@ select {
   max-width: 175px;
 }
 
+input {
+  max-width: 60px;
+  background-color: var(--switch-background-color);
+}
+
 .setting-option {
   &.select,
   &.toggle {

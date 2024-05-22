@@ -54,7 +54,14 @@ export const Dial = observer(function Dial(props) {
             </svg>
           ))}
       </div>
-      <Title {...{ title: props.title, name: props.name }} />
+      <div
+        style={{
+          /*fontSize: '50pt',*/
+          fontSize: settings.titleFontSize + 'pt',
+        }}
+      >
+        <Title {...{ title: props.title, name: props.name }} />
+      </div>
     </a>
   );
 });

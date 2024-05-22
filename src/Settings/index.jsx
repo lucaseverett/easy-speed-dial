@@ -35,6 +35,7 @@ export const Settings = observer(function Settings() {
     handleShowTitle,
     handleSwitchTitle,
     handleThemeOption,
+    handleTitleFontSize,
     handleWallpaper,
     resetCustomImage,
     resetSettings,
@@ -428,6 +429,24 @@ export const Settings = observer(function Settings() {
                   ))}
                 </select>
                 <Arrow />
+              </div>
+            </div>
+            <div className="setting-wrapper setting-group">
+              <div className="setting-label">
+                <div className="setting-title" id="title-font-size-title">
+                  Title Font Size
+                </div>
+                <div className="setting-description" id="title-font-size-description">
+                  Choose the font size of title (in points).
+                </div>
+              </div>
+              <div className="setting-option input">
+                <input
+                  onChange={(e) => handleTitleFontSize(e.target.value)}
+                  value={settings.titleFontSize}
+                  type="number"
+                  min="0"
+                />
               </div>
             </div>
             <div className="setting-wrapper setting-group">

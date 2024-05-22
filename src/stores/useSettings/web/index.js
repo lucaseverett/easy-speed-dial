@@ -88,6 +88,7 @@ const defaultSettings = {
   showTitle: true,
   switchTitle: false,
   themeOption: "System Theme",
+  titleFontSize: 12,
   wallpaper: "",
 };
 
@@ -126,6 +127,9 @@ export const settings = makeAutoObservable({
   themeOption:
     localStorage.getItem(`${apiVersion}-theme-option`) ||
     defaultSettings.themeOption,
+  titleFontSize:
+    localStorage.getItem(`${apiVersion}-title-font-size`) ||
+    defaultSettings.titleFontSize,
   wallpaper,
   handleAttachTitle(value) {
     localStorage.setItem(`${apiVersion}-attach-title`, value);
@@ -233,6 +237,11 @@ export const settings = makeAutoObservable({
     );
     bc.postMessage({ themeOption: value });
   },
+  handleTitleFontSize(value) {
+    localStorage.setItem(`${apiVersion}-title-font-size`, value);
+    settings.titleFontSize = value;
+    bc.postMessage({ titleFontSize: value });
+  },
   handleWallpaper(value) {
     localStorage.setItem(`${apiVersion}-wallpaper`, value);
     settings.wallpaper = value;
@@ -280,6 +289,7 @@ export const settings = makeAutoObservable({
     settings.handleShowTitle(defaultSettings.showTitle);
     settings.handleSwitchTitle(defaultSettings.switchTitle);
     settings.handleThemeOption(defaultSettings.themeOption);
+    settings.handleTitleFontSize(defaultSettings.titleFontSize);
   },
   resetWallpaper() {
     settings.handleWallpaper(
@@ -325,6 +335,7 @@ export const settings = makeAutoObservable({
           settings.handleSwitchTitle(backup.switchTitle);
           settings.handleWallpaper(backup.wallpaper);
           settings.handleThemeOption(backup.themeOption);
+          settings.handleTitleFontSize(backup.titleFontSize);
         } catch (err) {
           console.error("Error parsing JSON file", err);
         }
@@ -345,6 +356,7 @@ export const settings = makeAutoObservable({
       showTitle: settings.showTitle,
       switchTitle: settings.switchTitle,
       themeOption: settings.themeOption,
+      titleFontSize: settings.titleFontSize,
       wallpaper: settings.wallpaper,
     };
     const image = await localForage.getItem(`${apiVersion}-custom-image`);
