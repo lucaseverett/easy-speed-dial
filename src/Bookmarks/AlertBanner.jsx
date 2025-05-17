@@ -1,6 +1,7 @@
-import { appVersion } from "#common/version";
 import { modals } from "#stores/useModals";
 import { settings } from "#stores/useSettings";
+
+const appVersion = __APP_VERSION__;
 
 export function AlertBanner() {
   function handleShowWhatsNew(e) {

@@ -1,4 +1,4 @@
-export const mockBookmarks = {
+let bookmarkTree = {
   id: "0",
   title: "Bookmarks",
   type: "folder",
@@ -13,6 +13,13 @@ export const mockBookmarks = {
     },
   ],
 };
+
+let listenerCb = null;
+const bc = new BroadcastChannel("easy-bookmarks");
+
+function broadcastChanges() {
+  bc.postMessage(bookmarkTree);
+}
 
 function create({ url, title, id, parentId }) {
   const newBookmark = {
@@ -30,23 +37,29 @@ function create({ url, title, id, parentId }) {
   }
 
   getChildren(parentId).push(newBookmark);
+
+  // Run the callback if it exists
+  listenerCb?.();
+
   return newBookmark;
 }
 
 function getTree() {
-  return [mockBookmarks];
+  return [bookmarkTree];
 }
 
-function getSubTree(id, bookmarks = mockBookmarks) {
+function getSubTree(id, bookmarks = bookmarkTree) {
   if (bookmarks.id === id) {
-    return {
-      id,
-      parentId: bookmarks.parentId,
-      title: bookmarks.title,
-      children: bookmarks.children?.sort(
-        (a, b) => (a.index || 0) - (b.index || 0),
-      ),
-    };
+    return [
+      {
+        id,
+        parentId: bookmarks.parentId,
+        title: bookmarks.title,
+        children: bookmarks.children?.sort(
+          (a, b) => (a.index || 0) - (b.index || 0),
+        ),
+      },
+    ];
   }
 
   return (
@@ -63,10 +76,10 @@ function getSubTree(id, bookmarks = mockBookmarks) {
 }
 
 function getChildren(id) {
-  return getSubTree(id)?.children || [];
+  return getSubTree(id)?.[0].children || [];
 }
 
-function get(id, bookmarks = mockBookmarks) {
+function get(id, bookmarks = bookmarkTree) {
   if (bookmarks.id === id) {
     return bookmarks;
   }
@@ -107,12 +120,18 @@ function move(id, { index }) {
 
   // Sort the bookmarks by index
   bookmarks.sort((a, b) => a.index - b.index);
+
+  // Run the callback if it exists
+  listenerCb?.();
 }
 
 function remove(id) {
   const bookmarks = getChildren(get(id).parentId);
   const index = bookmarks.findIndex((b) => b.id === id);
   if (index !== -1) bookmarks.splice(index, 1);
+
+  // Run the callback if it exists
+  listenerCb?.();
 }
 
 function update(id, changes) {
@@ -124,18 +143,43 @@ function update(id, changes) {
     title: changes.title,
   };
   bookmarks[index] = updatedBookmark;
+
+  // Run the callback if it exists
+  listenerCb?.();
+
   return updatedBookmark;
 }
 
-export const browser = {
-  bookmarks: {
-    create,
-    getChildren,
-    getSubTree,
-    getTree,
-    move,
-    remove,
-    removeTree: remove,
-    update,
-  },
+function addListener(callback) {
+  if (!listenerCb) {
+    listenerCb = () => {
+      broadcastChanges();
+      callback();
+    };
+    bc.onmessage = (e) => {
+      bookmarkTree = e.data;
+      callback();
+    };
+  }
+}
+
+function createTab({ url }) {
+  window.open(url, "_blank", "noreferrer");
+}
+
+const bookmarks = {
+  create,
+  getChildren,
+  getSubTree,
+  getTree,
+  move,
+  remove,
+  removeTree: remove,
+  update,
+  onChanged: { addListener },
+  onCreated: { addListener },
+  onMoved: { addListener },
+  onRemoved: { addListener },
 };
+
+export default { bookmarks, tabs: { create: createTab } };

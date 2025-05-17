@@ -1,5 +1,5 @@
 @import "modern-normalize";
-@import "../styles/fonts/roboto.css";
+@import "@fontsource/roboto";
 @import "./buttons.css";
 @import "./inputs.css";
 @import "./wallpapers.css";

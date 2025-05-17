@@ -24,6 +24,14 @@ export const wallpapers = [
     category: "Nature",
   },
   {
+    id: "EarthHorizon",
+    title: "Earth Horizon",
+    filename: "EarthHorizon.jpg",
+    thumbnail: "EarthHorizon_thumb.webp",
+    url: "https://stock.adobe.com/images/la-terre-earth-horizon/1956486",
+    category: "Nature",
+  },
+  {
     id: "BeachForest",
     title: "Beach Forest",
     filename: "BeachForest.jpg",
@@ -49,10 +57,10 @@ export const wallpapers = [
   },
   {
     id: "SnowCoveredMountainwithSunnySky",
-    title: "Snow Covered Mountain",
-    filename: "SnowCoveredMountainwithSunnySky.jpg",
-    thumbnail: "SnowCoveredMountainwithSunnySky_thumb.png",
-    url: "https://unsplash.com/photos/0vw4InAC-yM",
+    title: "Snow-Covered Mountain",
+    filename: "SnowCoveredMountain.jpg",
+    thumbnail: "SnowCoveredMountain_thumb.webp",
+    url: "https://stock.adobe.com/images/snow-covered-mountain-peaks-against-the-cloudy-sky-caucasus-mountains-elbrus-region-russia/267281893",
     category: "Nature",
   },
   {

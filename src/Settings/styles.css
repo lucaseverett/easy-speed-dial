@@ -314,5 +314,6 @@ select {
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
+    scrollbar-gutter: stable;
   }
 }

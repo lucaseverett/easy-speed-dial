@@ -67,7 +67,7 @@ export const Bookmarks = observer(function Bookmarks() {
         onContextMenu={contextMenu.openContextMenu}
         onScroll={contextMenu.closeContextMenu}
         tabIndex="-1"
-        inert={modals.isOpen ? "" : undefined}
+        inert={!!modals.isOpen}
         ref={focusRef}
       >
         {settings.showAlertBanner && <AlertBanner />}

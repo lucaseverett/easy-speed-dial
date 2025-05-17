@@ -1,7 +1,8 @@
 import "./styles.css";
 
-import { appVersion } from "#common/version";
 import logo from "./128.svg";
+
+const appVersion = __APP_VERSION__;
 
 export function About() {
   return (

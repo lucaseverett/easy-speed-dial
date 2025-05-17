@@ -1,15 +1,9 @@
 import { resolve } from "path";
 
 import react from "@vitejs/plugin-react";
-import postcssPresetEnv from "postcss-preset-env";
 import { defineConfig } from "vite";
 
 const PROJECT = process.env.PROJECT || "demo";
-
-const resolveFile = (file) =>
-  ["chrome", "firefox"].includes(PROJECT)
-    ? `#stores/${file}/extension`
-    : `#stores/${file}/web`;
 
 export default defineConfig({
   build: {
@@ -25,19 +19,25 @@ export default defineConfig({
   },
   css: {
     postcss: {
-      plugins: [postcssPresetEnv()],
+      plugins: [],
     },
   },
   define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     __CHROME__: PROJECT === "chrome",
     __FIREFOX__: PROJECT === "firefox",
+    __DEMO__: PROJECT === "demo",
   },
   plugins: [react()],
   publicDir: `public/${PROJECT}`,
   resolve: {
     alias: {
-      "#stores/useSettings/web": resolveFile("useSettings"),
-      "#stores/useBookmarks/web": resolveFile("useBookmarks"),
+      "webextension-polyfill":
+        PROJECT === "demo" ? "./browser-polyfill.js" : "webextension-polyfill",
     },
+  },
+  server: {
+    host: true,
+    open: true,
   },
 });

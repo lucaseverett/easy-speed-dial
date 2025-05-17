@@ -1,4 +1,4 @@
-import { browser } from "./browser.bookmarks";
+import browser from "./browser.bookmarks";
 import amazonThumbnail from "./images/amazon.svg";
 import bestBuyThumbnail from "./images/bestbuy.svg";
 import bookingThumbnail from "./images/booking.svg";
@@ -11,7 +11,7 @@ import targetThumbnail from "./images/target.svg";
 import walmartThumbnail from "./images/walmart.svg";
 import youTubeThumbnail from "./images/youtube.svg";
 
-export const bookmarks = [
+export const mockBookmarks = [
   [
     "https://www.amazon.com",
     "Amazon",
@@ -225,8 +225,13 @@ const topSitesGlobal = [
 // LOAD MOCK BOOKMARKS
 // ==========================
 
-bookmarks.forEach((b) => {
-  browser.bookmarks.create({ url: b[0], title: b[1], id: b[2], parentId: "1" });
+mockBookmarks.forEach((b) => {
+  browser.bookmarks.create({
+    url: b[0],
+    title: b[1],
+    id: b[2],
+    parentId: "1",
+  });
 });
 
 if (process.env.NODE_ENV === "development") {

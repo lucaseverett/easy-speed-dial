@@ -32,77 +32,81 @@
   }
 
   &.SandDune {
-    background-image: url(https://media.toolbardial.com/SandDune.jpg);
+    background-image: url(https://media.easyspeeddial.com/SandDune.jpg);
   }
 
   &.WavySand {
-    background-image: url(https://media.toolbardial.com/WavySand.jpg);
+    background-image: url(https://media.easyspeeddial.com/WavySand.jpg);
   }
 
   &.Galaxy {
-    background-image: url(https://media.toolbardial.com/Galaxy.jpg);
+    background-image: url(https://media.easyspeeddial.com/Galaxy.jpg);
+  }
+
+  &.EarthHorizon {
+    background-image: url(https://media.easyspeeddial.com/EarthHorizon.jpg);
   }
 
   &.BeachForest {
-    background-image: url(https://media.toolbardial.com/BeachForest.jpg);
+    background-image: url(https://media.easyspeeddial.com/BeachForest.jpg);
   }
 
   &.Water {
-    background-image: url(https://media.toolbardial.com/Water.jpg);
+    background-image: url(https://media.easyspeeddial.com/Water.jpg);
   }
 
   &.Flowers {
-    background-image: url(https://media.toolbardial.com/Flowers.jpg);
+    background-image: url(https://media.easyspeeddial.com/Flowers.jpg);
   }
 
   &.SnowCoveredMountainwithSunnySky {
-    background-image: url(https://media.toolbardial.com/SnowCoveredMountainwithSunnySky.jpg);
+    background-image: url(https://media.easyspeeddial.com/SnowCoveredMountain.jpg);
   }
 
   &.DesertDay {
-    background-image: url(https://media.toolbardial.com/DunesDay.png);
+    background-image: url(https://media.easyspeeddial.com/DunesDay.png);
   }
 
   &.DesertNight {
-    background-image: url(https://media.toolbardial.com/DunesNight.png);
+    background-image: url(https://media.easyspeeddial.com/DunesNight.png);
   }
 
   &.Crayons {
-    background-image: url(https://media.toolbardial.com/Crayons.jpg);
+    background-image: url(https://media.easyspeeddial.com/Crayons.jpg);
     background-position: bottom;
   }
 
   &.Underwater {
-    background-image: url(https://media.toolbardial.com/Underwater.jpg);
+    background-image: url(https://media.easyspeeddial.com/Underwater.jpg);
   }
 
   &.HorizonLight {
-    background-image: url(https://media.toolbardial.com/HorizonLight.png);
+    background-image: url(https://media.easyspeeddial.com/HorizonLight.png);
     background-position: bottom left;
   }
 
   &.HorizonDark {
-    background-image: url(https://media.toolbardial.com/HorizonDark.png);
+    background-image: url(https://media.easyspeeddial.com/HorizonDark.png);
     background-position: bottom left;
   }
 
   &.AbstractPurple {
-    background-image: url(https://media.toolbardial.com/AbstractPurple.jpg);
+    background-image: url(https://media.easyspeeddial.com/AbstractPurple.jpg);
   }
 
   &.Gradient1 {
-    background-image: url(https://media.toolbardial.com/RiceFlower.png);
+    background-image: url(https://media.easyspeeddial.com/RiceFlower.png);
   }
 
   &.Gradient2 {
-    background-image: url(https://media.toolbardial.com/ColumbiaBlue.png);
+    background-image: url(https://media.easyspeeddial.com/ColumbiaBlue.png);
   }
 
   &.Gradient3 {
-    background-image: url(https://media.toolbardial.com/Fuchsia.png);
+    background-image: url(https://media.easyspeeddial.com/Fuchsia.png);
   }
 
   &.Gradient4 {
-    background-image: url(https://media.toolbardial.com/VioletBlue.png);
+    background-image: url(https://media.easyspeeddial.com/VioletBlue.png);
   }
 }

@@ -1,8 +1,6 @@
-import assert from "node:assert";
+import { describe, expect, test } from "vitest";
 
-import { describe, test } from "node:test";
-
-import { browser } from "./browser.bookmarks.js";
+import browser from "./browser.bookmarks.js";
 
 // Helper function to validate an object against BookmarkTreeNode type.
 function isValidBookmark(obj, blueprint) {
@@ -28,7 +26,7 @@ describe("create", () => {
     const result = await browser.bookmarks.create(mockData);
 
     // Check if the returned object matches the BookmarkTreeNode type.
-    assert(
+    expect(
       isValidBookmark(result, {
         id: "string",
         parentId: "string",
@@ -37,11 +35,11 @@ describe("create", () => {
         url: "string",
         type: "bookmark",
       }),
-    );
+    ).toBe(true);
 
     // Check if the returned object has all keys and values from mockData.
     for (const key in mockData) {
-      assert.equal(result[key], mockData[key]);
+      expect(result[key]).toEqual(mockData[key]);
     }
   });
 
@@ -54,7 +52,7 @@ describe("create", () => {
     const result = await browser.bookmarks.create(mockData);
 
     // Check if the returned object matches the BookmarkTreeNode type.
-    assert(
+    expect(
       isValidBookmark(result, {
         id: "string",
         parentId: "string",
@@ -62,11 +60,11 @@ describe("create", () => {
         title: "string",
         type: "folder",
       }),
-    );
+    ).toBe(true);
 
     // Check if the returned object has all keys and values from mockData.
     for (const key in mockData) {
-      assert.equal(result[key], mockData[key]);
+      expect(result[key]).toEqual(mockData[key]);
     }
   });
 });

@@ -53,12 +53,12 @@ export const Settings = observer(function Settings() {
     "Nature",
     "Custom",
   ];
-  const wallpaperCategory = settings.wallpaper.includes("wallpaper")
-    ? "Colors"
-    : settings.wallpaper.includes("custom")
-      ? "Custom"
-      : wallpapers.filter(({ id }) => id === settings.wallpaper)[0]?.category;
-  const currentCategory = selectedCategory || wallpaperCategory;
+
+  function getWallpaperCategory(wallpaperId) {
+    if (wallpaperId.includes("wallpaper")) return "Colors";
+    if (wallpaperId.includes("custom")) return "Custom";
+    return wallpapers.find(({ id }) => id === wallpaperId)?.category || "";
+  }
 
   useEffect(() => {
     focusRef.current.focus();
@@ -67,12 +67,16 @@ export const Settings = observer(function Settings() {
     ];
   }, []);
 
+  useEffect(() => {
+    setSelectedCategory(getWallpaperCategory(settings.wallpaper));
+  }, [settings.wallpaper]);
+
   function getImageUrl(thumbnail) {
-    return new URL(`../thumbs/${thumbnail}`, import.meta.url).href;
+    return new URL(`../wallpapers/thumbs/${thumbnail}`, import.meta.url).href;
   }
 
   function handleKeyDown(e) {
-    const currIndex = wallpaperCategories.indexOf(currentCategory);
+    const currIndex = wallpaperCategories.indexOf(selectedCategory);
     const isFirstItem = currIndex === 0;
     const isLastItem = currIndex === wallpaperCategories.length - 1;
 
@@ -171,16 +175,16 @@ export const Settings = observer(function Settings() {
                     type="button"
                     onClick={() => setSelectedCategory(category)}
                     className={classNames("btn defaultBtn", {
-                      selected: currentCategory === category,
+                      selected: selectedCategory === category,
                     })}
                     role="tab"
-                    aria-selected={currentCategory === category}
+                    aria-selected={selectedCategory === category}
                     aria-controls={
-                      currentCategory === category
+                      selectedCategory === category
                         ? "background-tabpanel"
                         : null
                     }
-                    tabIndex={currentCategory === category ? null : "-1"}
+                    tabIndex={selectedCategory === category ? null : "-1"}
                     key={category}
                   >
                     {category}
@@ -192,7 +196,7 @@ export const Settings = observer(function Settings() {
                 role="tabpanel"
                 id="background-tabpanel"
               >
-                {currentCategory === "Colors" ? (
+                {selectedCategory === "Colors" ? (
                   [
                     "Light",
                     "Dark",
@@ -219,7 +223,7 @@ export const Settings = observer(function Settings() {
                       key={wallpaper}
                     />
                   ))
-                ) : currentCategory === "Custom" ? (
+                ) : selectedCategory === "Custom" ? (
                   <>
                     <div className="custom-group">
                       {settings.customColor ? (
@@ -304,7 +308,7 @@ export const Settings = observer(function Settings() {
                   </>
                 ) : (
                   wallpapers
-                    .filter(({ category }) => category === currentCategory)
+                    .filter(({ category }) => category === selectedCategory)
                     .map(({ id, title, thumbnail }) => (
                       <button
                         type="button"
