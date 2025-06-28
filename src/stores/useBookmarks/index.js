@@ -10,10 +10,6 @@ export const bookmarks = makeAutoObservable({
   folders: [],
   parentId: "",
   async changeFolder(id) {
-    // Needs error handling
-    // If folder not found, display defaultFolder
-    // If defaultFolder doesn't exist, display root folder
-    // If issue with root folder, display error message
     const newBookmarks = await browser.bookmarks.getSubTree(id);
     sessionStorage.setItem("last-folder", id);
     runInAction(() => {
@@ -21,7 +17,13 @@ export const bookmarks = makeAutoObservable({
         (a, b) => a.index - b.index,
       );
       bookmarks.currentFolder = { id, title: newBookmarks[0].title };
-      bookmarks.parentId = newBookmarks[0].parentId;
+      // Set parentId for the current folder if it isn't the root folder.
+      // This is used for the breadcrumbs.
+      bookmarks.parentId =
+        newBookmarks[0].parentId !== "root________" &&
+        newBookmarks[0].parentId !== "0"
+          ? newBookmarks[0].parentId
+          : "";
     });
   },
   async createBookmark({ url, title, parentId }) {
@@ -54,21 +56,47 @@ export const bookmarks = makeAutoObservable({
     settings.handleClearColor(id);
     settings.handleClearThumbnail(id);
   },
-  moveBookmark({ id, from, to }) {
-    /*
+  async getBookmarksBarId() {
+    let bookmarksBar = "1";
+
+    if (__CHROME__) {
+      // Find the bookmarks bar folder
+      const rootTree = await browser.bookmarks.getSubTree("0");
+      bookmarksBar =
+        rootTree[0].children?.find(
+          (child) => child.folderType === "bookmarks-bar",
+        )?.id || "1";
+    } else if (__FIREFOX__) {
+      bookmarksBar = "toolbar_____";
+    }
+
+    return bookmarksBar;
+  },
+  moveBookmark({ id, from, to, parentId }) {
+    if (from && to) {
+      /*
       Some bookmarks may be filtered from being displayed.
       bookmarksRef.current[to]["index"] accounts for the 
       index considering filtered bookmarks.
       */
-    to = bookmarks.bookmarks[to]["index"];
+      to = bookmarks.bookmarks[to]["index"];
 
-    /* 
+      /* 
       This is needed for Chrome but not Firefox.
       https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
       */
-    if (__CHROME__ && from < to) to++;
+      if (__CHROME__ && from < to) to++;
+    }
 
-    browser.bookmarks.move(id.toString(), { index: to });
+    const moveOptions = {};
+    if (to !== undefined && to !== null) {
+      moveOptions.index = to;
+    }
+    if (parentId) {
+      moveOptions.parentId = parentId;
+    }
+
+    browser.bookmarks.move(id.toString(), moveOptions);
   },
   async openAllWindow(id) {
     const urls = await browser.bookmarks.getSubTree(id);
@@ -105,6 +133,15 @@ export const bookmarks = makeAutoObservable({
     const updatedBookmark = browser.bookmarks.update(id, changes);
     return updatedBookmark;
   },
+  async validateFolderExists(id) {
+    if (!id) return false;
+    try {
+      await browser.bookmarks.get(id);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  },
 });
 
 async function getFolders() {
@@ -120,16 +157,12 @@ async function getFolders() {
 
   function logItems(bookmarkItem, indent) {
     if (!bookmarkItem.url) {
-      let root;
-      if (__CHROME__) {
-        root = "0";
-      } else if (__FIREFOX__) {
-        root = "root________";
-      }
+      const root = __FIREFOX__ ? "root________" : "0";
+
       if (bookmarkItem.id !== root) {
         addFolder(
           bookmarkItem.id,
-          `${makeIndent(indent)}${bookmarkItem.title}`,
+          `${makeIndent(indent)}${bookmarkItem.title}${bookmarkItem.syncing ? " (synced)" : ""}`,
         );
         indent++;
       }
@@ -149,7 +182,21 @@ async function getFolders() {
   logTree(getTree);
 }
 
+// ==========================
+// FOLDERS LISTENER
+// ==========================
+
 getFolders();
+
+browser.bookmarks.onChanged.addListener(getFolders);
+browser.bookmarks.onCreated.addListener(getFolders);
+browser.bookmarks.onMoved.addListener(getFolders);
+browser.bookmarks.onRemoved.addListener(getFolders);
+if (__CHROME__) {
+  browser.bookmarks.onChildrenReordered.addListener(getFolders);
+  browser.bookmarks.onImportBegan.addListener(getFolders);
+  browser.bookmarks.onImportEnded.addListener(getFolders);
+}
 
 // ==========================
 // BOOKMARKS LISTENER

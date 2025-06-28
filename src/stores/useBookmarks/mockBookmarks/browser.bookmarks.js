@@ -169,6 +169,7 @@ function createTab({ url }) {
 
 const bookmarks = {
   create,
+  get,
   getChildren,
   getSubTree,
   getTree,

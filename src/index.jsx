@@ -5,24 +5,34 @@ import { bookmarks } from "#stores/useBookmarks";
 import { settings } from "#stores/useSettings";
 import { Bookmarks } from "./Bookmarks/index";
 
-const session = sessionStorage.getItem("last-folder");
-if (!location.hash && session && session !== settings.defaultFolder) {
-  // Load from session when clicking browser home button.
-  history.replaceState(null, null, `#${session}`);
-  bookmarks.changeFolder(session);
-} else if (location.hash) {
-  // Load from hash when reloading page.
-  bookmarks.changeFolder(location.hash.slice(1));
-} else {
-  // Load default folder on first load.
-  history.replaceState(null, null, `#${settings.defaultFolder}`);
-  bookmarks.changeFolder(settings.defaultFolder);
+async function initializeApp() {
+  const setFolder = async (folderId) => {
+    const isValid = folderId
+      ? await bookmarks.validateFolderExists(folderId)
+      : false;
+    const targetId = isValid ? folderId : await bookmarks.getBookmarksBarId();
+
+    bookmarks.changeFolder(targetId);
+    // Update hash if it's incorrect or was missing.
+    if (location.hash.slice(1) !== targetId) {
+      history.replaceState(null, null, `#${targetId}`);
+    }
+  };
+
+  // Change folder when hash changes. (Browser back/forward buttons.)
+  window.addEventListener("hashchange", () => {
+    setFolder(location.hash.slice(1));
+  });
+
+  // Determine and set the initial folder.
+  const initialFolder =
+    location.hash.slice(1) ||
+    sessionStorage.getItem("last-folder") ||
+    settings.defaultFolder;
+  await setFolder(initialFolder);
 }
 
-// Change folder when hash changes. (Browser back/forward buttons.)
-window.addEventListener("hashchange", () => {
-  bookmarks.changeFolder(location.hash.slice(1));
-});
+initializeApp();
 
 const domNode = document.getElementById("root");
 const root = createRoot(domNode);

@@ -7,15 +7,17 @@ import { defineConfig } from "eslint/config";
 import globals from "globals";
 
 export default defineConfig([
+  { ignores: ["dist{,-chrome,-firefox}/**"] },
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       globals: globals.browser,
     },
-    ...js.configs.recommended,
-    ...reactPlugin.configs.flat.recommended,
-    ...reactHooks.configs.recommended,
-    ...jsxA11y.flatConfigs.recommended,
-    ...eslintConfigPrettier,
   },
+  js.configs.recommended,
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat["jsx-runtime"],
+  reactHooks.configs.recommended,
+  jsxA11y.flatConfigs.recommended,
+  eslintConfigPrettier,
 ]);

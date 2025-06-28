@@ -46,6 +46,7 @@ export const Settings = observer(function Settings() {
   const buttons = useRef();
 
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [defaultFolderValue, setDefaultFolderValue] = useState("");
   const wallpaperCategories = [
     "Colors",
     "Abstract",
@@ -70,6 +71,19 @@ export const Settings = observer(function Settings() {
   useEffect(() => {
     setSelectedCategory(getWallpaperCategory(settings.wallpaper));
   }, [settings.wallpaper]);
+
+  useEffect(() => {
+    const setDefaultFolder = async () => {
+      const isValid = settings.defaultFolder
+        ? await bookmarks.validateFolderExists(settings.defaultFolder)
+        : false;
+      const value = isValid
+        ? settings.defaultFolder
+        : await bookmarks.getBookmarksBarId();
+      setDefaultFolderValue(value);
+    };
+    setDefaultFolder();
+  }, [settings.defaultFolder]);
 
   function getImageUrl(thumbnail) {
     return new URL(`../wallpapers/thumbs/${thumbnail}`, import.meta.url).href;
@@ -345,7 +359,7 @@ export const Settings = observer(function Settings() {
               <div className="setting-option select">
                 <select
                   onChange={(e) => handleDefaultFolder(e.target.value)}
-                  value={settings.defaultFolder}
+                  value={defaultFolderValue}
                   className="input"
                   aria-labelledby="default-folder-title"
                   aria-describedby="default-folder-description"

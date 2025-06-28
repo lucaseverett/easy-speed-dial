@@ -75,7 +75,7 @@ const defaultSettings = {
     : "color-scheme-light",
   customColor: "",
   customImage: "",
-  defaultFolder: "1",
+  defaultFolder: "",
   dialColors: {},
   dialImages: {},
   firstRun: !lastVersion,
@@ -87,10 +87,6 @@ const defaultSettings = {
   themeOption: "System Theme",
   wallpaper: "",
 };
-
-if (__FIREFOX__) {
-  defaultSettings.defaultFolder = "toolbar_____";
-}
 
 export const settings = makeAutoObservable({
   attachTitle:
