@@ -73,7 +73,9 @@ export const bookmarks = makeAutoObservable({
     return bookmarksBar;
   },
   moveBookmark({ id, from, to, parentId }) {
-    if (from && to) {
+    const moveOptions = {};
+
+    if (from !== undefined && to !== undefined) {
       /*
       Some bookmarks may be filtered from being displayed.
       bookmarksRef.current[to]["index"] accounts for the 
@@ -86,12 +88,10 @@ export const bookmarks = makeAutoObservable({
       https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
       */
       if (__CHROME__ && from < to) to++;
-    }
 
-    const moveOptions = {};
-    if (to !== undefined && to !== null) {
       moveOptions.index = to;
     }
+
     if (parentId) {
       moveOptions.parentId = parentId;
     }
