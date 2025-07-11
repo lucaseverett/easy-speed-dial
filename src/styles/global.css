@@ -16,10 +16,7 @@ html {
 
 body {
   font-family: "Roboto", sans-serif;
-  font-size: initial; /* fix for 
-  https://chromium.googlesource.com/chromium/src/+/master/extensions/renderer/resources/extension_fonts.css
-  https://bugs.chromium.org/p/chromium/issues/detail?id=428412
-  */
+  font-size: initial; /* Fix for font-size issue in Chrome extensions. See: https://chromium.googlesource.com/chromium/src/+/master/extensions/renderer/resources/extension_fonts.css and https://bugs.chromium.org/p/chromium/issues/detail?id=428412 */
 }
 
 .scrollbars {

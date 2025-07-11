@@ -18,7 +18,7 @@ async function getCustomImage() {
    * IndexedDB storage allows images to be stored as blob.
    * Chrome storage requires blobs to be converted to base64.
    * Firefox storage allows images to be stored as blob.
-   * This store converts to base64 to avoid multiple implementations.
+   * This store always converts to base64 to avoid multiple implementations.
    */
   try {
     const { [`${apiVersion}-custom-image`]: image } =
@@ -61,6 +61,7 @@ wallpaper = wallpaper?.includes("custom-image")
 /* Handle changes page between open tabs. */
 const bc = new BroadcastChannel("easy-settings");
 bc.onmessage = (e) => {
+  // When settings are updated in another tab, update this tab's settings as well.
   runInAction(() => set(settings, e.data));
 };
 
@@ -362,7 +363,7 @@ export const settings = makeAutoObservable({
 // ==================================================================
 // TOGGLE THEME/BACKGROUND
 // ==================================================================
-
+// Listen for system theme changes and update settings accordingly.
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", settings.systemThemeChanged);
@@ -370,7 +371,7 @@ window
 // ==================================================================
 // DIALS FROM DEMO BOOKMARKS
 // ==================================================================
-
+// If running in demo mode, populate dial colors and images from mock bookmarks.
 if (__DEMO__) {
   mockBookmarks.forEach((b) => {
     settings.dialColors[b[2]] = b[3];
@@ -381,7 +382,7 @@ if (__DEMO__) {
 // ==================================================================
 // CLASSNAMES FROM SETTINGS
 // ==================================================================
-
+// Dynamically update document class names and background based on settings.
 const userAgent = navigator.userAgent.toLowerCase();
 const isMacOS = userAgent.includes("macintosh");
 const isChrome = userAgent.includes("chrome");
@@ -409,7 +410,7 @@ autorun(() => {
 // ==================================================================
 // BACKUP/RESTORE HELPERS
 // ==================================================================
-
+// Utility to convert a base64 string to a Blob object.
 function base64ToBlob(base64) {
   const contentType = base64.match(/data:([^;]+);base64,/)[1];
   const base64Data = base64.replace(/data:([^;]+);base64,/, "");
@@ -424,6 +425,7 @@ function base64ToBlob(base64) {
   return new Blob([uint8Array], { type: contentType });
 }
 
+// Utility to convert a Blob object to a base64 string.
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -433,6 +435,7 @@ function blobToBase64(blob) {
   });
 }
 
+// Utility to trigger a download of a JSON backup file.
 function downloadBackup(obj) {
   const dataStr = `data:text/plain;charset=utf-8,${encodeURIComponent(
     JSON.stringify(obj),

@@ -1,0 +1,67 @@
+.WhatsNew {
+  font-size: 16px;
+  padding: 20px;
+
+  .firefox-only {
+    display: none;
+  }
+
+  .firefox & .firefox-only {
+    display: block;
+  }
+
+  h2 {
+    margin: 20px 0 0;
+    font-size: 16px;
+
+    .color-scheme-light & {
+      color: #1565c0;
+    }
+
+    .color-scheme-dark & {
+      color: #64b5f6;
+    }
+  }
+
+  h3 {
+    margin: 20px 0;
+  }
+
+  h2,
+  h3 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  ul {
+    padding-left: 30px;
+  }
+
+  li {
+    margin: 10px 0;
+  }
+
+  div {
+    .color-scheme-light & {
+      border-top: 1px solid #bdbdbd;
+    }
+
+    .color-scheme-dark & {
+      border-top: 1px solid #373737;
+    }
+
+    &:first-child {
+      border: none;
+
+      h2 {
+        margin-top: 0;
+      }
+    }
+
+    &:last-child {
+      ul:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

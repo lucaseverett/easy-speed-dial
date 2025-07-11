@@ -36,8 +36,4 @@ export default defineConfig({
         PROJECT === "demo" ? "./browser-polyfill.js" : "webextension-polyfill",
     },
   },
-  server: {
-    host: true,
-    open: true,
-  },
 });

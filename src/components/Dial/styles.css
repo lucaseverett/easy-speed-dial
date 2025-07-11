@@ -1,0 +1,141 @@
+.Link {
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+
+  .attach-title & {
+    box-shadow: var(--dial-box-shadow);
+    border-radius: 6px;
+
+    &:focus-visible:is(a) {
+      outline: 5px solid #1976d2;
+      outline-offset: 1px;
+
+      .color-scheme-dark & {
+        outline-color: #90caf9;
+      }
+    }
+  }
+}
+
+.Box {
+  border-radius: 6px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 500;
+  overflow: hidden;
+  pointer-events: none;
+
+  .folder {
+    width: 80px;
+    height: 80px;
+    fill: #fff;
+  }
+
+  .windows & {
+    font-weight: bold;
+  }
+
+  .normal-title & {
+    box-shadow: var(--dial-box-shadow);
+
+    :focus-visible:is(a) & {
+      outline: 5px solid #1976d2;
+      outline-offset: 1px;
+
+      .color-scheme-dark & {
+        outline-color: #90caf9;
+      }
+    }
+  }
+
+  .attach-title.show-title & {
+    border-radius: 6px 6px 0 0;
+  }
+}
+
+.Small {
+  font-size: 13px;
+  font-weight: normal;
+  max-width: 180px;
+  text-align: var(--name-align);
+  margin: 0 auto;
+}
+
+.Domain {
+  line-height: var(--name-line-height);
+  white-space: var(--name-white-space);
+  padding: var(--name-padding);
+  font-size: 24px;
+  transform: var(--name-transform);
+  text-align: center;
+}
+
+.Title {
+  text-align: center;
+  font-size: 13px;
+  padding-top: 10px;
+  position: relative;
+
+  .attach-title & {
+    padding-top: 0;
+  }
+
+  .title {
+    text-overflow: ellipsis;
+    border-radius: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 100%;
+
+    .windows & {
+      font-weight: 500;
+    }
+
+    .windows.firefox & {
+      padding: 3px 8px 3px;
+    }
+
+    .windows.chrome & {
+      padding: 4px 8px 3px;
+    }
+
+    .mac.chrome & {
+      padding: 4px 8px 2px;
+    }
+
+    .mac.firefox & {
+      padding: 3px 8px 2px;
+    }
+
+    .color-scheme-light & {
+      background-color: rgba(255, 255, 255, 0.75);
+      color: #373737;
+    }
+
+    .color-scheme-dark & {
+      background-color: rgba(55, 55, 55, 0.75);
+      color: #eeeeee;
+    }
+
+    .attach-title & {
+      border-radius: 0 0 6px 6px;
+      width: 100%;
+      display: block;
+    }
+
+    :focus-visible:is(a) & {
+      background-color: #1976d2;
+      color: #fff;
+
+      .color-scheme-dark & {
+        background-color: #90caf9;
+        color: #000;
+      }
+    }
+  }
+}

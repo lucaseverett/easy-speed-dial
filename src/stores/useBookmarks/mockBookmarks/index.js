@@ -234,7 +234,7 @@ mockBookmarks.forEach((b) => {
   });
 });
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.MODE === "development") {
   const topSitesUSFolder = browser.bookmarks.create({
     title: "Top Sites - US",
     id: "a1e0e978-6fcf-48ec-a968-e88fcf021faf",

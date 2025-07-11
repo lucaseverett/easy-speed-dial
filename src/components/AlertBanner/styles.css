@@ -1,0 +1,68 @@
+.AlertBanner {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: linear-gradient(to right, #4527a0, #6a1b9a);
+  color: #fff;
+  font-size: 16px;
+
+  .banner {
+    display: flex;
+    align-items: center;
+
+    .bullhorn {
+      padding-right: 10px;
+      width: 38px;
+      height: 38px;
+      fill: #fff;
+    }
+
+    .message {
+      padding: 20px 0;
+    }
+
+    strong {
+      font-weight: 500;
+      padding-right: 5px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:focus-visible {
+        background-color: #7953d2;
+        outline: none;
+      }
+    }
+  }
+
+  .whats-new {
+    margin-right: 20px;
+  }
+
+  button.whats-new {
+    --btn-background-color: #7c43bd;
+    --btn-text-color: #fff;
+    --btn-hover-background-color: #9c4dcc;
+    --btn-hover-text-color: #fff;
+    --btn-focus-box-shadow-color: #fff;
+    --btn-selected-background-color: #bcbcbc;
+  }
+
+  button.dismiss {
+    color: #fff;
+
+    &:hover {
+      background-color: #9c4dcc;
+    }
+  }
+}

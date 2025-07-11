@@ -1,8 +1,8 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import browser from "webextension-polyfill";
 
-import { filter } from "#common/filter";
 import { settings } from "#stores/useSettings";
+import { filter } from "#utils/filter";
 
 export const bookmarks = makeAutoObservable({
   bookmarks: [],
@@ -17,8 +17,7 @@ export const bookmarks = makeAutoObservable({
         (a, b) => a.index - b.index,
       );
       bookmarks.currentFolder = { id, title: newBookmarks[0].title };
-      // Set parentId for the current folder if it isn't the root folder.
-      // This is used for the breadcrumbs.
+      // Set parentId for the current folder. If parentId is empty, breadcrumbs will not be shown.
       bookmarks.parentId =
         newBookmarks[0].parentId !== "root________" &&
         newBookmarks[0].parentId !== "0"
@@ -32,9 +31,12 @@ export const bookmarks = makeAutoObservable({
       title,
       parentId,
     });
-    runInAction(() => {
-      bookmarks.bookmarks.push(filter([newBookmark])[0]);
-    });
+
+    if (parentId === bookmarks.currentFolder.id) {
+      runInAction(() => {
+        bookmarks.bookmarks.push(filter([newBookmark])[0]);
+      });
+    }
 
     return newBookmark;
   },
@@ -72,28 +74,43 @@ export const bookmarks = makeAutoObservable({
 
     return bookmarksBar;
   },
+  async getBookmarkById(id) {
+    const results = await browser.bookmarks.get(id);
+    return results[0];
+  },
   moveBookmark({ id, from, to, parentId }) {
     const moveOptions = {};
 
     if (from !== undefined && to !== undefined) {
       /*
-      Some bookmarks may be filtered from being displayed.
-      bookmarksRef.current[to]["index"] accounts for the 
-      index considering filtered bookmarks.
+      Some bookmarks may be filtered out.
+      bookmarks.bookmarks[to]["index"] gives the correct index for filtered bookmarks.
       */
-      to = bookmarks.bookmarks[to]["index"];
+      moveOptions.index = bookmarks.bookmarks[to]["index"];
 
-      /* 
-      This is needed for Chrome but not Firefox.
-      https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
+      /*
+      Required for Chrome, not Firefox.
+      See: https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
       */
-      if (__CHROME__ && from < to) to++;
-
-      moveOptions.index = to;
+      if (__CHROME__ && from < to) moveOptions.index++;
     }
 
     if (parentId) {
       moveOptions.parentId = parentId;
+    }
+
+    // Remove the bookmark from the current folder if moving to a different folder.
+    if (parentId && parentId !== bookmarks.currentFolder.id) {
+      const indexToRemove = bookmarks.bookmarks.findIndex(
+        (bookmark) => bookmark.id === id,
+      );
+      if (indexToRemove !== -1) {
+        bookmarks.bookmarks.splice(indexToRemove, 1);
+      }
+    } else if (from !== undefined && to !== undefined && from !== to) {
+      // Reorder the bookmark within the same folder for immediate UI feedback.
+      const bookmark = bookmarks.bookmarks.splice(from, 1)[0];
+      bookmarks.bookmarks.splice(to, 0, bookmark);
     }
 
     browser.bookmarks.move(id.toString(), moveOptions);
@@ -138,7 +155,7 @@ export const bookmarks = makeAutoObservable({
     try {
       await browser.bookmarks.get(id);
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
@@ -175,7 +192,9 @@ async function getFolders() {
 
   function logTree(bookmarkItems) {
     logItems(bookmarkItems[0], 0);
-    bookmarks.folders = folders;
+    runInAction(() => {
+      bookmarks.folders = folders;
+    });
   }
 
   const getTree = await browser.bookmarks.getTree();
@@ -230,16 +249,52 @@ function receiveBookmarks() {
         bookmarks.currentFolder.id,
       );
       if (newBookmarks) {
+        const filteredAndSorted = filter(newBookmarks[0].children).sort(
+          (a, b) => a.index - b.index,
+        );
         runInAction(() => {
-          bookmarks.bookmarks = filter(newBookmarks[0].children).sort(
-            (a, b) => a.index - b.index,
-          );
+          reconcile(bookmarks.bookmarks, filteredAndSorted);
         });
       }
     } catch (error) {
       console.error("Error receiving bookmarks:", error);
     }
   }, 200)();
+}
+
+function reconcile(observableArray, newData, keyFn = (item) => item.id) {
+  const existingMap = new Map(
+    observableArray.map((item) => [keyFn(item), item]),
+  );
+  const newMap = new Map(newData.map((item) => [keyFn(item), item]));
+
+  // Remove items not in new data
+  for (let i = observableArray.length - 1; i >= 0; i--) {
+    const key = keyFn(observableArray[i]);
+    if (!newMap.has(key)) {
+      observableArray.splice(i, 1);
+    }
+  }
+
+  // Add or update items
+  newData.forEach((newItem, index) => {
+    const key = keyFn(newItem);
+    const existing = existingMap.get(key);
+
+    if (existing) {
+      // Update existing item in place
+      Object.assign(existing, newItem);
+      // Move to correct position if needed
+      const currentIndex = observableArray.indexOf(existing);
+      if (currentIndex !== index) {
+        observableArray.splice(currentIndex, 1);
+        observableArray.splice(index, 0, existing);
+      }
+    } else {
+      // Add new item
+      observableArray.splice(index, 0, newItem);
+    }
+  });
 }
 
 browser.bookmarks.onChanged.addListener(receiveBookmarks);

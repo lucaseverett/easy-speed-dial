@@ -12,7 +12,7 @@ export default {
             Object.keys(keys).length === 0 &&
             !Array.isArray(keys))
         ) {
-          // Handle keys as null, undefined, or empty object (retrieve all)
+          // If keys is null, undefined, or an empty object, retrieve all stored items.
           const allEntries = await entries();
           for (const [k, v] of allEntries) {
             result[k] = v;
@@ -21,7 +21,7 @@ export default {
         }
 
         if (typeof keys === "string") {
-          // Handle keys as a single string
+          // If keys is a string, retrieve the value for that key.
           const value = await get(keys);
           if (typeof value !== "undefined") {
             result[keys] = value;
@@ -30,7 +30,7 @@ export default {
         }
 
         if (Array.isArray(keys)) {
-          // Handle keys as an array of strings
+          // If keys is an array of strings, retrieve values for each key.
           if (keys.length === 0) {
             return {};
           }
@@ -46,7 +46,7 @@ export default {
         }
 
         if (typeof keys === "object") {
-          // Handle keys as an object (retrieve items with defaults)
+          // If keys is an object, retrieve each key and use the provided value as a default if not found.
           for (const k in keys) {
             if (Object.prototype.hasOwnProperty.call(keys, k)) {
               const defaultValue = keys[k];
@@ -57,7 +57,7 @@ export default {
           }
           return result;
         }
-        // If keys is an invalid type, WebExtension API typically returns an empty object or throws an error. For simplicity, returning empty object.
+        // For invalid key types, mimic WebExtension API by returning an empty object.
         console.warn(
           "Invalid 'keys' argument for browser.storage.local.get:",
           keys,
@@ -78,8 +78,8 @@ export default {
           if (Object.prototype.hasOwnProperty.call(items, key)) {
             const newValue = items[key];
 
-            // Create a promise for each key operation (get old value, then set new value)
-            const operationPromise = get(key) // get from idb-keyval
+            // Create a promise for each key operation (retrieve old value, then store new value)
+            const operationPromise = get(key) // Retrieve value from idb-keyval.
               .then((oldValue) => {
                 // Using JSON.stringify for comparison to handle objects/arrays correctly, as direct comparison (oldValue !== newValue) might be true for identical objects.
                 const oldValueString =
@@ -97,7 +97,7 @@ export default {
                     changesObject[key].oldValue = oldValue; // Store the actual oldValue
                   }
                 }
-                return set(key, newValue); // set from idb-keyval
+                return set(key, newValue); // Store value using idb-keyval.
               });
             setPromises.push(operationPromise);
           }
@@ -105,14 +105,14 @@ export default {
 
         await Promise.all(setPromises);
 
-        // Promise resolves to undefined implicitly
+        // The returned promise resolves to undefined (matches WebExtension API).
       },
       async remove(keys) {
         let keysToRemove = [];
         if (typeof keys === "string") {
           keysToRemove = [keys];
         } else if (Array.isArray(keys)) {
-          // Filter out non-string items, as the API expects an array of strings or a single string.
+          // Only keep string items, as the API expects an array of strings or a single string.
           keysToRemove = keys.filter((k) => typeof k === "string");
         } else {
           const error = new Error(
@@ -123,7 +123,7 @@ export default {
         }
 
         if (keysToRemove.length === 0) {
-          // If keys was an empty array, or became empty after filtering, it's a no-op.
+          // If there are no keys to remove, do nothing.
           return Promise.resolve();
         }
 
@@ -131,13 +131,13 @@ export default {
         const removalPromises = [];
 
         for (const key of keysToRemove) {
-          const operationPromise = get(key) // get from idb-keyval
+          const operationPromise = get(key) // Retrieve value from idb-keyval.
             .then((oldValue) => {
               if (typeof oldValue !== "undefined") {
                 changesObject[key] = { oldValue: oldValue };
-                return del(key); // del from idb-keyval
+                return del(key); // Delete value using idb-keyval.
               }
-              // If key didn't exist, no need to call del or record a change.
+              // If the key does not exist, skip deletion and change recording.
               return Promise.resolve();
             });
           removalPromises.push(operationPromise);
@@ -145,7 +145,7 @@ export default {
 
         await Promise.all(removalPromises);
 
-        // Promise resolves to undefined implicitly
+        // The returned promise resolves to undefined (matches WebExtension API).
       },
     },
   },

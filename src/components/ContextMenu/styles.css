@@ -1,0 +1,90 @@
+.ContextMenu {
+  position: absolute;
+  top: var(--context-menu-top);
+  left: var(--context-menu-left);
+  font-family: system-ui;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--cm-border-color);
+  background-color: var(--cm-background-color);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  user-select: none;
+  white-space: nowrap;
+  z-index: 1;
+
+  &:focus {
+    outline: none;
+  }
+
+  .lowercase {
+    text-transform: lowercase;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 3px 0;
+  }
+
+  li {
+    display: flex;
+  }
+
+  li button {
+    text-align: left;
+    padding: 6px;
+    margin: 0 3px;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    border-radius: 3px;
+    color: var(--cm-color);
+
+    .firefox & {
+      text-transform: capitalize;
+    }
+
+    &.selected {
+      background-color: #1565c0;
+      color: var(--cm-hover-color);
+      outline: none;
+    }
+  }
+
+  li.separator {
+    border-bottom: 1px solid var(--cm-border-color);
+    height: 0;
+    margin: 3px 0;
+    border-radius: 0;
+  }
+
+  li.delete button {
+    color: var(--cm-delete-color);
+
+    &:hover,
+    &:focus {
+      background-color: var(--cm-delete-hover-background-color);
+      color: var(--cm-hover-color);
+    }
+  }
+
+  .color-scheme-light & {
+    --cm-border-color: #bdbdbd;
+    --cm-background-color: #eee;
+    --cm-color: #000;
+    --cm-hover-color: #fff;
+    --cm-delete-color: #c62828;
+    --cm-delete-hover-background-color: #c62828;
+  }
+
+  .color-scheme-dark & {
+    --cm-border-color: #6d6d6d;
+    --cm-background-color: #424242;
+    --cm-color: #fff;
+    --cm-hover-color: #fff;
+    --cm-delete-color: #ef9a9a;
+    --cm-delete-hover-background-color: #c62828;
+  }
+}

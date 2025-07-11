@@ -1,0 +1,77 @@
+.BookmarkModal {
+  font-size: 16px;
+  margin: 20px;
+
+  form {
+    .form-grid {
+      display: grid;
+      grid-template-columns: min-content auto;
+      align-items: center;
+      column-gap: 10px;
+      row-gap: 20px;
+    }
+
+    label {
+      white-space: nowrap;
+    }
+
+    input {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 32px;
+    }
+
+    .folder-select {
+      position: relative;
+
+      .input {
+        width: 100%;
+      }
+    }
+
+    .dial-color-input {
+      display: flex;
+
+      .colorBtn {
+        width: 32px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      #dial-color-input {
+        flex: 1;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+
+        &.connected {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+
+      .resetBtn {
+        padding-top: 0;
+        padding-bottom: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        font-size: 14px;
+        margin-left: 1px;
+      }
+
+      > :focus {
+        z-index: 1;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      margin-top: 20px;
+      gap: 10px;
+      width: 100%;
+
+      .btn {
+        flex-grow: 1;
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+.Modal {
+  .color-scheme-light & {
+    --modal-text-color: #000;
+    --modal-header-background-color: #bdbdbd;
+    --modal-background-color: #eee;
+    --modal-outer-border-color: #e0e0e0;
+    --modal-inner-border-color: #9e9e9e;
+    --modal-shadow: 10px 14px 13px rgb(0, 0, 0, 0.3);
+  }
+
+  .color-scheme-dark & {
+    --modal-text-color: #e0e0e0;
+    --modal-header-background-color: #373737;
+    --modal-background-color: #484848;
+    --modal-outer-border-color: #424242;
+    --modal-inner-border-color: #212121;
+    --modal-box-shadow: 10px 14px 13px rgb(0, 0, 0, 0.3);
+  }
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  .modal-wrapper {
+    color: var(--modal-text-color);
+  }
+
+  .modal-body {
+    background-color: var(--modal-background-color);
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10px 10px 20px;
+    background-color: var(--modal-header-background-color);
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      margin: 0;
+    }
+  }
+
+  .scroll-box {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .scroll-focus:focus-visible {
+    .color-scheme-light & {
+      --btn-focus-color: #1565c0;
+    }
+
+    .color-scheme-dark & {
+      --btn-focus-color: #64b5f6;
+    }
+
+    outline: 4px solid var(--btn-focus-color);
+    outline-offset: -4px;
+  }
+
+  .dismiss {
+    width: 30px;
+    height: 30px;
+    fill: var(--modal-text-color);
+  }
+
+  @media (min-width: 535px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .modal-wrapper {
+      max-height: calc(100vh - 100px);
+      height: initial;
+      border-radius: 10px;
+      box-shadow: var(--modal-box-shadow);
+      border: 5px solid var(--modal-outer-border-color);
+    }
+
+    .modal-body {
+      border: 1px solid var(--modal-inner-border-color);
+      border-radius: 5px;
+      overflow: hidden;
+      height: initial;
+    }
+
+    .scroll-box {
+      width: var(--modal-width);
+      max-height: var(--modal-height);
+    }
+  }
+}
