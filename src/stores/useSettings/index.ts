@@ -79,11 +79,13 @@ const defaultSettings = {
   defaultFolder: "",
   dialColors: {},
   dialImages: {},
+  dialSize: "small",
   firstRun: !lastVersion,
   maxColumns: "7",
   newTab: false,
   showAlertBanner: !lastVersion || isUpgrade,
   showTitle: true,
+  squareDials: false,
   switchTitle: false,
   themeOption: "System Theme",
   wallpaper: "",
@@ -102,12 +104,15 @@ export const settings = makeAutoObservable({
     storage[`${apiVersion}-dial-colors`] || defaultSettings.dialColors,
   dialImages:
     storage[`${apiVersion}-dial-images`] || defaultSettings.dialImages,
+  dialSize: storage[`${apiVersion}-dial-size`] || defaultSettings.dialSize,
   firstRun: defaultSettings.firstRun,
   maxColumns:
     storage[`${apiVersion}-max-columns`] || defaultSettings.maxColumns,
   newTab: storage[`${apiVersion}-new-tab`] ?? defaultSettings.newTab,
   showAlertBanner: defaultSettings.showAlertBanner,
   showTitle: storage[`${apiVersion}-show-title`] ?? defaultSettings.showTitle,
+  squareDials:
+    storage[`${apiVersion}-square-dials`] ?? defaultSettings.squareDials,
   switchTitle:
     storage[`${apiVersion}-switch-title`] ?? defaultSettings.switchTitle,
   themeOption,
@@ -171,6 +176,11 @@ export const settings = makeAutoObservable({
       dialColors: { ...settings.dialColors },
     });
   },
+  handleDialSize(value) {
+    browser.storage.local.set({ [`${apiVersion}-dial-size`]: value });
+    settings.dialSize = value;
+    bc.postMessage({ dialSize: value });
+  },
   handleMaxColumns(value) {
     browser.storage.local.set({ [`${apiVersion}-max-columns`]: value });
     settings.maxColumns = value;
@@ -204,6 +214,11 @@ export const settings = makeAutoObservable({
     browser.storage.local.set({ [`${apiVersion}-switch-title`]: value });
     settings.switchTitle = value;
     bc.postMessage({ switchTitle: value });
+  },
+  handleSquareDials(value) {
+    browser.storage.local.set({ [`${apiVersion}-square-dials`]: value });
+    settings.squareDials = value;
+    bc.postMessage({ squareDials: value });
   },
   handleThemeOption(value) {
     browser.storage.local.set({ [`${apiVersion}-theme-option`]: value });
@@ -246,9 +261,11 @@ export const settings = makeAutoObservable({
     settings.resetDialImages();
     settings.resetWallpaper();
     settings.handleDefaultFolder(defaultSettings.defaultFolder);
+    settings.handleDialSize(defaultSettings.dialSize);
     settings.handleMaxColumns(defaultSettings.maxColumns);
     settings.handleNewTab(defaultSettings.newTab);
     settings.handleShowTitle(defaultSettings.showTitle);
+    settings.handleSquareDials(defaultSettings.squareDials);
     settings.handleSwitchTitle(defaultSettings.switchTitle);
     settings.handleThemeOption(defaultSettings.themeOption);
   },
@@ -291,9 +308,11 @@ export const settings = makeAutoObservable({
           settings.dialImages = backup.dialImages || {};
           bc.postMessage({ dialColors: backup.dialColors });
           bc.postMessage({ dialImages: backup.dialImages || {} });
+          settings.handleDialSize(backup.dialSize);
           settings.handleMaxColumns(backup.maxColumns);
           settings.handleNewTab(backup.newTab);
           settings.handleShowTitle(backup.showTitle);
+          settings.handleSquareDials(backup.squareDials);
           settings.handleSwitchTitle(backup.switchTitle);
           settings.handleWallpaper(backup.wallpaper);
           settings.handleThemeOption(backup.themeOption);
@@ -312,9 +331,11 @@ export const settings = makeAutoObservable({
       defaultFolder: settings.defaultFolder,
       dialColors: settings.dialColors,
       dialImages: settings.dialImages,
+      dialSize: settings.dialSize,
       maxColumns: settings.maxColumns,
       newTab: settings.newTab,
       showTitle: settings.showTitle,
+      squareDials: settings.squareDials,
       switchTitle: settings.switchTitle,
       themeOption: settings.themeOption,
       wallpaper: settings.wallpaper,
@@ -396,6 +417,9 @@ autorun(() => {
     isMacOS ? "mac" : "windows",
     settings.showTitle ? "show-title" : "hide-title",
     settings.attachTitle ? "attach-title" : "normal-title",
+    settings.dialSize,
+    settings.maxColumns === "Unlimited" && "unlimited-columns",
+    settings.squareDials && "square",
   );
   document.documentElement.style.backgroundImage =
     settings.wallpaper === "custom-image" && settings.customImage

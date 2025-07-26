@@ -61,27 +61,86 @@
 }
 
 .Grid {
+  --dial-width-value: 12.125; /* 194px */
+  --dial-width: calc(var(--dial-width-value) * 1em);
+  --grid-gap-value: 1.75; /* 28px */
+  --grid-gap: calc(var(--grid-gap-value) * 1em);
+  --grid-padding: 50px;
+  --max-small-width: calc(
+    var(--dial-width) * 0.92
+  ); /* for <Small> padding when scaling <Domain> */
+  --title-height: 1.5em;
+  --dial-height-value: 8.125; /* 130px */
+  --dial-height: calc(var(--dial-height-value) * 1em);
+  --dial-height-attached-title: calc(var(--dial-width) - var(--title-height));
   display: grid;
-  grid-template-columns: repeat(auto-fill, 194px);
-  max-width: calc(
-    (var(--grid-max-cols) * 194px + (var(--grid-max-cols) - 1) * 41px) + 140px
-  );
-  row-gap: 27px;
-  column-gap: 41px;
+  grid-template-columns: repeat(auto-fill, var(--dial-width)); /* 194px */
+  row-gap: var(--grid-gap);
+  column-gap: var(--grid-gap);
   justify-content: center;
   margin: 80px auto;
-  padding: 0 70px 0;
+  padding-inline: var(--grid-padding);
 
   &.has-breadcrumbs {
     margin: 0 auto 70px;
+  }
+
+  &.max-width:not(.unlimited-columns &),
+  :not(.unlimited-columns) & {
+    max-width: calc(
+      (
+          var(--grid-max-cols) * var(--dial-width) +
+            (var(--grid-max-cols) - 1) * var(--grid-gap)
+        ) +
+        calc(var(--grid-padding) * 2)
+    );
+  }
+
+  .scale:not(.unlimited-columns) & {
+    max-width: initial;
   }
 
   .sortable-ghost {
     visibility: hidden;
   }
 
-  .attach-title & {
-    row-gap: 40px;
+  .square & {
+    --dial-width-value: 10.25; /* 164px */
+  }
+
+  .tiny & {
+    font-size: 0.8em;
+  }
+
+  .small & {
+    font-size: 1em;
+  }
+
+  .medium & {
+    font-size: 1.2em;
+  }
+
+  .large & {
+    font-size: 1.4em;
+  }
+
+  .huge & {
+    font-size: 1.6em;
+  }
+
+  .scale & {
+    font-size: clamp(
+      0.8em,
+      calc(
+        (100vw - 2 * var(--grid-padding)) /
+          (
+            var(--grid-max-cols) * var(--dial-width-value) +
+              (var(--grid-max-cols) - 1) * var(--grid-gap-value)
+          ) -
+          1px
+      ),
+      1.6em
+    );
   }
 }
 

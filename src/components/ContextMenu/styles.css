@@ -2,7 +2,6 @@
   position: absolute;
   top: var(--context-menu-top);
   left: var(--context-menu-left);
-  font-family: system-ui;
   font-size: 15px;
   border-radius: 6px;
   border: 1px solid var(--cm-border-color);

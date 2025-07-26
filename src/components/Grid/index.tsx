@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { observer } from "mobx-react-lite";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
 
 import "./styles.css";
@@ -15,12 +15,37 @@ export const Grid = observer(function Grid() {
   const gridRef = useRef(null);
   const breadcrumbsRef = useRef(null);
   const dropZonePercent = 0.6;
+  const [isMaxFontSize, setIsMaxFontSize] = useState(false);
 
   // Show breadcrumbs unless in the root folder.
   const isRoot =
     (settings.defaultFolder !== undefined &&
       bookmarks.currentFolder.id === settings.defaultFolder) ||
     !bookmarks.parentId;
+
+  // Check if font size is at maximum (1.6em) for scale mode.
+  // This is used to determine if the grid should have a max-width applied.
+  // It's a workaround for a Firefox glitch where the grid does not scale properly.
+  // By removing the max-width when the font size is at maximum, we work around the issue.
+  useEffect(() => {
+    const checkFontSize = () => {
+      if (gridRef.current) {
+        const computedStyle = window.getComputedStyle(gridRef.current);
+        const fontSize = parseFloat(computedStyle.fontSize);
+
+        setIsMaxFontSize(fontSize === 25.6);
+      }
+    };
+
+    // Check on mount, when window resizes, and when dial settings change
+    checkFontSize();
+    window.addEventListener("resize", checkFontSize);
+
+    return () => {
+      window.removeEventListener("resize", checkFontSize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.dialSize, settings.maxColumns, settings.squareDials]);
 
   useEffect(() => {
     // Check if the cursor is in a dial's drop zone
@@ -247,10 +272,12 @@ export const Grid = observer(function Grid() {
       <div
         className={classNames("Grid", {
           "has-breadcrumbs": !isRoot,
+          "max-width": isMaxFontSize,
         })}
         id="sortable"
         style={{
-          "--grid-max-cols": settings.maxColumns,
+          "--grid-max-cols":
+            settings.maxColumns === "Unlimited" ? "999" : settings.maxColumns,
         }}
         ref={gridRef}
       >

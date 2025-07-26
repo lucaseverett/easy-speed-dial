@@ -17,6 +17,22 @@ export function WhatsNewModal() {
       <div className="scroll-focus" tabIndex="0">
         <div className="WhatsNew">
           <div>
+            <h2>Version 2.12.0</h2>
+            <h3>New features</h3>
+            <ul>
+              <li>Added option to change the size of dials</li>
+              <li>Added option to change the shape of dials to be a square</li>
+            </ul>
+            <h3>Changes</h3>
+            <ul>
+              <li>
+                Improved grid layout with tighter spacing to fit more dials on
+                screen
+              </li>
+              <li>Updated font from Roboto to Inter for better readability</li>
+            </ul>
+          </div>
+          <div>
             <h2>Version 2.11.0</h2>
             <h3>New features</h3>
             <ul>
@@ -133,17 +149,19 @@ export function WhatsNewModal() {
               <li>Minor bug fixes</li>
             </ul>
           </div>
-          <div className="firefox-only">
-            <h2>Version 2.6.1</h2>
-            <h3>Resolved Issues</h3>
-            <ul>
-              <li>
-                Fixed bug that prevented the &quot;Open All in New Tabs&quot;
-                and &quot;Open All in New Window&quot; context menu options from
-                working.
-              </li>
-            </ul>
-          </div>
+          {__FIREFOX__ && (
+            <div>
+              <h2>Version 2.6.1</h2>
+              <h3>Resolved Issues</h3>
+              <ul>
+                <li>
+                  Fixed bug that prevented the &quot;Open All in New Tabs&quot;
+                  and &quot;Open All in New Window&quot; context menu options
+                  from working.
+                </li>
+              </ul>
+            </div>
+          )}
           <div>
             <h2>Version 2.6</h2>
             <h3>New features</h3>
@@ -154,13 +172,15 @@ export function WhatsNewModal() {
               </li>
             </ul>
           </div>
-          <div className="firefox-only">
-            <h2>Version 2.5.1</h2>
-            <h3>Resolved Issues</h3>
-            <ul>
-              <li>Minor bug fixes</li>
-            </ul>
-          </div>
+          {__FIREFOX__ && (
+            <div>
+              <h2>Version 2.5.1</h2>
+              <h3>Resolved Issues</h3>
+              <ul>
+                <li>Minor bug fixes</li>
+              </ul>
+            </div>
+          )}
           <div>
             <h2>Version 2.5</h2>
             <h3>Resolved Issues</h3>

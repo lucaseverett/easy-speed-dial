@@ -1,4 +1,39 @@
-let bookmarkTree = {
+interface BookmarkTreeNode {
+  id: string;
+  parentId?: string;
+  index?: number;
+  title: string;
+  type: "bookmark" | "folder";
+  url?: string;
+  children?: BookmarkTreeNode[];
+}
+
+interface BookmarkCreateDetails {
+  url?: string;
+  title: string;
+  id?: string;
+  parentId: string;
+  index?: number;
+}
+
+interface BookmarkUpdateChanges {
+  title?: string;
+  url?: string;
+}
+
+interface BookmarkMoveDestination {
+  index?: number;
+  parentId?: string;
+}
+
+interface CreateTabDetails {
+  url: string;
+}
+
+type EventType = "onChanged" | "onCreated" | "onMoved" | "onRemoved";
+type ListenerCallback = (...args: unknown[]) => void;
+
+let bookmarkTree: BookmarkTreeNode = {
   id: "0",
   title: "Bookmarks",
   type: "folder",
@@ -15,7 +50,7 @@ let bookmarkTree = {
 };
 
 // Maintain separate listener arrays for each bookmark event type
-const listeners = {
+const listeners: Record<EventType, ListenerCallback[]> = {
   onChanged: [],
   onCreated: [],
   onMoved: [],
@@ -24,7 +59,7 @@ const listeners = {
 
 // Flags to prevent infinite loops and redundant broadcasts during programmatic or cross-tab updates
 let isProcessingBroadcast = false;
-let broadcastTimeout = null;
+let broadcastTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const bc = new BroadcastChannel("easy-bookmarks");
 
@@ -52,7 +87,7 @@ bc.onmessage = (e) => {
 };
 
 // Call all registered listeners for a given event type
-function triggerListeners(eventType, ...args) {
+function triggerListeners(eventType: EventType, ...args: unknown[]) {
   listeners[eventType].forEach((callback) => {
     try {
       callback(...args);
@@ -69,14 +104,16 @@ function broadcastChanges() {
     return;
   }
 
-  clearTimeout(broadcastTimeout);
+  if (broadcastTimeout) {
+    clearTimeout(broadcastTimeout);
+  }
   broadcastTimeout = setTimeout(() => {
     bc.postMessage(bookmarkTree);
   }, 50);
 }
 
 // Register a callback for a specific event type
-function addListener(eventType, callback) {
+function addListener(eventType: EventType, callback: ListenerCallback) {
   if (typeof callback !== "function") {
     throw new Error("Callback must be a function");
   }
@@ -84,27 +121,31 @@ function addListener(eventType, callback) {
   listeners[eventType].push(callback);
 }
 
-function create({ url, title, id, parentId }) {
+function create({
+  url,
+  title,
+  id,
+  parentId,
+}: BookmarkCreateDetails): BookmarkTreeNode {
   const parent = findBookmarkById(parentId);
   if (!parent || parent.type !== "folder") {
     throw new Error("Parent not found or is not a folder");
   }
 
-  const newBookmark = {
+  const newBookmark: BookmarkTreeNode = {
     id: id || crypto.randomUUID(),
-    parentId: parentId,
+    parentId,
     url,
-    title,
-    type: "bookmark",
-    index: parent.children.length,
+    title: title!,
+    type: url ? "bookmark" : "folder",
+    index: parent.children!.length,
   };
 
   if (!url) {
-    newBookmark.type = "folder";
     newBookmark.children = [];
   }
 
-  parent.children.push(newBookmark);
+  parent.children!.push(newBookmark);
 
   // Trigger onCreated listeners
   triggerListeners("onCreated", newBookmark.id, newBookmark);
@@ -119,42 +160,47 @@ function getTree() {
   return [bookmarkTree];
 }
 
-function getSubTree(id, bookmarks = bookmarkTree) {
+function getSubTree(
+  id: string,
+  bookmarks: BookmarkTreeNode = bookmarkTree,
+): BookmarkTreeNode[] | null {
   if (bookmarks.id === id) {
     return [
       {
         id,
         parentId: bookmarks.parentId,
         title: bookmarks.title,
-        children: bookmarks.children?.sort(
-          (a, b) => (a.index || 0) - (b.index || 0),
-        ),
+        type: bookmarks.type,
+        children: bookmarks.children?.sort((a, b) => a.index! - b.index!),
       },
     ];
   }
 
-  return (
-    bookmarks.children?.reduce((acc, child) => {
-      if (child.type === "folder") {
-        const subTree = getSubTree(id, child);
-        if (subTree) {
-          return subTree;
-        }
+  if (!bookmarks.children) {
+    return null;
+  }
+
+  for (const child of bookmarks.children) {
+    if (child.type === "folder") {
+      const subTree = getSubTree(id, child);
+      if (subTree) {
+        return subTree;
       }
-      return acc;
-    }, null) || null
-  );
+    }
+  }
+
+  return null;
 }
 
-function getChildren(id) {
+function getChildren(id: string): BookmarkTreeNode[] {
   const subTree = getSubTree(id);
-  return (
-    subTree?.[0]?.children?.sort((a, b) => (a.index || 0) - (b.index || 0)) ||
-    []
-  );
+  return subTree?.[0]?.children?.sort((a, b) => a.index! - b.index!) || [];
 }
 
-function get(idOrIdList, bookmarks = bookmarkTree) {
+function get(
+  idOrIdList: string | string[],
+  bookmarks: BookmarkTreeNode = bookmarkTree,
+): Promise<BookmarkTreeNode[]> {
   return new Promise((resolve, reject) => {
     const ids = Array.isArray(idOrIdList) ? idOrIdList : [idOrIdList];
 
@@ -179,7 +225,10 @@ function get(idOrIdList, bookmarks = bookmarkTree) {
   });
 }
 
-function findBookmarkById(id, bookmarks = bookmarkTree) {
+function findBookmarkById(
+  id: string,
+  bookmarks: BookmarkTreeNode = bookmarkTree,
+): BookmarkTreeNode | null {
   if (bookmarks.id === id) {
     return bookmarks;
   }
@@ -206,11 +255,26 @@ function findBookmarkById(id, bookmarks = bookmarkTree) {
   return null;
 }
 
-function move(id, { index, parentId }) {
+function move(id: string, { index, parentId }: BookmarkMoveDestination): void {
   const bookmark = findBookmarkById(id);
-  const oldParent = findBookmarkById(bookmark.parentId);
+  if (!bookmark) {
+    throw new Error("Bookmark not found");
+  }
+
+  const oldParent = findBookmarkById(bookmark.parentId!);
+  if (!oldParent) {
+    throw new Error("Old parent not found");
+  }
+
   const newParentId = parentId || bookmark.parentId;
-  const newParent = findBookmarkById(newParentId);
+  const newParent = findBookmarkById(newParentId!);
+  if (!newParent) {
+    throw new Error("New parent not found");
+  }
+
+  if (newParent.type !== "folder") {
+    throw new Error("New parent is not a folder");
+  }
 
   // Store old values for the event
   const oldIndex = bookmark.index;
@@ -219,6 +283,9 @@ function move(id, { index, parentId }) {
   // If moving to a different folder
   if (newParentId !== bookmark.parentId) {
     // Remove the bookmark from its old parent folder
+    if (!oldParent.children) {
+      oldParent.children = [];
+    }
     const oldIndex = oldParent.children.findIndex((b) => b.id === id);
     if (oldIndex !== -1) {
       oldParent.children.splice(oldIndex, 1);
@@ -226,6 +293,10 @@ function move(id, { index, parentId }) {
 
     // Add the bookmark to the new parent folder
     bookmark.parentId = newParentId;
+
+    if (!newParent.children) {
+      newParent.children = [];
+    }
 
     // Set the bookmark's index in the new folder; add to end if index is not specified
     if (index !== undefined) {
@@ -241,33 +312,36 @@ function move(id, { index, parentId }) {
       b.index = i;
     });
     // Sort the old parent's children by their updated indices
-    oldParent.children.sort((a, b) => a.index - b.index);
+    oldParent.children.sort((a, b) => a.index! - b.index!);
 
     newParent.children.forEach((b, i) => {
       b.index = i;
     });
     // Sort the new parent's children by their updated indices
-    newParent.children.sort((a, b) => a.index - b.index);
+    newParent.children.sort((a, b) => a.index! - b.index!);
   } else {
     // Handle reordering bookmarks within the same folder
-    const parent = findBookmarkById(bookmark.parentId);
+    const parent = findBookmarkById(bookmark.parentId!);
+    if (!parent || !parent.children) {
+      throw new Error("Parent or children not found");
+    }
     const bookmarks = parent.children;
 
     // Determine the original and target indices for the bookmark being moved
-    const from = bookmark.index;
-    const to = index;
+    const from = bookmark.index!;
+    const to = index!;
 
     // Adjust indices of affected bookmarks depending on move direction
     bookmarks.forEach((b) => {
       if (from < to) {
         // moving down
-        if (b.index > from && b.index <= to) {
-          b.index--;
+        if (b.index! > from && b.index! <= to) {
+          b.index!--;
         }
       } else if (from > to) {
         // moving up
-        if (b.index >= to && b.index < from) {
-          b.index++;
+        if (b.index! >= to && b.index! < from) {
+          b.index!++;
         }
       }
     });
@@ -276,7 +350,7 @@ function move(id, { index, parentId }) {
     bookmark.index = to;
 
     // Sort all bookmarks in the folder by their index
-    bookmarks.sort((a, b) => a.index - b.index);
+    bookmarks.sort((a, b) => a.index! - b.index!);
   }
 
   // Notify all onMoved listeners about the move
@@ -291,9 +365,17 @@ function move(id, { index, parentId }) {
   broadcastChanges();
 }
 
-function remove(id) {
+function remove(id: string): void {
   const bookmark = findBookmarkById(id);
-  const parent = findBookmarkById(bookmark.parentId);
+  if (!bookmark) {
+    throw new Error("Bookmark not found");
+  }
+
+  const parent = findBookmarkById(bookmark.parentId!);
+  if (!parent || !parent.children) {
+    throw new Error("Parent not found or has no children");
+  }
+
   const index = parent.children.findIndex((b) => b.id === id);
   if (index !== -1) {
     parent.children.splice(index, 1);
@@ -315,12 +397,17 @@ function remove(id) {
   broadcastChanges();
 }
 
-function update(id, changes) {
+function update(id: string, changes: BookmarkUpdateChanges): BookmarkTreeNode {
   const bookmark = findBookmarkById(id);
   if (!bookmark) {
     throw new Error("Bookmark not found");
   }
-  const parent = findBookmarkById(bookmark.parentId);
+
+  const parent = findBookmarkById(bookmark.parentId!);
+  if (!parent || !parent.children) {
+    throw new Error("Parent not found or has no children");
+  }
+
   const index = parent.children.findIndex((b) => b.id === id);
   const updatedBookmark = {
     ...parent.children[index],
@@ -337,7 +424,7 @@ function update(id, changes) {
   return updatedBookmark;
 }
 
-function createTab({ url }) {
+function createTab({ url }: CreateTabDetails): void {
   window.open(url, "_blank", "noreferrer");
 }
 
@@ -351,10 +438,22 @@ const bookmarks = {
   remove,
   removeTree: remove,
   update,
-  onChanged: { addListener: (callback) => addListener("onChanged", callback) },
-  onCreated: { addListener: (callback) => addListener("onCreated", callback) },
-  onMoved: { addListener: (callback) => addListener("onMoved", callback) },
-  onRemoved: { addListener: (callback) => addListener("onRemoved", callback) },
+  onChanged: {
+    addListener: (callback: ListenerCallback) =>
+      addListener("onChanged", callback),
+  },
+  onCreated: {
+    addListener: (callback: ListenerCallback) =>
+      addListener("onCreated", callback),
+  },
+  onMoved: {
+    addListener: (callback: ListenerCallback) =>
+      addListener("onMoved", callback),
+  },
+  onRemoved: {
+    addListener: (callback: ListenerCallback) =>
+      addListener("onRemoved", callback),
+  },
 };
 
 export default { bookmarks, tabs: { create: createTab } };

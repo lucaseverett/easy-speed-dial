@@ -1,5 +1,5 @@
 @import "modern-normalize";
-@import "@fontsource/roboto";
+@import "inter-ui/inter-variable.css";
 @import "./buttons.css";
 @import "./inputs.css";
 @import "./wallpapers.css";
@@ -15,7 +15,10 @@ html {
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: InterVariable, sans-serif;
+  font-feature-settings:
+    "liga" 1,
+    "calt" 1; /* fix for Chrome */
   font-size: initial; /* Fix for font-size issue in Chrome extensions. See: https://chromium.googlesource.com/chromium/src/+/master/extensions/renderer/resources/extension_fonts.css and https://bugs.chromium.org/p/chromium/issues/detail?id=428412 */
 }
 

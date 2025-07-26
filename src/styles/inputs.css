@@ -1,5 +1,4 @@
 :root {
-  --border-radius: 4px;
   --input-background-color: #cfcfcf;
   --input-border-color: #bdbdbd;
   --input-focus-outline-color: #42a5f5;
@@ -15,7 +14,7 @@
 }
 
 .input {
-  border-radius: var(--border-radius);
+  border-radius: 4px;
   border: none;
   padding: 7px 25px 7px 7px;
   background-color: var(--input-background-color);

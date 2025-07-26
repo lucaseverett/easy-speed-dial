@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { dialColors } from "./dialColors.js";
+import { dialColors } from "./dialColors";
 
 describe("getColorByDomain", () => {
   test("should return the color for a domain", () => {

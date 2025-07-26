@@ -20,9 +20,11 @@ export const Settings = observer(function Settings() {
     handleCustomColor,
     handleCustomImage,
     handleDefaultFolder,
+    handleDialSize,
     handleMaxColumns,
     handleNewTab,
     handleShowTitle,
+    handleSquareDials,
     handleSwitchTitle,
     handleThemeOption,
     handleWallpaper,
@@ -282,7 +284,7 @@ export const Settings = observer(function Settings() {
                   className="setting-description"
                   id="default-folder-description"
                 >
-                  Choose the folder used to display dials.
+                  Select the bookmark folder used to display your speed dials.
                 </div>
               </div>
               <div className="setting-option select">
@@ -311,9 +313,9 @@ export const Settings = observer(function Settings() {
                   className="setting-description"
                   id="color-scheme-description"
                 >
-                  Choose the colors used throughout Easy Speed Dial. If you
-                  select &quot;Automatic&quot;, colors will change based on the
-                  preference set for your device.
+                  Choose the color scheme for Easy Speed Dial. If set to
+                  &quot;Automatic,&quot; it will follow your system&apos;s light
+                  or dark mode preference.
                 </div>
               </div>
               <div className="setting-option select">
@@ -338,14 +340,39 @@ export const Settings = observer(function Settings() {
             </div>
             <div className="setting-wrapper setting-group">
               <div className="setting-label">
+                <div className="setting-title" id="open-new-tabs-title">
+                  Open in New Tab
+                </div>
+                <div
+                  className="setting-description"
+                  id="open-new-tabs-description"
+                >
+                  Open all bookmarks in a new browser tab instead of the current
+                  one.
+                </div>
+              </div>
+              <div className="setting-option toggle">
+                <Switch
+                  aria-labelledby="open-new-tabs-title"
+                  aria-describedby="open-new-tabs-description"
+                  onClick={() => handleNewTab(!settings.newTab)}
+                  className="switch-root"
+                  checked={settings.newTab}
+                >
+                  <span className="switch-thumb" />
+                </Switch>
+              </div>
+            </div>
+            <div className="setting-wrapper setting-group">
+              <div className="setting-label">
                 <div className="setting-title" id="max-cols-title">
                   Maximum Columns
                 </div>
                 <div className="setting-description" id="max-cols-description">
-                  Choose the maximum number of columns that will be displayed.
+                  Choose the maximum number of columns to display based on your
+                  screen size.
                 </div>
               </div>
-
               <div className="setting-option select">
                 <select
                   onChange={(e) => handleMaxColumns(e.target.value)}
@@ -379,23 +406,80 @@ export const Settings = observer(function Settings() {
             </div>
             <div className="setting-wrapper setting-group">
               <div className="setting-label">
-                <div className="setting-title" id="open-new-tabs-title">
-                  Open in New Tab
+                <div className="setting-title" id="dial-size-title">
+                  Dial Size
+                </div>
+                <div className="setting-description" id="dial-size-description">
+                  Choose the size of the speed dial icons.
+                </div>
+              </div>
+              <div className="setting-option select">
+                <select
+                  onChange={(e) => handleDialSize(e.target.value)}
+                  value={settings.dialSize}
+                  className="input"
+                  aria-labelledby="dial-size-title"
+                  aria-describedby="dial-size-description"
+                >
+                  {[
+                    { label: "Tiny", value: "tiny" },
+                    { label: "Small", value: "small" },
+                    { label: "Medium", value: "medium" },
+                    { label: "Large", value: "large" },
+                    { label: "Huge", value: "huge" },
+                    { label: "Scale to Fit", value: "scale" },
+                  ].map(({ label, value }) => (
+                    <option value={value} key={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                <CaretDown />
+              </div>
+            </div>
+            <div className="setting-wrapper setting-group">
+              <div className="setting-label">
+                <div className="setting-title" id="square-dials-title">
+                  Square Dials
                 </div>
                 <div
                   className="setting-description"
-                  id="open-new-tabs-description"
+                  id="square-dials-description"
                 >
-                  All bookmarks will open in a new browser tab.
+                  Make all dials square-shaped instead of rectangular.
                 </div>
               </div>
               <div className="setting-option toggle">
                 <Switch
-                  aria-labelledby="open-new-tabs-title"
-                  aria-describedby="open-new-tabs-description"
-                  onClick={() => handleNewTab(!settings.newTab)}
+                  aria-labelledby="square-dials-title"
+                  aria-describedby="square-dials-description"
+                  onClick={() => handleSquareDials(!settings.squareDials)}
                   className="switch-root"
-                  checked={settings.newTab}
+                  checked={settings.squareDials}
+                >
+                  <span className="switch-thumb" />
+                </Switch>
+              </div>
+            </div>
+            <div className="setting-wrapper setting-group">
+              <div className="setting-label">
+                <div className="setting-title" id="show-title-title">
+                  Show Title
+                </div>
+                <div
+                  className="setting-description"
+                  id="show-title-description"
+                >
+                  Display the bookmark&apos;s title below the dial.
+                </div>
+              </div>
+              <div className="setting-option toggle">
+                <Switch
+                  aria-labelledby="show-title-title"
+                  aria-describedby="show-title-description"
+                  onClick={() => handleShowTitle(!settings.showTitle)}
+                  className="switch-root"
+                  checked={settings.showTitle}
                 >
                   <span className="switch-thumb" />
                 </Switch>
@@ -410,7 +494,7 @@ export const Settings = observer(function Settings() {
                   className="setting-description"
                   id="switch-title-description"
                 >
-                  The title will be displayed in the dial instead of the URL.
+                  Show the bookmark&apos;s title in the dial instead of the URL.
                 </div>
               </div>
               <div className="setting-option toggle">
@@ -427,54 +511,29 @@ export const Settings = observer(function Settings() {
             </div>
             <div className="setting-wrapper setting-group">
               <div className="setting-label">
-                <div className="setting-title" id="show-title-title">
-                  Show Title
+                <div className="setting-title" id="attach-title-title">
+                  Attach Title to Dial
                 </div>
                 <div
                   className="setting-description"
-                  id="show-title-description"
+                  id="attach-title-description"
                 >
-                  The title will be displayed beneath the dial.
+                  Remove spacing between the title and dial, connecting them
+                  directly.
                 </div>
               </div>
               <div className="setting-option toggle">
                 <Switch
-                  aria-labelledby="show-title-title"
-                  aria-describedby="show-title-description"
-                  onClick={() => handleShowTitle(!settings.showTitle)}
+                  aria-labelledby="attach-title-title"
+                  aria-describedby="attach-title-description"
+                  onClick={() => handleAttachTitle(!settings.attachTitle)}
                   className="switch-root"
-                  checked={settings.showTitle}
+                  checked={settings.attachTitle}
                 >
                   <span className="switch-thumb" />
                 </Switch>
               </div>
             </div>
-            {settings.showTitle && (
-              <div className="setting-wrapper setting-group">
-                <div className="setting-label">
-                  <div className="setting-title" id="attach-title-title">
-                    Attach Title to Dial
-                  </div>
-                  <div
-                    className="setting-description"
-                    id="attach-title-description"
-                  >
-                    The title will be attached to the dial.
-                  </div>
-                </div>
-                <div className="setting-option toggle">
-                  <Switch
-                    aria-labelledby="attach-title-title"
-                    aria-describedby="attach-title-description"
-                    onClick={() => handleAttachTitle(!settings.attachTitle)}
-                    className="switch-root"
-                    checked={settings.attachTitle}
-                  >
-                    <span className="switch-thumb" />
-                  </Switch>
-                </div>
-              </div>
-            )}
             <div className="setting-wrapper setting-group">
               <div className="setting-label">
                 <div className="setting-title" id="reset-backup-restore-title">
@@ -484,10 +543,9 @@ export const Settings = observer(function Settings() {
                   className="setting-description"
                   id="reset-backup-restore-description"
                 >
-                  Save a file containing all of your settings. Your custom
-                  background image, custom background color, and custom dial
-                  colors will be included. Restoring a backup will overwrite
-                  your current settings.
+                  Save a file with all your settings, including custom
+                  background image/color and dial images/colors. Restoring a
+                  backup will replace your current settings.
                 </div>
               </div>
               <div className="setting-option backup-restore">
@@ -516,9 +574,9 @@ export const Settings = observer(function Settings() {
                   className="setting-description"
                   id="reset-backup-restore-description"
                 >
-                  This will reset all settings to their default values. Your
-                  custom background image, custom background color, and custom
-                  dial colors will be cleared. This action cannot be undone.
+                  Reset all settings to their defaults. Custom background
+                  image/color and dial images/colors will be cleared. This
+                  cannot be undone.
                 </div>
               </div>
               <div className="setting-option reset">

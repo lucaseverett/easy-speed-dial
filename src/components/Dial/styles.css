@@ -1,3 +1,7 @@
+:root {
+  --border-radius: 0.375em;
+}
+
 .Link {
   text-decoration: none;
   cursor: pointer;
@@ -5,7 +9,7 @@
 
   .attach-title & {
     box-shadow: var(--dial-box-shadow);
-    border-radius: 6px;
+    border-radius: var(--border-radius);
 
     &:focus-visible:is(a) {
       outline: 5px solid #1976d2;
@@ -19,8 +23,8 @@
 }
 
 .Box {
-  border-radius: 6px;
-  height: 130px;
+  border-radius: var(--border-radius);
+  height: var(--dial-height);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,13 +34,9 @@
   pointer-events: none;
 
   .folder {
-    width: 80px;
-    height: 80px;
+    width: 5em; /* 80px */
+    height: 5em; /* 80px */
     fill: #fff;
-  }
-
-  .windows & {
-    font-weight: bold;
   }
 
   .normal-title & {
@@ -53,63 +53,67 @@
   }
 
   .attach-title.show-title & {
-    border-radius: 6px 6px 0 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+
+  .square & {
+    height: var(--dial-height-attached-title);
   }
 }
 
 .Small {
-  font-size: 13px;
   font-weight: normal;
-  max-width: 180px;
+  width: 100%;
+  max-width: var(--max-small-width);
   text-align: var(--name-align);
   margin: 0 auto;
+  display: grid;
+  align-items: center;
+  height: 1em;
+
+  div {
+    font-size: 0.8125em;
+    display: block;
+  }
 }
 
 .Domain {
-  line-height: var(--name-line-height);
   white-space: var(--name-white-space);
   padding: var(--name-padding);
-  font-size: 24px;
   transform: var(--name-transform);
   text-align: center;
+
+  div {
+    font-size: 1.5em;
+    margin-block: -0.15em;
+  }
 }
 
 .Title {
   text-align: center;
-  font-size: 13px;
-  padding-top: 10px;
-  position: relative;
+  padding-top: 0.5em;
+  display: grid;
+  place-content: center;
 
   .attach-title & {
     padding-top: 0;
+    display: block;
   }
 
   .title {
-    text-overflow: ellipsis;
-    border-radius: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    display: inline-block;
+    border-radius: 0.625em;
     max-width: 100%;
+    height: var(--title-height);
+    display: grid;
+    place-content: center;
+    padding-inline: 8px;
 
-    .windows & {
-      font-weight: 500;
-    }
-
-    .windows.firefox & {
-      padding: 3px 8px 3px;
-    }
-
-    .windows.chrome & {
-      padding: 4px 8px 3px;
-    }
-
-    .mac.chrome & {
-      padding: 4px 8px 2px;
-    }
-
-    .mac.firefox & {
-      padding: 3px 8px 2px;
+    div {
+      font-size: clamp(10px, 0.8125em, 15px);
+      line-height: initial;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .color-scheme-light & {
@@ -123,9 +127,7 @@
     }
 
     .attach-title & {
-      border-radius: 0 0 6px 6px;
-      width: 100%;
-      display: block;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
     }
 
     :focus-visible:is(a) & {

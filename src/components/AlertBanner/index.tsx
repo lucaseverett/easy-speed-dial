@@ -6,7 +6,7 @@ import "./styles.css";
 const appVersion = __APP_VERSION__;
 
 export function AlertBanner() {
-  function handleShowWhatsNew(e) {
+  function handleShowWhatsNew(e: React.MouseEvent<HTMLButtonElement>) {
     modals.openModal({
       modal: "whats-new",
       focusAfterClosed: e.currentTarget,

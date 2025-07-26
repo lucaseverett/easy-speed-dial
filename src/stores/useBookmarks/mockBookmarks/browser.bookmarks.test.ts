@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import browser from "./browser.bookmarks.js";
+import browser from "./browser.bookmarks";
 
 // Helper function to validate an object against BookmarkTreeNode type.
 function isValidBookmark(obj, blueprint) {

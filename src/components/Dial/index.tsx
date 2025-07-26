@@ -26,7 +26,7 @@ export const Dial = observer(function Dial(props) {
         className="Box"
         style={{
           background: settings.dialImages[props.id]
-            ? `${settings.dialColors[props.id] || dialColors(props.name)} url("${settings.dialImages[props.id]}") center/cover no-repeat`
+            ? `${settings.dialColors[props.id] || dialColors(props.name)} url("${settings.dialImages[props.id]}") center/contain no-repeat`
             : `${settings.dialColors[props.id] || dialColors(props.name)}`,
           textShadow:
             props.type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none",
@@ -106,7 +106,7 @@ function Small(props) {
         "--name-align": props.align,
       }}
     >
-      {props.children}
+      <div>{props.children}</div>
     </div>
   );
 }
@@ -115,30 +115,55 @@ function Domain(props) {
   const [scale, setScale] = useState();
   const domainRef = useRef();
   useLayoutEffect(() => {
-    const domainWidth = domainRef.current.offsetWidth;
-    const domainHeight = domainRef.current.offsetHeight;
-    if (domainHeight > "120") {
-      setScale(120 / domainHeight);
-    } else if (domainWidth > "180") {
-      setScale(180 / domainWidth);
-    }
+    const domainElement = domainRef.current;
+    const boxElement = domainElement.closest(".Box");
+
+    const calculateScale = () => {
+      const domainWidth = domainElement.offsetWidth;
+      const domainHeight = domainElement.offsetHeight;
+      const boxWidth = boxElement.offsetWidth;
+      const boxHeight = boxElement.offsetHeight;
+
+      // Scale relative to Box size
+      const maxWidth = boxWidth * 0.92;
+      const maxHeight = boxHeight * 0.92;
+
+      let newScale = null;
+      if (domainHeight > maxHeight) {
+        newScale = maxHeight / domainHeight;
+      } else if (domainWidth > maxWidth) {
+        newScale = maxWidth / domainWidth;
+      }
+      
+      setScale(newScale);
+    };
+
+    // Use ResizeObserver to ensure we calculate after layout is complete
+    const resizeObserver = new ResizeObserver(() => {
+      calculateScale();
+    });
+
+    resizeObserver.observe(domainElement);
+    resizeObserver.observe(boxElement);
+
+    // Also calculate immediately in case dimensions are already stable
+    calculateScale();
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
   return (
     <div
       ref={domainRef}
       className="Domain"
       style={{
-        "--name-line-height": props.title ? "26px" : "16px",
         "--name-white-space": props.title ? "initial" : "nowrap",
-        "--name-padding": props.title
-          ? "0"
-          : props.padding
-            ? "18px 0 3px"
-            : "3px 0",
+        "--name-padding": props.title ? "0" : props.padding ? "1em 0 0" : "0 0",
         "--name-transform": scale ? `scale(${scale})` : "initial",
       }}
     >
-      {props.children}
+      <div>{props.children}</div>
     </div>
   );
 }
@@ -149,9 +174,11 @@ const Title = observer(function Title(props) {
   return (
     <div className="Title">
       <div className="title">
-        {settings.switchTitle || !props.title
-          ? props.name.join(".")
-          : props.title}
+        <div>
+          {settings.switchTitle || !props.title
+            ? props.name.join(".")
+            : props.title}
+        </div>
       </div>
     </div>
   );

@@ -2,14 +2,6 @@
   font-size: 16px;
   padding: 20px;
 
-  .firefox-only {
-    display: none;
-  }
-
-  .firefox & .firefox-only {
-    display: block;
-  }
-
   h2 {
     margin: 20px 0 0;
     font-size: 16px;
