@@ -26,7 +26,7 @@ export const Dial = observer(function Dial(props) {
         className="Box"
         style={{
           background: settings.dialImages[props.id]
-            ? `${settings.dialColors[props.id] || dialColors(props.name)} url("${settings.dialImages[props.id]}") center/contain no-repeat`
+            ? `${settings.dialColors[props.id] || dialColors(props.name)} url("${settings.dialImages[props.id]}") center/cover no-repeat`
             : `${settings.dialColors[props.id] || dialColors(props.name)}`,
           textShadow:
             props.type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none",
@@ -134,7 +134,7 @@ function Domain(props) {
       } else if (domainWidth > maxWidth) {
         newScale = maxWidth / domainWidth;
       }
-      
+
       setScale(newScale);
     };
 
