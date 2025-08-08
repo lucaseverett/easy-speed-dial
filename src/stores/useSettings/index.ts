@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx/lite";
 import { autorun, makeAutoObservable, remove, runInAction, set } from "mobx";
 import semverCoerce from "semver/functions/coerce";
 import semverGt from "semver/functions/gt";
@@ -24,7 +24,7 @@ async function getCustomImage() {
     const { [`${apiVersion}-custom-image`]: image } =
       await browser.storage.local.get(`${apiVersion}-custom-image`);
     if (image) {
-      const blobImage = base64ToBlob(image);
+      const blobImage = base64ToBlob(image as string);
       const imageURI = URL.createObjectURL(blobImage);
       return imageURI;
     } else {
@@ -39,24 +39,28 @@ function prefersDarkMode() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
-function getColorScheme(value) {
+function getColorScheme(value: string) {
   return (value === "System Theme" && prefersDarkMode()) || value === "Dark"
     ? "color-scheme-dark"
     : "color-scheme-light";
 }
 
-const storage = await browser.storage.local.get();
-const lastVersion = semverCoerce(storage["last-version"])?.version || false;
+const storage: Record<string, unknown> = await browser.storage.local.get();
+const lastVersion =
+  semverCoerce(storage["last-version"] as string)?.version || false;
 const isUpgrade = lastVersion && semverGt(appVersion, lastVersion);
 browser.storage.local.set({ "last-version": appVersion });
-const themeOption = storage[`${apiVersion}-theme-option`] || "System Theme";
+const themeOption =
+  (storage[`${apiVersion}-theme-option`] as string) || "System Theme";
 const colorScheme = getColorScheme(themeOption);
 let wallpaper = storage[`${apiVersion}-wallpaper`];
 
 const customImage = await getCustomImage();
-wallpaper = wallpaper?.includes("custom-image")
-  ? "custom-image"
-  : wallpaper || (prefersDarkMode() ? "dark-wallpaper" : "light-wallpaper");
+wallpaper =
+  typeof wallpaper === "string" && wallpaper.includes("custom-image")
+    ? "custom-image"
+    : (wallpaper as string) ||
+      (prefersDarkMode() ? "dark-wallpaper" : "light-wallpaper");
 
 /* Handle changes page between open tabs. */
 const bc = new BroadcastChannel("easy-settings");
@@ -69,6 +73,9 @@ bc.onmessage = (e) => {
 // SETTINGS STORE
 // ==================================================================
 
+type DialColors = Record<string, string>;
+type DialImages = Record<string, string>;
+
 const defaultSettings = {
   attachTitle: false,
   colorScheme: window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -77,8 +84,8 @@ const defaultSettings = {
   customColor: "",
   customImage: "",
   defaultFolder: "",
-  dialColors: {},
-  dialImages: {},
+  dialColors: {} as DialColors,
+  dialImages: {} as DialImages,
   dialSize: "small",
   firstRun: !lastVersion,
   maxColumns: "7",
@@ -88,6 +95,7 @@ const defaultSettings = {
   squareDials: false,
   switchTitle: false,
   themeOption: "System Theme",
+  transparentDials: false,
   wallpaper: "",
 };
 
@@ -101,9 +109,11 @@ export const settings = makeAutoObservable({
   defaultFolder:
     storage[`${apiVersion}-default-folder`] || defaultSettings.defaultFolder,
   dialColors:
-    storage[`${apiVersion}-dial-colors`] || defaultSettings.dialColors,
+    (storage[`${apiVersion}-dial-colors`] as DialColors) ||
+    defaultSettings.dialColors,
   dialImages:
-    storage[`${apiVersion}-dial-images`] || defaultSettings.dialImages,
+    (storage[`${apiVersion}-dial-images`] as DialImages) ||
+    defaultSettings.dialImages,
   dialSize: storage[`${apiVersion}-dial-size`] || defaultSettings.dialSize,
   firstRun: defaultSettings.firstRun,
   maxColumns:
@@ -116,13 +126,16 @@ export const settings = makeAutoObservable({
   switchTitle:
     storage[`${apiVersion}-switch-title`] ?? defaultSettings.switchTitle,
   themeOption,
+  transparentDials:
+    storage[`${apiVersion}-transparent-dials`] ??
+    defaultSettings.transparentDials,
   wallpaper,
-  handleAttachTitle(value) {
+  handleAttachTitle(value: boolean) {
     browser.storage.local.set({ [`${apiVersion}-attach-title`]: value });
     settings.attachTitle = value;
     bc.postMessage({ attachTitle: value });
   },
-  handleClearColor(id) {
+  handleClearColor(id: string) {
     if (settings.dialColors[id]) {
       remove(settings.dialColors, id);
       browser.storage.local.set({
@@ -131,7 +144,7 @@ export const settings = makeAutoObservable({
       bc.postMessage({ dialColors: { ...settings.dialColors } });
     }
   },
-  handleClearThumbnail(id) {
+  handleClearThumbnail(id: string) {
     if (settings.dialImages[id]) {
       remove(settings.dialImages, id);
       browser.storage.local.set({
@@ -140,7 +153,7 @@ export const settings = makeAutoObservable({
       bc.postMessage({ dialImages: { ...settings.dialImages } });
     }
   },
-  handleCustomColor(value) {
+  handleCustomColor(value: string) {
     browser.storage.local.set({ [`${apiVersion}-custom-color`]: value });
     settings.customColor = value;
     settings.handleWallpaper("custom-color");
@@ -149,8 +162,17 @@ export const settings = makeAutoObservable({
   handleCustomImage() {
     const i = document.createElement("input");
     i.type = "File";
-    i.onchange = async (e) => {
-      const image = e.target.files[0];
+    i.accept = "image/*";
+    i.onchange = async (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const image = target.files?.[0];
+      if (!image) return;
+
+      if (!image.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return;
+      }
+
       const imageURI = URL.createObjectURL(image);
       const base64 = await blobToBase64(image);
       await browser.storage.local.set({
@@ -162,12 +184,12 @@ export const settings = makeAutoObservable({
     };
     i.click();
   },
-  handleDefaultFolder(value) {
+  handleDefaultFolder(value: string) {
     browser.storage.local.set({ [`${apiVersion}-default-folder`]: value });
     settings.defaultFolder = value;
     bc.postMessage({ defaultFolder: value });
   },
-  handleDialColors(id, value) {
+  handleDialColors(id: string, value: string) {
     set(settings.dialColors, id, value);
     browser.storage.local.set({
       [`${apiVersion}-dial-colors`]: { ...settings.dialColors },
@@ -176,26 +198,35 @@ export const settings = makeAutoObservable({
       dialColors: { ...settings.dialColors },
     });
   },
-  handleDialSize(value) {
+  handleDialSize(value: string) {
     browser.storage.local.set({ [`${apiVersion}-dial-size`]: value });
     settings.dialSize = value;
     bc.postMessage({ dialSize: value });
   },
-  handleMaxColumns(value) {
+  handleMaxColumns(value: string) {
     browser.storage.local.set({ [`${apiVersion}-max-columns`]: value });
     settings.maxColumns = value;
     bc.postMessage({ maxColumns: value });
   },
-  handleNewTab(value) {
+  handleNewTab(value: boolean) {
     browser.storage.local.set({ [`${apiVersion}-new-tab`]: value });
     settings.newTab = value;
     bc.postMessage({ newTab: value });
   },
-  handleSelectThumbnail(id) {
+  handleSelectThumbnail(id: string) {
     const i = document.createElement("input");
     i.type = "File";
-    i.onchange = async (e) => {
-      const image = e.target.files[0];
+    i.accept = "image/*";
+    i.onchange = async (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const image = target.files?.[0];
+      if (!image) return;
+
+      if (!image.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return;
+      }
+
       const base64 = await blobToBase64(image);
       settings.dialImages = { ...settings.dialImages, [id]: base64 };
       browser.storage.local.set({
@@ -205,43 +236,70 @@ export const settings = makeAutoObservable({
     };
     i.click();
   },
-  handleShowTitle(value) {
+  handleShowTitle(value: boolean) {
     browser.storage.local.set({ [`${apiVersion}-show-title`]: value });
     settings.showTitle = value;
     bc.postMessage({ showTitle: value });
   },
-  handleSwitchTitle(value) {
+  handleSwitchTitle(value: boolean) {
     browser.storage.local.set({ [`${apiVersion}-switch-title`]: value });
     settings.switchTitle = value;
     bc.postMessage({ switchTitle: value });
   },
-  handleSquareDials(value) {
+  handleSquareDials(value: boolean) {
     browser.storage.local.set({ [`${apiVersion}-square-dials`]: value });
     settings.squareDials = value;
     bc.postMessage({ squareDials: value });
   },
-  handleThemeOption(value) {
+  handleThemeOption(value: string) {
     browser.storage.local.set({ [`${apiVersion}-theme-option`]: value });
     settings.themeOption = value;
     settings.colorScheme = getColorScheme(value);
     settings.toggleThemeBackground(settings.colorScheme);
     bc.postMessage({ colorScheme: settings.colorScheme, themeOption: value });
   },
-  handleWallpaper(value) {
+  handleTransparentDials(value: boolean) {
+    browser.storage.local.set({ [`${apiVersion}-transparent-dials`]: value });
+    settings.transparentDials = value;
+    bc.postMessage({ transparentDials: value });
+  },
+  handleWallpaper(value: string) {
+    // Automatically clear custom image when switching to a different wallpaper
+    if (value !== "custom-image" && settings.wallpaper === "custom-image") {
+      settings._clearCustomImage();
+    }
+    // Automatically clear custom color when switching to a different wallpaper
+    if (value !== "custom-color" && settings.wallpaper === "custom-color") {
+      settings._clearCustomColor();
+    }
     browser.storage.local.set({ [`${apiVersion}-wallpaper`]: value });
     settings.wallpaper = value;
     bc.postMessage({ wallpaper: value });
   },
+  _restoreWallpaper(value: string) {
+    // Internal method for restoring wallpaper without clearing custom image/color
+    browser.storage.local.set({ [`${apiVersion}-wallpaper`]: value });
+    settings.wallpaper = value;
+    bc.postMessage({ wallpaper: value });
+  },
+  _restoreCustomColor(value: string) {
+    // Internal method for restoring custom color without triggering wallpaper change
+    browser.storage.local.set({ [`${apiVersion}-custom-color`]: value });
+    settings.customColor = value;
+    bc.postMessage({ customColor: value });
+  },
   hideAlertBanner() {
     settings.showAlertBanner = false;
   },
-  resetCustomImage() {
+  _clearCustomImage() {
     browser.storage.local.remove([`${apiVersion}-custom-image`]);
     settings.customImage = "";
     bc.postMessage({ customImage: "" });
-    if (settings.wallpaper === "custom-image") {
-      settings.resetWallpaper();
-    }
+  },
+  _clearCustomColor() {
+    browser.storage.local.set({ [`${apiVersion}-custom-color`]: "" });
+    settings.customColor = "";
+    bc.postMessage({ customColor: "" });
   },
   resetDialColors() {
     browser.storage.local.set({ [`${apiVersion}-dial-colors`]: {} });
@@ -255,8 +313,8 @@ export const settings = makeAutoObservable({
   },
   resetSettings() {
     settings.handleAttachTitle(defaultSettings.attachTitle);
-    settings.handleCustomColor(defaultSettings.customColor);
-    settings.resetCustomImage();
+    settings._clearCustomColor();
+    settings._clearCustomImage();
     settings.resetDialColors();
     settings.resetDialImages();
     settings.resetWallpaper();
@@ -268,6 +326,7 @@ export const settings = makeAutoObservable({
     settings.handleSquareDials(defaultSettings.squareDials);
     settings.handleSwitchTitle(defaultSettings.switchTitle);
     settings.handleThemeOption(defaultSettings.themeOption);
+    settings.handleTransparentDials(defaultSettings.transparentDials);
   },
   resetWallpaper() {
     settings.handleWallpaper(
@@ -277,13 +336,17 @@ export const settings = makeAutoObservable({
   restoreFromJSON() {
     const i = document.createElement("input");
     i.type = "File";
-    i.onchange = (e) => {
+    i.accept = ".json";
+    i.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
       const reader = new FileReader();
-      reader.readAsText(e.target.files[0]);
-      reader.onload = async (e) => {
+      reader.readAsText(target.files![0]);
+      reader.onload = async (e: ProgressEvent<FileReader>) => {
         try {
-          const backup = JSON.parse(e.target.result);
-          settings.resetCustomImage();
+          const result = e.target?.result;
+          if (typeof result !== "string") return;
+          const backup = JSON.parse(result);
+          settings.resetSettings();
           if (backup.customImage) {
             const image = base64ToBlob(backup.customImage);
             await browser.storage.local.set({
@@ -292,30 +355,59 @@ export const settings = makeAutoObservable({
             const imageURI = URL.createObjectURL(image);
             settings.customImage = imageURI;
             bc.postMessage({ customImage: imageURI });
-          } else {
-            settings.resetCustomImage();
           }
-          settings.handleAttachTitle(backup.attachTitle);
-          settings.handleCustomColor(backup.customColor);
-          settings.handleDefaultFolder(backup.defaultFolder);
-          browser.storage.local.set({
-            [`${apiVersion}-dial-colors`]: backup.dialColors,
-          });
-          browser.storage.local.set({
-            [`${apiVersion}-dial-images`]: backup.dialImages || {},
-          });
-          settings.dialColors = backup.dialColors;
-          settings.dialImages = backup.dialImages || {};
-          bc.postMessage({ dialColors: backup.dialColors });
-          bc.postMessage({ dialImages: backup.dialImages || {} });
-          settings.handleDialSize(backup.dialSize);
-          settings.handleMaxColumns(backup.maxColumns);
-          settings.handleNewTab(backup.newTab);
-          settings.handleShowTitle(backup.showTitle);
-          settings.handleSquareDials(backup.squareDials);
-          settings.handleSwitchTitle(backup.switchTitle);
-          settings.handleWallpaper(backup.wallpaper);
-          settings.handleThemeOption(backup.themeOption);
+          if (Object.prototype.hasOwnProperty.call(backup, "attachTitle")) {
+            settings.handleAttachTitle(backup.attachTitle);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "customColor")) {
+            settings._restoreCustomColor(backup.customColor);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "defaultFolder")) {
+            settings.handleDefaultFolder(backup.defaultFolder);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "dialColors")) {
+            browser.storage.local.set({
+              [`${apiVersion}-dial-colors`]: backup.dialColors,
+            });
+            settings.dialColors = backup.dialColors;
+            bc.postMessage({ dialColors: backup.dialColors });
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "dialImages")) {
+            browser.storage.local.set({
+              [`${apiVersion}-dial-images`]: backup.dialImages,
+            });
+            settings.dialImages = backup.dialImages;
+            bc.postMessage({ dialImages: backup.dialImages });
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "dialSize")) {
+            settings.handleDialSize(backup.dialSize);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "maxColumns")) {
+            settings.handleMaxColumns(backup.maxColumns);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "newTab")) {
+            settings.handleNewTab(backup.newTab);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "showTitle")) {
+            settings.handleShowTitle(backup.showTitle);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "squareDials")) {
+            settings.handleSquareDials(backup.squareDials);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "switchTitle")) {
+            settings.handleSwitchTitle(backup.switchTitle);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "wallpaper")) {
+            settings._restoreWallpaper(backup.wallpaper);
+          }
+          if (Object.prototype.hasOwnProperty.call(backup, "themeOption")) {
+            settings.handleThemeOption(backup.themeOption);
+          }
+          if (
+            Object.prototype.hasOwnProperty.call(backup, "transparentDials")
+          ) {
+            settings.handleTransparentDials(backup.transparentDials);
+          }
         } catch (err) {
           console.error("Error parsing JSON file", err);
         }
@@ -338,16 +430,17 @@ export const settings = makeAutoObservable({
       squareDials: settings.squareDials,
       switchTitle: settings.switchTitle,
       themeOption: settings.themeOption,
+      transparentDials: settings.transparentDials,
       wallpaper: settings.wallpaper,
     };
     const { [`${apiVersion}-custom-image`]: image } =
       await browser.storage.local.get(`${apiVersion}-custom-image`);
-    if (image) {
+    if (image && typeof image === "string") {
       backup.customImage = image;
     }
     downloadBackup(backup);
   },
-  toggleThemeBackground(scheme) {
+  toggleThemeBackground(scheme: string) {
     const wallpaperMap = {
       "color-scheme-light": {
         "dark-wallpaper": "light-wallpaper",
@@ -366,12 +459,13 @@ export const settings = makeAutoObservable({
         DesertNight: "DesertNight",
       },
     };
-    const wallpaper = wallpaperMap[scheme]?.[settings.wallpaper];
+    const schemeMap = wallpaperMap[scheme as keyof typeof wallpaperMap];
+    const wallpaper = schemeMap?.[settings.wallpaper as keyof typeof schemeMap];
     if (wallpaper) {
       settings.handleWallpaper(wallpaper);
     }
   },
-  systemThemeChanged(e) {
+  systemThemeChanged(e: MediaQueryListEvent) {
     if (settings.themeOption === "System Theme") {
       settings.colorScheme = e.matches
         ? "color-scheme-dark"
@@ -409,25 +503,28 @@ const isMacOS = userAgent.includes("macintosh");
 const isChrome = userAgent.includes("chrome");
 
 autorun(() => {
-  document.documentElement.className = classNames(
-    settings.colorScheme,
-    settings.wallpaper,
+  document.documentElement.className = clsx(
+    settings.colorScheme as string,
+    settings.wallpaper as string,
     "Wallpapers",
     isChrome ? "chrome" : "firefox",
     isMacOS ? "mac" : "windows",
     settings.showTitle ? "show-title" : "hide-title",
     settings.attachTitle ? "attach-title" : "normal-title",
     settings.dialSize,
-    settings.maxColumns === "Unlimited" && "unlimited-columns",
-    settings.squareDials && "square",
+    settings.maxColumns === "Unlimited" ? "unlimited-columns" : undefined,
+    settings.squareDials ? "square" : undefined,
+    settings.transparentDials ? "transparent-dials" : undefined,
   );
   document.documentElement.style.backgroundImage =
     settings.wallpaper === "custom-image" && settings.customImage
       ? `url(${settings.customImage})`
-      : null;
+      : "";
   document.documentElement.style.setProperty(
     "--background-color",
-    settings.wallpaper === "custom-color" ? settings.customColor : null,
+    settings.wallpaper === "custom-color"
+      ? (settings.customColor as string | null)
+      : null,
   );
 });
 
@@ -435,8 +532,9 @@ autorun(() => {
 // BACKUP/RESTORE HELPERS
 // ==================================================================
 // Utility to convert a base64 string to a Blob object.
-function base64ToBlob(base64) {
-  const contentType = base64.match(/data:([^;]+);base64,/)[1];
+function base64ToBlob(base64: string) {
+  const contentType = base64.match(/data:([^;]+);base64,/)?.[1];
+  if (!contentType) throw new Error("Invalid base64 format");
   const base64Data = base64.replace(/data:([^;]+);base64,/, "");
   const binaryData = atob(base64Data);
   const length = binaryData.length;
@@ -450,17 +548,23 @@ function base64ToBlob(base64) {
 }
 
 // Utility to convert a Blob object to a base64 string.
-function blobToBase64(blob) {
+function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
-    reader.onloadend = () => resolve(reader.result);
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Failed to read file as string"));
+      }
+    };
     reader.onerror = (error) => reject(error);
   });
 }
 
 // Utility to trigger a download of a JSON backup file.
-function downloadBackup(obj) {
+function downloadBackup(obj: Record<string, unknown>) {
   const dataStr = `data:text/plain;charset=utf-8,${encodeURIComponent(
     JSON.stringify(obj),
   )}`;

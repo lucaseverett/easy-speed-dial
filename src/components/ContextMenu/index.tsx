@@ -1,3 +1,5 @@
+import type { KeyboardEvent, MouseEvent } from "react";
+
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 
@@ -9,16 +11,16 @@ import { settings } from "#stores/useSettings";
 import "./styles.css";
 
 export const ContextMenu = observer(function ContextMenu() {
-  const contextMenuRef = useRef();
+  const contextMenuRef = useRef<HTMLDivElement>(null);
 
   const [currIndex, setCurrIndex] = useState(-1);
-  const [menuItems, setMenuItems] = useState();
+  const [menuItems, setMenuItems] = useState<HTMLButtonElement[]>([]);
 
   useEffect(() => {
     // Set menu items when context menu is opened.
     // Reset menu items if context menu is opened while another is open.
     setMenuItems([
-      ...(contextMenuRef.current?.querySelectorAll("button") || []),
+      ...Array.from(contextMenuRef.current?.querySelectorAll("button") || []),
     ]);
     setCurrIndex(-1);
 
@@ -41,25 +43,26 @@ export const ContextMenu = observer(function ContextMenu() {
           : contextMenu.coords.x
       }px`,
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contextMenu.coords]);
 
   useEffect(() => {
     // Focus current menu item.
-    menuItems?.forEach((el) => el.classList.remove("selected"));
+    menuItems.forEach((el) => el.classList.remove("selected"));
     if (currIndex === -1) {
       contextMenuRef.current?.focus();
     } else {
-      menuItems?.[currIndex]?.focus();
-      menuItems?.[currIndex]?.classList.add("selected");
+      menuItems[currIndex]?.focus();
+      menuItems[currIndex]?.classList.add("selected");
     }
   }, [currIndex, menuItems]);
 
-  function handleContextMenu(e) {
+  function handleContextMenu(e: MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
   }
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent) {
     const isNotOnMenuItem = currIndex === -1;
     const isFirstItem = currIndex === 0;
     const isLastItem = currIndex === menuItems.length - 1;
@@ -82,7 +85,7 @@ export const ContextMenu = observer(function ContextMenu() {
       },
     };
 
-    const keys = {
+    const keys: Record<string, () => void> = {
       Enter: () => {
         if (isNotOnMenuItem) {
           e.preventDefault();
@@ -133,8 +136,8 @@ export const ContextMenu = observer(function ContextMenu() {
     }
   }
 
-  function handleMouseEnter(e) {
-    setCurrIndex(menuItems.indexOf(e.target));
+  function handleMouseEnter(e: MouseEvent<HTMLButtonElement>) {
+    setCurrIndex(menuItems.indexOf(e.target as HTMLButtonElement));
   }
 
   function handleMouseLeave() {
@@ -393,47 +396,69 @@ export const ContextMenu = observer(function ContextMenu() {
 
 function handleClearThumbnail() {
   contextMenu.closeContextMenu();
-  settings.handleClearThumbnail(contextMenu.focusAfterClosed.dataset.id);
+  if (contextMenu.focusAfterClosed?.dataset.id) {
+    settings.handleClearThumbnail(contextMenu.focusAfterClosed.dataset.id);
+  }
 }
 
 function handleCopyURL() {
   contextMenu.closeContextMenu();
-  navigator.clipboard.writeText(contextMenu.focusAfterClosed.href);
+  const element = contextMenu.focusAfterClosed as HTMLAnchorElement;
+  if (element?.href) {
+    navigator.clipboard.writeText(element.href);
+  }
 }
 
 function handleDeleteBookmark() {
   contextMenu.closeContextMenu();
-  bookmarks.deleteBookmark(contextMenu.focusAfterClosed.dataset.id);
+  if (contextMenu.focusAfterClosed?.dataset.id) {
+    bookmarks.deleteBookmark(contextMenu.focusAfterClosed.dataset.id);
+  }
 }
 
 function handleDeleteFolder() {
   contextMenu.closeContextMenu();
-  bookmarks.deleteFolder(contextMenu.focusAfterClosed.dataset.id);
+  if (contextMenu.focusAfterClosed?.dataset.id) {
+    bookmarks.deleteFolder(contextMenu.focusAfterClosed.dataset.id);
+  }
 }
 
 function handleOpenAllWindow() {
   contextMenu.closeContextMenu();
-  bookmarks.openAllWindow(contextMenu.focusAfterClosed.dataset.id);
+  if (contextMenu.focusAfterClosed?.dataset.id) {
+    bookmarks.openAllWindow(contextMenu.focusAfterClosed.dataset.id);
+  }
 }
 
 function handleOpenAllTab() {
   contextMenu.closeContextMenu();
-  bookmarks.openAllTab(contextMenu.focusAfterClosed.dataset.id);
+  if (contextMenu.focusAfterClosed?.dataset.id) {
+    bookmarks.openAllTab(contextMenu.focusAfterClosed.dataset.id);
+  }
 }
 
 function handleOpenLinkBackgroundTab() {
   contextMenu.closeContextMenu();
-  bookmarks.openLinkBackgroundTab(contextMenu.focusAfterClosed.href);
+  const element = contextMenu.focusAfterClosed as HTMLAnchorElement;
+  if (element?.href) {
+    bookmarks.openLinkBackgroundTab(element.href);
+  }
 }
 
 function handleOpenLinkWindow() {
   contextMenu.closeContextMenu();
-  bookmarks.openLinkWindow(contextMenu.focusAfterClosed.href);
+  const element = contextMenu.focusAfterClosed as HTMLAnchorElement;
+  if (element?.href) {
+    bookmarks.openLinkWindow(element.href);
+  }
 }
 
 function handleOpenLinkTab() {
   contextMenu.closeContextMenu();
-  bookmarks.openLinkTab(contextMenu.focusAfterClosed.href);
+  const element = contextMenu.focusAfterClosed as HTMLAnchorElement;
+  if (element?.href) {
+    bookmarks.openLinkTab(element.href);
+  }
 }
 
 function handleOpenSettings() {
@@ -443,13 +468,15 @@ function handleOpenSettings() {
 
 function handleSelectThumbnail() {
   contextMenu.closeContextMenu();
-  settings.handleSelectThumbnail(contextMenu.focusAfterClosed.dataset.id);
+  if (contextMenu.focusAfterClosed?.dataset.id) {
+    settings.handleSelectThumbnail(contextMenu.focusAfterClosed.dataset.id);
+  }
 }
 
 function handleShowAbout() {
   modals.openModal({
     modal: "about",
-    focusAfterClosed: contextMenu.focusAfterClosed,
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });
 }
@@ -457,8 +484,8 @@ function handleShowAbout() {
 function handleShowEditBookmark() {
   modals.openModal({
     modal: "edit-bookmark",
-    editingBookmarkId: contextMenu.focusAfterClosed.dataset.id,
-    focusAfterClosed: contextMenu.focusAfterClosed,
+    editingBookmarkId: contextMenu.focusAfterClosed?.dataset.id || null,
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });
 }
@@ -466,8 +493,8 @@ function handleShowEditBookmark() {
 function handleShowEditFolder() {
   modals.openModal({
     modal: "edit-folder",
-    editingBookmarkId: contextMenu.focusAfterClosed.dataset.id,
-    focusAfterClosed: contextMenu.focusAfterClosed,
+    editingBookmarkId: contextMenu.focusAfterClosed?.dataset.id || null,
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });
 }
@@ -475,7 +502,7 @@ function handleShowEditFolder() {
 function handleShowNewBookmark() {
   modals.openModal({
     modal: "new-bookmark",
-    focusAfterClosed: contextMenu.focusAfterClosed,
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });
 }
@@ -483,7 +510,7 @@ function handleShowNewBookmark() {
 function handleShowNewFolder() {
   modals.openModal({
     modal: "new-folder",
-    focusAfterClosed: contextMenu.focusAfterClosed,
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });
 }
@@ -491,7 +518,7 @@ function handleShowNewFolder() {
 function handleShowWhatsNew() {
   modals.openModal({
     modal: "whats-new",
-    focusAfterClosed: contextMenu.focusAfterClosed,
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });
 }

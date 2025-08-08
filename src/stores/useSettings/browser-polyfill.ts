@@ -1,10 +1,13 @@
 import { del, entries, get, set } from "idb-keyval";
 
+type StorageItems = Record<string, unknown>;
+type StorageKeys = string | string[] | StorageItems | null | undefined;
+
 export default {
   storage: {
     local: {
-      async get(keys) {
-        const result = {};
+      async get(keys: StorageKeys): Promise<StorageItems> {
+        const result: StorageItems = {};
         if (
           keys === null ||
           typeof keys === "undefined" ||
@@ -15,7 +18,9 @@ export default {
           // If keys is null, undefined, or an empty object, retrieve all stored items.
           const allEntries = await entries();
           for (const [k, v] of allEntries) {
-            result[k] = v;
+            if (typeof k === "string") {
+              result[k] = v;
+            }
           }
           return result;
         }
@@ -64,15 +69,15 @@ export default {
         );
         return {};
       },
-      async set(items) {
+      async set(items: StorageItems): Promise<void> {
         if (typeof items !== "object" || items === null) {
           const error = new Error("Parameter 'items' must be an object.");
           console.error("browser.storage.local.set:", error);
           return Promise.reject(error);
         }
 
-        const changesObject = {};
-        const setPromises = [];
+        const changesObject: StorageItems = {};
+        const setPromises: Promise<void>[] = [];
 
         for (const key in items) {
           if (Object.prototype.hasOwnProperty.call(items, key)) {
@@ -94,7 +99,12 @@ export default {
                 if (oldValueString !== newValueString) {
                   changesObject[key] = { newValue: newValue }; // Store the actual newValue, not stringified
                   if (typeof oldValue !== "undefined") {
-                    changesObject[key].oldValue = oldValue; // Store the actual oldValue
+                    (
+                      changesObject[key] as {
+                        newValue: unknown;
+                        oldValue?: unknown;
+                      }
+                    ).oldValue = oldValue; // Store the actual oldValue
                   }
                 }
                 return set(key, newValue); // Store value using idb-keyval.
@@ -107,8 +117,8 @@ export default {
 
         // The returned promise resolves to undefined (matches WebExtension API).
       },
-      async remove(keys) {
-        let keysToRemove = [];
+      async remove(keys: string | string[]): Promise<void> {
+        let keysToRemove: string[] = [];
         if (typeof keys === "string") {
           keysToRemove = [keys];
         } else if (Array.isArray(keys)) {
@@ -127,8 +137,8 @@ export default {
           return Promise.resolve();
         }
 
-        const changesObject = {};
-        const removalPromises = [];
+        const changesObject: StorageItems = {};
+        const removalPromises: Promise<void>[] = [];
 
         for (const key of keysToRemove) {
           const operationPromise = get(key) // Retrieve value from idb-keyval.

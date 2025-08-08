@@ -3,7 +3,8 @@ import { describe, expect, test } from "vitest";
 import browser from "./browser.bookmarks";
 
 // Helper function to validate an object against BookmarkTreeNode type.
-function isValidBookmark(obj, blueprint) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isValidBookmark(obj: any, blueprint: Record<string, string>): boolean {
   for (const key in blueprint) {
     if (key === "type") {
       if (obj[key] !== blueprint[key]) return false;
@@ -39,7 +40,8 @@ describe("create", () => {
 
     // Check if the returned object has all keys and values from mockData.
     for (const key in mockData) {
-      expect(result[key]).toEqual(mockData[key]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((result as any)[key]).toEqual((mockData as any)[key]);
     }
   });
 
@@ -64,7 +66,8 @@ describe("create", () => {
 
     // Check if the returned object has all keys and values from mockData.
     for (const key in mockData) {
-      expect(result[key]).toEqual(mockData[key]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((result as any)[key]).toEqual((mockData as any)[key]);
     }
   });
 });
@@ -91,9 +94,9 @@ describe("move", () => {
     });
 
     // Store initial indexes for comparison (they should be consecutive)
-    const initialIndex1 = bookmark1.index;
-    const initialIndex2 = bookmark2.index;
-    const initialIndex3 = bookmark3.index;
+    const initialIndex1 = bookmark1.index!;
+    const initialIndex2 = bookmark2.index!;
+    const initialIndex3 = bookmark3.index!;
 
     // Verify they are consecutive
     expect(initialIndex2).toBe(initialIndex1 + 1);
@@ -156,8 +159,8 @@ describe("move", () => {
     });
 
     // Store initial indexes
-    const initialIndex1 = bookmark1.index;
-    const initialIndex2 = bookmark2.index;
+    const initialIndex1 = bookmark1.index!;
+    const initialIndex2 = bookmark2.index!;
 
     // Move bookmark4 to the second position (between bookmark1 and bookmark2)
     browser.bookmarks.move(bookmark4.id, { index: initialIndex2 });
@@ -227,7 +230,7 @@ describe("move", () => {
 
     // Verify bookmark2 index updated in original folder (should be less than its original value)
     expect(updatedBookmark2.parentId).toBe("1");
-    expect(updatedBookmark2.index).toBeLessThan(originalBookmark2Index); // Should have decreased after bookmark1 was removed
+    expect(updatedBookmark2.index!).toBeLessThan(originalBookmark2Index!); // Should have decreased after bookmark1 was removed
 
     // Verify bookmark3 remained in folder2 with correct index
     expect(updatedBookmark3.parentId).toBe(folder2.id);

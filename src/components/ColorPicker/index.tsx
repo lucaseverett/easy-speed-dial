@@ -6,19 +6,27 @@ import { colorPicker } from "#stores/useColorPicker";
 
 import "./styles.css";
 
+interface ColorPickerProps {
+  color: string;
+  handler: (color: string) => void;
+  label: string;
+}
+
 export const ColorPicker = observer(function ColorPicker({
   color,
   handler,
   label,
-}) {
-  const pickerRef = useRef();
+}: ColorPickerProps) {
+  const pickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Set focus to color picker.
-    pickerRef.current.querySelector(".react-colorful__interactive").focus();
+    pickerRef.current
+      ?.querySelector<HTMLElement>(".react-colorful__interactive")
+      ?.focus();
   }, []);
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     e.stopPropagation();
     if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -26,27 +34,32 @@ export const ColorPicker = observer(function ColorPicker({
     } else if (
       e.key === "Tab" &&
       e.shiftKey &&
-      e.target.getAttribute("aria-label") === "Color"
+      (e.target as HTMLElement).getAttribute("aria-label") === "Color"
     ) {
       e.preventDefault();
-      pickerRef.current.lastChild.focus();
+      (pickerRef.current?.lastChild as HTMLElement)?.focus();
     } else if (
       e.key === "Tab" &&
       !e.shiftKey &&
-      e.target.nodeName === "INPUT"
+      (e.target as HTMLElement).nodeName === "INPUT"
     ) {
       e.preventDefault();
-      pickerRef.current.querySelector(".react-colorful__interactive").focus();
+      pickerRef.current
+        ?.querySelector<HTMLElement>(".react-colorful__interactive")
+        ?.focus();
     }
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
       className="ColorPicker"
-      style={{
-        "--picker-left": `${colorPicker.coords.x}px`,
-        "--picker-top": `${colorPicker.coords.y}px`,
-      }}
+      style={
+        {
+          "--picker-left": `${colorPicker.coords.x}px`,
+          "--picker-top": `${colorPicker.coords.y}px`,
+        } as React.CSSProperties
+      }
       onMouseDown={(e) => {
         e.stopPropagation();
       }}

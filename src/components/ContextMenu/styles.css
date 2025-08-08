@@ -17,10 +17,6 @@
     outline: none;
   }
 
-  .lowercase {
-    text-transform: lowercase;
-  }
-
   ul {
     list-style: none;
     padding: 0;
@@ -43,6 +39,10 @@
 
     .firefox & {
       text-transform: capitalize;
+
+      .lowercase {
+        text-transform: lowercase;
+      }
     }
 
     &.selected {

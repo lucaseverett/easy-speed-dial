@@ -1,4 +1,8 @@
-export default function CaretDown({ className = "arrow", ...props }) {
+interface CaretDownProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
+export function CaretDown({ className = "arrow", ...props }: CaretDownProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

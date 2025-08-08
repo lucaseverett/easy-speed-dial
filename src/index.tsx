@@ -6,16 +6,16 @@ import { bookmarks } from "#stores/useBookmarks";
 import { settings } from "#stores/useSettings";
 
 async function initializeApp() {
-  const setFolder = async (folderId) => {
+  const setFolder = async (folderId: string | null) => {
     const isValid = folderId
       ? await bookmarks.validateFolderExists(folderId)
       : false;
-    const targetId = isValid ? folderId : await bookmarks.getBookmarksBarId();
+    const targetId = isValid ? folderId! : await bookmarks.getBookmarksBarId();
 
     bookmarks.changeFolder(targetId);
     // Update the URL hash if it is missing or incorrect.
     if (location.hash.slice(1) !== targetId) {
-      history.replaceState(null, null, `#${targetId}`);
+      history.replaceState(null, "", `#${targetId}`);
     }
   };
 
@@ -28,15 +28,13 @@ async function initializeApp() {
   const initialFolder =
     location.hash.slice(1) ||
     sessionStorage.getItem("last-folder") ||
-    settings.defaultFolder;
+    (settings.defaultFolder as string);
   await setFolder(initialFolder);
 }
 
 initializeApp();
 
-const domNode = document.getElementById("root");
-const root = createRoot(domNode);
-root.render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Bookmarks />
   </StrictMode>,

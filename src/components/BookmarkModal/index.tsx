@@ -1,10 +1,13 @@
-import classNames from "classnames";
+import type { FormEvent, MouseEvent } from "react";
+import type { Bookmarks } from "webextension-polyfill";
+
+import { clsx } from "clsx/lite";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { HexColorInput } from "react-colorful";
 
-import CaretDown from "#components/CaretDown";
 import { ColorPicker } from "#components/ColorPicker";
+import { CaretDown } from "#components/icons/CaretDown.tsx";
 import { Modal } from "#components/Modal";
 import { dialColors } from "#lib/dialColors";
 import { bookmarks } from "#stores/useBookmarks";
@@ -16,15 +19,18 @@ import { getLinkName } from "#utils/filter";
 import "./styles.css";
 
 export const BookmarkModal = observer(function BookmarkModal() {
-  const [editingBookmark, setEditingBookmark] = useState(null);
+  const [editingBookmark, setEditingBookmark] =
+    useState<Bookmarks.BookmarkTreeNode | null>(null);
   const [bookmarkTitle, setBookmarkTitle] = useState("");
   const [bookmarkURL, setBookmarkURL] = useState("");
   const [parentFolderId, setparentFolderId] = useState(
-    bookmarks.currentFolder.id,
+    (bookmarks.currentFolder as { id: string }).id || "",
   );
   const [customDialColor, setCustomDialColor] = useState("");
   const isEditing = modals.editingBookmarkId !== null;
-  const bookmarkType = modals.isOpen.includes("folder") ? "folder" : "bookmark";
+  const bookmarkType = modals.isOpen?.includes("folder")
+    ? "folder"
+    : "bookmark";
 
   // Load bookmark details when editing an existing bookmark or folder.
   useEffect(() => {
@@ -35,9 +41,9 @@ export const BookmarkModal = observer(function BookmarkModal() {
         );
         if (bookmark) {
           setEditingBookmark(bookmark);
-          setBookmarkTitle(bookmark.title);
-          setBookmarkURL(bookmark.url);
-          setparentFolderId(bookmark.parentId);
+          setBookmarkTitle(bookmark.title || "");
+          setBookmarkURL(bookmark.url || "");
+          setparentFolderId(bookmark.parentId || "");
           // Load the custom dial color for this bookmark, if set.
           const customColor = settings.dialColors[modals.editingBookmarkId];
           setCustomDialColor(customColor || "");
@@ -46,6 +52,7 @@ export const BookmarkModal = observer(function BookmarkModal() {
     }
 
     loadBookmarkData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modals.editingBookmarkId]);
 
   const defaultDialColor = dialColors(
@@ -58,15 +65,15 @@ export const BookmarkModal = observer(function BookmarkModal() {
       ? defaultDialColor
       : "";
   const disabled = bookmarkType === "folder" ? false : !bookmarkURL;
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (isEditing) {
       // Save a custom dial color if it differs from the default.
       // Remove the custom dial color if it matches the default.
       const color = dialColor !== defaultDialColor ? customDialColor : "";
-      if (color) {
+      if (color && modals.editingBookmarkId) {
         settings.handleDialColors(modals.editingBookmarkId, color);
-      } else {
+      } else if (modals.editingBookmarkId) {
         settings.handleClearColor(modals.editingBookmarkId);
       }
       // Determine which bookmark details have changed.
@@ -76,11 +83,13 @@ export const BookmarkModal = observer(function BookmarkModal() {
         (bookmarkType === "bookmark" && bookmarkURL !== editingBookmark?.url);
       const parentChanged = parentFolderId !== editingBookmark?.parentId;
 
-      let updatedBookmark;
-      let closeModalOptions;
+      let updatedBookmark: Bookmarks.BookmarkTreeNode | undefined;
+      let closeModalOptions:
+        | { focusAfterClosed?: FocusAfterClosed }
+        | undefined;
 
       // Update bookmark details if they changed.
-      if (detailsChanged) {
+      if (detailsChanged && modals.editingBookmarkId) {
         updatedBookmark = await bookmarks.updateBookmark(
           modals.editingBookmarkId,
           {
@@ -91,14 +100,16 @@ export const BookmarkModal = observer(function BookmarkModal() {
         // Focus on the updated bookmark after closing.
         closeModalOptions = {
           focusAfterClosed: () =>
-            document.querySelector(`[data-id="${updatedBookmark.id}"]`),
+            document.querySelector(`[data-id="${updatedBookmark!.id}"]`),
         };
       }
 
       // Move bookmark to different folder if parent changed.
       if (parentChanged) {
         bookmarks.moveBookmark({
-          id: modals.editingBookmarkId,
+          id: modals.editingBookmarkId!,
+          from: undefined,
+          to: undefined,
           parentId: parentFolderId,
         });
         // Don't focus since the bookmark is no longer visible in current folder.
@@ -112,9 +123,9 @@ export const BookmarkModal = observer(function BookmarkModal() {
       modals.closeModal(closeModalOptions);
     } else {
       const newBookmark = await bookmarks.createBookmark({
+        url: bookmarkType === "bookmark" ? bookmarkURL : undefined,
         title: bookmarkTitle,
         parentId: parentFolderId,
-        ...(bookmarkType === "bookmark" ? { url: bookmarkURL } : {}),
       });
       if (dialColor !== defaultDialColor) {
         // Save a custom dial color if it differs from the default.
@@ -127,10 +138,10 @@ export const BookmarkModal = observer(function BookmarkModal() {
     }
   }
 
-  function resetCustomDialColor(e) {
+  function resetCustomDialColor(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setCustomDialColor("");
-    document.querySelector("#dial-color-input").focus();
+    (document.querySelector("#dial-color-input") as HTMLInputElement)?.focus();
   }
 
   return (
@@ -177,11 +188,13 @@ export const BookmarkModal = observer(function BookmarkModal() {
                 onChange={(e) => setparentFolderId(e.target.value)}
                 className="input"
               >
-                {bookmarks.folders.map((folder) => (
-                  <option key={folder.id} value={folder.id}>
-                    {folder.title}
-                  </option>
-                ))}
+                {bookmarks.folders.map(
+                  (folder: { id: string; title: string }) => (
+                    <option key={folder.id} value={folder.id}>
+                      {folder.title}
+                    </option>
+                  ),
+                )}
               </select>
               <CaretDown />
             </div>
@@ -207,9 +220,10 @@ export const BookmarkModal = observer(function BookmarkModal() {
                 color={dialColor}
                 id="dial-color-input"
                 onChange={setCustomDialColor}
-                className={classNames("input", {
-                  connected: dialColor && dialColor !== defaultDialColor,
-                })}
+                className={clsx(
+                  "input",
+                  dialColor && dialColor !== defaultDialColor && "connected",
+                )}
                 prefixed={true}
               />
               {dialColor && dialColor !== defaultDialColor && (
@@ -230,7 +244,7 @@ export const BookmarkModal = observer(function BookmarkModal() {
             <button
               type="button"
               className="btn defaultBtn"
-              onClick={modals.closeModal}
+              onClick={() => modals.closeModal()}
             >
               Cancel
             </button>

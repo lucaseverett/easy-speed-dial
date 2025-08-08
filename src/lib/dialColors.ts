@@ -1,7 +1,7 @@
 import { getColorsByShade } from "random-color-library";
 import { murmur3_32 } from "random-color-library/dist/utils.js";
 
-const colors = {
+const colors: Record<string, string> = {
   "accuweather.com": "#e64a19",
   "ally.com": "#7b1fa2",
   "allrecipes.com": "#e64a19",
@@ -102,7 +102,7 @@ const colors = {
  * on a given key. This ensures that the same key will always produce the
  * same pseudo-random number.
  */
-function randomIntFromHash(key, max) {
+function randomIntFromHash(key: string, max: number): number {
   const hash = murmur3_32(key);
 
   // Normalize the hash value.
@@ -117,7 +117,7 @@ function randomIntFromHash(key, max) {
   return result;
 }
 
-function dialColors(name) {
+function dialColors(name: string | string[]): string {
   if (Array.isArray(name)) name = name.join(".");
 
   // If the name matches a key, return the corresponding color.

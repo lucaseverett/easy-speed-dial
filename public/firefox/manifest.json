@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Easy Speed Dial",
-  "version": "2.12.1",
+  "version": "2.13.0",
   "permissions": ["bookmarks", "storage", "unlimitedStorage"],
   "description": "Easy Speed Dial replaces the new tab page with a colorful grid of your bookmarks and folders.",
   "chrome_settings_overrides": {

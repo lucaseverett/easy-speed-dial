@@ -1,3 +1,33 @@
+.GridContainer {
+  position: relative;
+}
+
+.gear-button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+}
+
+.gear-button:focus-visible {
+  outline: 3px solid #1976d2;
+  outline-offset: 5px;
+
+  .color-scheme-dark & {
+    outline-color: #90caf9;
+  }
+}
+
+.settings-gear {
+  height: 16px;
+  width: 16px;
+}
+
 .Breadcrumbs {
   display: flex;
   align-items: center;
@@ -78,11 +108,11 @@
   row-gap: var(--grid-gap);
   column-gap: var(--grid-gap);
   justify-content: center;
-  margin: 80px auto;
-  padding-inline: var(--grid-padding);
+  margin-inline: auto;
+  padding: 80px var(--grid-padding);
 
   &.has-breadcrumbs {
-    margin: 0 auto 70px;
+    padding-block: 0 80px;
   }
 
   &.max-width:not(.unlimited-columns &),

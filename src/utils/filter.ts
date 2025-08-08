@@ -1,4 +1,6 @@
-function getLinkName(url) {
+import type { Bookmarks } from "webextension-polyfill";
+
+function getLinkName(url: string): string[] {
   // Split by '://'
   const protocolSplit = url.split("://");
   let parts = [];
@@ -31,21 +33,36 @@ function getLinkName(url) {
   return parts;
 }
 
-function filter(bookmarks) {
+function filter(bookmarks: Bookmarks.BookmarkTreeNode[]): FilteredBookmark[] {
   return bookmarks
     .filter(
-      ({ url = "", type }) =>
+      ({ url = "", type }: Bookmarks.BookmarkTreeNode) =>
         !url.match(/^(javascript|place|about|chrome|edge|file|data|blob):/i) &&
         type !== "separator",
     )
-    .map(({ id, index, parentId, title, url }) => {
-      if (url) {
-        const name = getLinkName(url);
-        return { title, url, type: "bookmark", name, id, parentId, index };
-      } else {
-        return { type: "folder", title, name: [title], id, parentId, index };
-      }
-    });
+    .map(
+      ({
+        id,
+        index,
+        parentId,
+        title,
+        url,
+      }: Bookmarks.BookmarkTreeNode): FilteredBookmark => {
+        if (url) {
+          const name = getLinkName(url);
+          return { title, url, type: "bookmark", name, id, parentId, index };
+        } else {
+          return {
+            type: "folder",
+            title,
+            name: [title || ""],
+            id,
+            parentId,
+            index,
+          };
+        }
+      },
+    );
 }
 
 export { getLinkName, filter };

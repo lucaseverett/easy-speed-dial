@@ -1,16 +1,19 @@
+import type { MouseEvent } from "react";
+
 import { makeAutoObservable } from "mobx";
 
 export const colorPicker = makeAutoObservable({
   coords: { x: 0, y: 0 },
   isOpen: false,
-  focusAfterClosed: "",
-  openColorPicker(e) {
+  focusAfterClosed: null as HTMLElement | null,
+  openColorPicker(e: MouseEvent) {
     e.preventDefault();
+    const target = e.currentTarget as HTMLElement;
     colorPicker.coords = {
-      x: e.currentTarget.offsetLeft,
-      y: e.currentTarget.offsetTop + e.currentTarget.offsetHeight + 4,
+      x: target.offsetLeft,
+      y: target.offsetTop + target.offsetHeight + 4,
     };
-    colorPicker.focusAfterClosed = e.currentTarget;
+    colorPicker.focusAfterClosed = target;
     colorPicker.isOpen = true;
   },
   closeColorPicker() {

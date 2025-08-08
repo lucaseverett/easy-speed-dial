@@ -4,6 +4,10 @@
 
 Easy Speed Dial is a browser extension that replaces the new tab page with a colorful grid of your bookmarks and folders.
 
+## Support Development
+
+If you find this extension useful, consider [buying me a coffee](https://www.buymeacoffee.com/lucaseverett) to support continued development!
+
 ## Live Demo
 
 https://demo.easyspeeddial.com/
@@ -40,6 +44,14 @@ npm run test
 
 ```sh
 npm run test:watch
+```
+
+## Type Checking
+
+### Check types with TypeScript
+
+```sh
+npm run tsc
 ```
 
 ## Linting

@@ -49,6 +49,7 @@
       margin: 0;
       font-size: 20px;
       margin: 0;
+      outline: none;
     }
   }
 
@@ -74,6 +75,32 @@
     width: 30px;
     height: 30px;
     fill: var(--modal-text-color);
+  }
+
+  &.right-aligned {
+    justify-content: flex-end;
+    align-items: stretch;
+    background-color: initial;
+
+    .modal-wrapper {
+      height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+      border: none;
+    }
+
+    .modal-body {
+      border: none;
+      border-radius: 0;
+      height: 100vh;
+    }
+
+    @media (max-width: 540px) {
+      .modal-wrapper {
+        width: 100vw;
+      }
+    }
   }
 
   @media (min-width: 535px) {

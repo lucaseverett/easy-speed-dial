@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx/lite";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
@@ -6,16 +6,33 @@ import Sortable from "sortablejs";
 import "./styles.css";
 
 import { runInAction } from "mobx";
+import { contrastRatio } from "random-color-library";
 
-import { Dial } from "#components/Dial";
+import { getImageAverageColor } from "#lib/imageLuminance";
 import { bookmarks } from "#stores/useBookmarks";
 import { settings } from "#stores/useSettings";
+import { Dial } from "./Dial/index.tsx";
+import { SettingsGear } from "./SettingsGear";
+
+interface ExtendedSortableEvent extends Sortable.SortableEvent {
+  originalEvent?: DragEvent;
+  item: HTMLElement;
+}
+
+interface ElementWithCleanup extends Element {
+  _hoverCleanup?: () => void;
+}
+
+interface HTMLElementWithCleanup extends HTMLDivElement {
+  _cleanup?: () => void;
+}
 
 export const Grid = observer(function Grid() {
-  const gridRef = useRef(null);
-  const breadcrumbsRef = useRef(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const breadcrumbsRef = useRef<HTMLDivElement>(null);
   const dropZonePercent = 0.6;
   const [isMaxFontSize, setIsMaxFontSize] = useState(false);
+  const [gearColor, setGearColor] = useState<string | null>(null);
 
   // Show breadcrumbs unless in the root folder.
   const isRoot =
@@ -47,9 +64,62 @@ export const Grid = observer(function Grid() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.dialSize, settings.maxColumns, settings.squareDials]);
 
+  // Calculate gear color based on root background for optimal contrast
+  useEffect(() => {
+    // Only run for custom image or custom color.
+    // Otherwise the gear color is set manually.
+    if (
+      settings.wallpaper !== "custom-image" &&
+      settings.wallpaper !== "custom-color"
+    ) {
+      setGearColor(null);
+      return;
+    }
+
+    const updateGearColor = async () => {
+      const rootElement = document.documentElement;
+      const computedStyle = window.getComputedStyle(rootElement);
+      const bgColor = computedStyle.backgroundColor;
+
+      // Handle background image (rgba indicates transparent background with image)
+      if (bgColor.startsWith("rgba")) {
+        const backgroundImage = computedStyle.backgroundImage;
+        const match = backgroundImage.match(/url\(['"]?([^'"]*?)['"]?\)/);
+        const backgroundImageUrl = match?.[1];
+
+        if (!backgroundImageUrl) {
+          setGearColor(null);
+        } else {
+          try {
+            const averageLuminance =
+              await getImageAverageColor(backgroundImageUrl);
+            setGearColor(averageLuminance < 0.5 ? "#ffffff" : "#000000");
+          } catch (error) {
+            console.warn("Failed to calculate image-based gear color:", error);
+            setGearColor(null);
+          }
+        }
+      } else {
+        // Handle solid background color
+        const whiteContrast = contrastRatio(bgColor, "#ffffff");
+        const blackContrast = contrastRatio(bgColor, "#000000");
+
+        setGearColor(whiteContrast > blackContrast ? "#ffffff" : "#000000");
+      }
+    };
+
+    updateGearColor();
+    window.addEventListener("resize", updateGearColor);
+
+    return () => {
+      window.removeEventListener("resize", updateGearColor);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.wallpaper, settings.customColor, settings.customImage]);
+
   useEffect(() => {
     // Check if the cursor is in a dial's drop zone
-    function isInDragZone(x, width) {
+    function isInDragZone(x: number, width: number) {
       const zoneWidth = width * dropZonePercent;
       const start = (width - zoneWidth) / 2;
       const end = start + zoneWidth;
@@ -60,12 +130,13 @@ export const Grid = observer(function Grid() {
     const addHoverListeners = () => {
       const sortableItems = gridRef.current?.querySelectorAll("[data-id]");
 
-      sortableItems?.forEach((item) => {
-        const handleDragOver = (e) => {
+      sortableItems?.forEach((item: ElementWithCleanup) => {
+        const handleDragOver = (e: Event) => {
+          const dragEvent = e as DragEvent;
           const draggedItem = document.querySelector(".sortable-chosen");
           if (draggedItem && draggedItem !== item) {
             const rect = item.getBoundingClientRect();
-            const x = e.clientX - rect.left;
+            const x = dragEvent.clientX - rect.left;
             const width = rect.width;
 
             if (isInDragZone(x, width)) {
@@ -76,9 +147,10 @@ export const Grid = observer(function Grid() {
           }
         };
 
-        const handleDragLeave = (e) => {
+        const handleDragLeave = (e: Event) => {
+          const dragEvent = e as DragEvent;
           // Only trigger when leaving the item, not when entering a child element.
-          if (!item.contains(e.relatedTarget)) {
+          if (!item.contains(dragEvent.relatedTarget as Node)) {
             const draggedItem = document.querySelector(".sortable-chosen");
             if (draggedItem && draggedItem !== item) {
               item.classList.remove("folder-drop-target");
@@ -101,16 +173,17 @@ export const Grid = observer(function Grid() {
     const addBreadcrumbListeners = () => {
       const breadcrumbElement = breadcrumbsRef.current;
       if (!breadcrumbElement) return;
-      const handleDragOver = (e) => {
+      const handleDragOver = (e: Event) => {
         e.preventDefault();
         breadcrumbElement.classList.add("breadcrumb-drop-target");
       };
-      const handleDragLeave = (e) => {
-        if (!breadcrumbElement.contains(e.relatedTarget)) {
+      const handleDragLeave = (e: Event) => {
+        const dragEvent = e as DragEvent;
+        if (!breadcrumbElement.contains(dragEvent.relatedTarget as Node)) {
           breadcrumbElement.classList.remove("breadcrumb-drop-target");
         }
       };
-      const handleDrop = (e) => {
+      const handleDrop = (e: Event) => {
         e.preventDefault();
         breadcrumbElement.classList.remove("breadcrumb-drop-target");
       };
@@ -118,7 +191,7 @@ export const Grid = observer(function Grid() {
       breadcrumbElement.addEventListener("dragleave", handleDragLeave);
       breadcrumbElement.addEventListener("drop", handleDrop);
       // Save the cleanup function for breadcrumb event listeners.
-      breadcrumbElement._cleanup = () => {
+      (breadcrumbElement as HTMLElementWithCleanup)._cleanup = () => {
         breadcrumbElement.removeEventListener("dragover", handleDragOver);
         breadcrumbElement.removeEventListener("dragleave", handleDragLeave);
         breadcrumbElement.removeEventListener("drop", handleDrop);
@@ -127,21 +200,24 @@ export const Grid = observer(function Grid() {
 
     const cleanupBreadcrumbListeners = () => {
       const breadcrumbElement = breadcrumbsRef.current;
-      if (breadcrumbElement && breadcrumbElement._cleanup) {
-        breadcrumbElement._cleanup();
+      if (
+        breadcrumbElement &&
+        (breadcrumbElement as HTMLElementWithCleanup)._cleanup
+      ) {
+        (breadcrumbElement as HTMLElementWithCleanup)._cleanup!();
       }
     };
 
     const cleanupHoverListeners = () => {
       const sortableItems = gridRef.current?.querySelectorAll("[data-id]");
-      sortableItems?.forEach((item) => {
+      sortableItems?.forEach((item: ElementWithCleanup) => {
         if (item._hoverCleanup) {
           item._hoverCleanup();
         }
       });
     };
 
-    const sortable = Sortable.create(gridRef.current, {
+    const sortable = Sortable.create(gridRef.current!, {
       animation: 150,
       delay: 100,
       delayOnTouchOnly: true,
@@ -153,19 +229,17 @@ export const Grid = observer(function Grid() {
         addHoverListeners();
         addBreadcrumbListeners();
       },
-      async onEnd(e) {
+      async onEnd(e: ExtendedSortableEvent) {
         cleanupBreadcrumbListeners();
         cleanupHoverListeners();
         // Remove the folder-drop-target class from the drop target.
-        if (
-          e.originalEvent &&
-          e.originalEvent.target &&
-          e.originalEvent.target.classList
-        ) {
-          e.originalEvent.target.classList.remove("folder-drop-target");
+        if (e.originalEvent?.target) {
+          (e.originalEvent.target as HTMLElement).classList?.remove(
+            "folder-drop-target",
+          );
         }
         // Revert the move if the drag was canceled.
-        if (e.originalEvent.type === "dragend") {
+        if (e.originalEvent?.type === "dragend") {
           sortable.sort(
             bookmarks.bookmarks.map((b) => b.id),
             true,
@@ -173,17 +247,19 @@ export const Grid = observer(function Grid() {
           return;
         }
         const draggedId = e.item.dataset.id;
-        const droppedId = e.originalEvent.target.dataset.id;
-        const droppedType = e.originalEvent.target.dataset.type;
+        const droppedId = (e.originalEvent?.target as HTMLElement | null)
+          ?.dataset.id;
+        const droppedType = (e.originalEvent?.target as HTMLElement | null)
+          ?.dataset.type;
 
         // Check if the drop happened on the breadcrumb.
         const breadcrumbElement = breadcrumbsRef.current;
         const droppedOnBreadcrumb =
           breadcrumbElement &&
           e.originalEvent &&
-          breadcrumbElement.contains(e.originalEvent.target);
+          breadcrumbElement.contains(e.originalEvent.target as Node);
 
-        if (droppedOnBreadcrumb) {
+        if (droppedOnBreadcrumb && draggedId) {
           bookmarks.moveBookmark({
             id: draggedId,
             parentId: bookmarks.parentId,
@@ -193,19 +269,21 @@ export const Grid = observer(function Grid() {
           (droppedType === "folder" || droppedType === "bookmark")
         ) {
           // Check if the drop happened in the middle third of the target
-          const targetElement = e.originalEvent.target.closest("[data-id]");
-          if (targetElement) {
+          const targetElement = (
+            e.originalEvent?.target as HTMLElement | null
+          )?.closest("[data-id]");
+          if (targetElement && e.originalEvent) {
             const rect = targetElement.getBoundingClientRect();
             const x = e.originalEvent.clientX - rect.left;
             const width = rect.width;
 
             if (isInDragZone(x, width)) {
-              if (droppedType === "folder") {
+              if (droppedType === "folder" && draggedId && droppedId) {
                 bookmarks.moveBookmark({
                   id: draggedId,
                   parentId: droppedId,
                 });
-              } else if (droppedType === "bookmark") {
+              } else if (droppedType === "bookmark" && draggedId && droppedId) {
                 runInAction(async () => {
                   // Create a new folder inside the current folder.
                   const newFolder = await bookmarks.createBookmark({
@@ -238,7 +316,7 @@ export const Grid = observer(function Grid() {
               }
             }
           }
-        } else if (e.oldIndex !== e.newIndex) {
+        } else if (e.oldIndex !== e.newIndex && draggedId) {
           // Handle standard reordering of dials.
           bookmarks.moveBookmark({
             id: draggedId,
@@ -251,7 +329,9 @@ export const Grid = observer(function Grid() {
   }, []);
 
   return (
-    <>
+    <div className="GridContainer">
+      <SettingsGear gearColor={gearColor} />
+      {/* Render breadcrumbs if not in the root folder */}
       {!isRoot && (
         <div className="Breadcrumbs" ref={breadcrumbsRef}>
           <a href={`#${bookmarks.parentId}`} title="Go to parent folder">
@@ -270,20 +350,23 @@ export const Grid = observer(function Grid() {
         </div>
       )}
       <div
-        className={classNames("Grid", {
-          "has-breadcrumbs": !isRoot,
-          "max-width": isMaxFontSize,
-        })}
+        className={clsx(
+          "Grid",
+          !isRoot && "has-breadcrumbs",
+          isMaxFontSize && "max-width",
+        )}
         id="sortable"
-        style={{
-          "--grid-max-cols":
-            settings.maxColumns === "Unlimited" ? "999" : settings.maxColumns,
-        }}
+        style={
+          {
+            "--grid-max-cols":
+              settings.maxColumns === "Unlimited" ? "999" : settings.maxColumns,
+          } as React.CSSProperties
+        }
         ref={gridRef}
       >
         <Dials />
       </div>
-    </>
+    </div>
   );
 });
 

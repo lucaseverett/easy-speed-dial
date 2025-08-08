@@ -14,8 +14,26 @@ export function WhatsNewModal() {
         initialFocus: "#modal-title",
       }}
     >
-      <div className="scroll-focus" tabIndex="0">
+      <div className="scroll-focus" tabIndex={0}>
         <div className="WhatsNew">
+          <div>
+            <h2>Version 2.13.0</h2>
+            <h3>New features</h3>
+            <ul>
+              <li>
+                Added a settings icon at the top right of the page that opens an
+                integrated settings panel
+              </li>
+              <li>
+                Added option for transparent dials, to show the background image
+                behind them
+              </li>
+            </ul>
+            <h3>Resolved Issues</h3>
+            <ul>
+              <li>Minor bug fixes</li>
+            </ul>
+          </div>
           <div>
             <h2>Version 2.12.0</h2>
             <h3>New features</h3>

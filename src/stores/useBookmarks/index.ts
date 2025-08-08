@@ -1,31 +1,51 @@
+import type { Bookmarks } from "webextension-polyfill";
+
 import { makeAutoObservable, runInAction } from "mobx";
 import browser from "webextension-polyfill";
 
 import { settings } from "#stores/useSettings";
 import { filter } from "#utils/filter";
 
+interface BookmarkFolder {
+  id: string;
+  title: string;
+}
+
+interface CreateBookmarkParams {
+  url?: string;
+  title: string;
+  parentId: string;
+}
+
+interface MoveBookmarkParams {
+  id: string;
+  from?: number;
+  to?: number;
+  parentId?: string;
+}
+
 export const bookmarks = makeAutoObservable({
-  bookmarks: [],
-  currentFolder: {},
-  folders: [],
+  bookmarks: [] as FilteredBookmark[],
+  currentFolder: {} as BookmarkFolder,
+  folders: [] as Array<{ id: string; title: string }>,
   parentId: "",
-  async changeFolder(id) {
+  async changeFolder(id: string) {
     const newBookmarks = await browser.bookmarks.getSubTree(id);
     sessionStorage.setItem("last-folder", id);
     runInAction(() => {
-      bookmarks.bookmarks = filter(newBookmarks[0].children).sort(
-        (a, b) => a.index - b.index,
+      bookmarks.bookmarks = filter(newBookmarks[0].children || []).sort(
+        (a, b) => a.index! - b.index!,
       );
       bookmarks.currentFolder = { id, title: newBookmarks[0].title };
       // Set parentId for the current folder. If parentId is empty, breadcrumbs will not be shown.
       bookmarks.parentId =
         newBookmarks[0].parentId !== "root________" &&
         newBookmarks[0].parentId !== "0"
-          ? newBookmarks[0].parentId
+          ? newBookmarks[0].parentId || ""
           : "";
     });
   },
-  async createBookmark({ url, title, parentId }) {
+  async createBookmark({ url, title, parentId }: CreateBookmarkParams) {
     const newBookmark = await browser.bookmarks.create({
       url: url && !url.match(/^[a-zA-Z]+:/) ? `http://${url}` : url,
       title,
@@ -40,7 +60,7 @@ export const bookmarks = makeAutoObservable({
 
     return newBookmark;
   },
-  deleteBookmark(id) {
+  deleteBookmark(id: string) {
     browser.bookmarks.remove(id);
     const indexToRemove = bookmarks.bookmarks.findIndex(
       (bookmark) => bookmark.id === id,
@@ -49,7 +69,7 @@ export const bookmarks = makeAutoObservable({
     settings.handleClearColor(id);
     settings.handleClearThumbnail(id);
   },
-  deleteFolder(id) {
+  deleteFolder(id: string) {
     browser.bookmarks.removeTree(id);
     const indexToRemove = bookmarks.bookmarks.findIndex(
       (bookmark) => bookmark.id === id,
@@ -74,25 +94,27 @@ export const bookmarks = makeAutoObservable({
 
     return bookmarksBar;
   },
-  async getBookmarkById(id) {
+  async getBookmarkById(id: string) {
     const results = await browser.bookmarks.get(id);
     return results[0];
   },
-  moveBookmark({ id, from, to, parentId }) {
-    const moveOptions = {};
+  moveBookmark({ id, from, to, parentId }: MoveBookmarkParams) {
+    const moveOptions: { index?: number; parentId?: string } = {};
 
     if (from !== undefined && to !== undefined) {
       /*
       Some bookmarks may be filtered out.
       bookmarks.bookmarks[to]["index"] gives the correct index for filtered bookmarks.
       */
-      moveOptions.index = bookmarks.bookmarks[to]["index"];
+      moveOptions.index = bookmarks.bookmarks[to]?.index;
 
       /*
       Required for Chrome, not Firefox.
       See: https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
       */
-      if (__CHROME__ && from < to) moveOptions.index++;
+      if (__CHROME__ && from < to && moveOptions.index !== undefined) {
+        moveOptions.index++;
+      }
     }
 
     if (parentId) {
@@ -115,24 +137,28 @@ export const bookmarks = makeAutoObservable({
 
     browser.bookmarks.move(id.toString(), moveOptions);
   },
-  async openAllWindow(id) {
+  async openAllWindow(id: string) {
     const urls = await browser.bookmarks.getSubTree(id);
-    bookmarks.openLinkWindow(urls[0].children.map((b) => b.url));
+    const childUrls =
+      urls[0].children?.filter((b) => b.url).map((b) => b.url!) || [];
+    bookmarks.openLinkWindow(childUrls);
   },
-  async openAllTab(id) {
+  async openAllTab(id: string) {
     const urls = await browser.bookmarks.getSubTree(id);
-    urls[0].children.forEach(({ url }) => bookmarks.openLinkBackgroundTab(url));
+    urls[0].children?.forEach(({ url }) => {
+      if (url) bookmarks.openLinkBackgroundTab(url);
+    });
   },
-  openLinkBackgroundTab(url) {
+  openLinkBackgroundTab(url: string) {
     browser.tabs.create({ url, active: false });
   },
-  openLinkTab(url) {
+  openLinkTab(url: string) {
     browser.tabs.create({ url });
   },
-  openLinkWindow(url) {
+  openLinkWindow(url: string | string[]) {
     browser.windows.create({ url });
   },
-  updateBookmark(id, changes) {
+  updateBookmark(id: string, changes: Partial<Bookmarks.CreateDetails>) {
     if (changes.url && !changes.url.match(/^[a-zA-Z]+:/)) {
       changes.url = `http://${changes.url}`;
     }
@@ -140,17 +166,17 @@ export const bookmarks = makeAutoObservable({
       (bookmark) => bookmark.id === id,
     );
     if (indexToUpdate !== -1) {
+      const updatedBookmark = {
+        ...bookmarks.bookmarks[indexToUpdate],
+        ...changes,
+      };
       bookmarks.bookmarks[indexToUpdate] = filter([
-        {
-          ...bookmarks.bookmarks[indexToUpdate],
-          ...changes,
-        },
+        updatedBookmark as Bookmarks.BookmarkTreeNode,
       ])[0];
     }
-    const updatedBookmark = browser.bookmarks.update(id, changes);
-    return updatedBookmark;
+    return browser.bookmarks.update(id, changes);
   },
-  async validateFolderExists(id) {
+  async validateFolderExists(id: string) {
     if (!id) return false;
     try {
       await browser.bookmarks.get(id);
@@ -162,35 +188,37 @@ export const bookmarks = makeAutoObservable({
 });
 
 async function getFolders() {
-  const folders = [];
+  const folders: Array<{ id: string; title: string }> = [];
 
-  function addFolder(id, title) {
+  function addFolder(id: string, title: string) {
     folders.push({ id, title });
   }
 
-  function makeIndent(indentLength) {
+  function makeIndent(indentLength: number) {
     return "\u00A0\u00A0".repeat(indentLength);
   }
 
-  function logItems(bookmarkItem, indent) {
+  function logItems(bookmarkItem: Bookmarks.BookmarkTreeNode, indent: number) {
     if (!bookmarkItem.url) {
       const root = __FIREFOX__ ? "root________" : "0";
 
       if (bookmarkItem.id !== root) {
         addFolder(
           bookmarkItem.id,
-          `${makeIndent(indent)}${bookmarkItem.title}${bookmarkItem.syncing ? " (synced)" : ""}`,
+          `${makeIndent(indent)}${bookmarkItem.title}${(bookmarkItem as Bookmarks.BookmarkTreeNode & { syncing?: boolean }).syncing ? " (synced)" : ""}`,
         );
         indent++;
       }
 
       if (bookmarkItem.children) {
-        bookmarkItem.children.forEach((child) => logItems(child, indent));
+        bookmarkItem.children.forEach((child: Bookmarks.BookmarkTreeNode) =>
+          logItems(child, indent),
+        );
       }
     }
   }
 
-  function logTree(bookmarkItems) {
+  function logTree(bookmarkItems: Bookmarks.BookmarkTreeNode[]) {
     logItems(bookmarkItems[0], 0);
     runInAction(() => {
       bookmarks.folders = folders;
@@ -212,19 +240,24 @@ browser.bookmarks.onCreated.addListener(getFolders);
 browser.bookmarks.onMoved.addListener(getFolders);
 browser.bookmarks.onRemoved.addListener(getFolders);
 if (__CHROME__) {
-  browser.bookmarks.onChildrenReordered.addListener(getFolders);
-  browser.bookmarks.onImportBegan.addListener(getFolders);
-  browser.bookmarks.onImportEnded.addListener(getFolders);
+  const chromeBookmarks = browser.bookmarks as typeof chrome.bookmarks;
+  chromeBookmarks.onChildrenReordered?.addListener(getFolders);
+  chromeBookmarks.onImportBegan?.addListener(getFolders);
+  chromeBookmarks.onImportEnded?.addListener(getFolders);
 }
 
 // ==========================
 // BOOKMARKS LISTENER
 // ==========================
 
-function debounce(func, wait, immediate) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
+function debounce<T extends (...args: unknown[]) => unknown>(
+  func: T,
+  wait: number,
+  immediate?: boolean,
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
       timeout = null;
       if (!immediate) func(...args);
@@ -242,27 +275,33 @@ function resumeListening() {
   receiveBookmarks();
 }
 
-function receiveBookmarks() {
-  debounce(async () => {
-    try {
-      const newBookmarks = await browser.bookmarks.getSubTree(
-        bookmarks.currentFolder.id,
+const debouncedReceiveBookmarks = debounce(async () => {
+  try {
+    const newBookmarks = await browser.bookmarks.getSubTree(
+      bookmarks.currentFolder.id,
+    );
+    if (newBookmarks) {
+      const filteredAndSorted = filter(newBookmarks[0].children || []).sort(
+        (a, b) => a.index! - b.index!,
       );
-      if (newBookmarks) {
-        const filteredAndSorted = filter(newBookmarks[0].children).sort(
-          (a, b) => a.index - b.index,
-        );
-        runInAction(() => {
-          reconcile(bookmarks.bookmarks, filteredAndSorted);
-        });
-      }
-    } catch (error) {
-      console.error("Error receiving bookmarks:", error);
+      runInAction(() => {
+        reconcile(bookmarks.bookmarks as FilteredBookmark[], filteredAndSorted);
+      });
     }
-  }, 200)();
+  } catch (error) {
+    console.error("Error receiving bookmarks:", error);
+  }
+}, 200);
+
+function receiveBookmarks() {
+  debouncedReceiveBookmarks();
 }
 
-function reconcile(observableArray, newData, keyFn = (item) => item.id) {
+function reconcile<T extends { id?: string }>(
+  observableArray: T[],
+  newData: T[],
+  keyFn: (item: T) => string = (item) => item.id || "",
+) {
   const existingMap = new Map(
     observableArray.map((item) => [keyFn(item), item]),
   );
@@ -277,7 +316,7 @@ function reconcile(observableArray, newData, keyFn = (item) => item.id) {
   }
 
   // Add or update items
-  newData.forEach((newItem, index) => {
+  newData.forEach((newItem: T, index: number) => {
     const key = keyFn(newItem);
     const existing = existingMap.get(key);
 
@@ -302,7 +341,8 @@ browser.bookmarks.onCreated.addListener(receiveBookmarks);
 browser.bookmarks.onMoved.addListener(receiveBookmarks);
 browser.bookmarks.onRemoved.addListener(receiveBookmarks);
 if (__CHROME__) {
-  browser.bookmarks.onChildrenReordered.addListener(receiveBookmarks);
-  browser.bookmarks.onImportBegan.addListener(endListening);
-  browser.bookmarks.onImportEnded.addListener(resumeListening);
+  const chromeBookmarks = browser.bookmarks as typeof chrome.bookmarks;
+  chromeBookmarks.onChildrenReordered?.addListener(receiveBookmarks);
+  chromeBookmarks.onImportBegan?.addListener(endListening);
+  chromeBookmarks.onImportEnded?.addListener(resumeListening);
 }

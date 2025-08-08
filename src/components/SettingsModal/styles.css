@@ -1,0 +1,22 @@
+.SettingsModal {
+  .header {
+    h1 {
+      font-size: 16px;
+    }
+
+    .btn.dismissBtn {
+      width: 24px;
+      height: 24px;
+
+      div {
+        width: 24px;
+        height: 24px;
+
+        &:before,
+        &:after {
+          height: 16px;
+        }
+      }
+    }
+  }
+}

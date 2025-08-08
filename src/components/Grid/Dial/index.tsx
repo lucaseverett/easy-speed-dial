@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { addOpacity } from "random-color-library";
 import { useLayoutEffect, useRef, useState } from "react";
 
 import { dialColors } from "#lib/dialColors";
@@ -7,14 +8,51 @@ import { settings } from "#stores/useSettings";
 
 import "./styles.css";
 
-export const Dial = observer(function Dial(props) {
+interface DialProps {
+  id: string;
+  title?: string;
+  name: string[];
+  type: "bookmark" | "folder";
+  url?: string;
+}
+
+interface NameProps {
+  name: string[];
+}
+
+interface SmallProps {
+  align: string;
+  children: React.ReactNode;
+}
+
+interface DomainProps {
+  title?: boolean;
+  padding?: boolean;
+  children: React.ReactNode;
+}
+
+interface TitleProps {
+  title?: string;
+  name: string[];
+}
+
+export const Dial = observer(function Dial(props: DialProps) {
+  const backgroundColor = settings.dialColors[props.id]
+    ? settings.transparentDials
+      ? addOpacity(settings.dialColors[props.id], 0.75)
+      : settings.dialColors[props.id]
+    : settings.transparentDials
+      ? addOpacity(dialColors(props.name), 0.75)
+      : dialColors(props.name);
+  const backgroundImage = settings.dialImages[props.id];
+
   return (
     <a
       href={props.type === "bookmark" ? props.url : `#${props.id}`}
       data-id={props.id}
       data-title={props.title}
       data-type={props.type}
-      data-thumbnail={settings.dialImages[props.id] ? "" : null}
+      data-thumbnail={backgroundImage ? "" : null}
       rel={props.type === "bookmark" ? "noreferrer" : undefined}
       className="Link"
       target={
@@ -25,9 +63,13 @@ export const Dial = observer(function Dial(props) {
       <div
         className="Box"
         style={{
-          background: settings.dialImages[props.id]
-            ? `${settings.dialColors[props.id] || dialColors(props.name)} url("${settings.dialImages[props.id]}") center/cover no-repeat`
-            : `${settings.dialColors[props.id] || dialColors(props.name)}`,
+          backgroundColor,
+          backgroundImage: backgroundImage
+            ? `url("${backgroundImage}")`
+            : undefined,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
           textShadow:
             props.type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none",
         }}
@@ -61,7 +103,7 @@ export const Dial = observer(function Dial(props) {
   );
 });
 
-function Name(props) {
+function Name(props: NameProps) {
   return props.name.length === 1 ? (
     <Domain {...{ title: true }}>{props.name.join(".")}</Domain>
   ) : props.name.length === 3 && props.name[0].length < props.name[1].length ? (
@@ -98,25 +140,29 @@ function Name(props) {
   );
 }
 
-function Small(props) {
+function Small(props: SmallProps) {
   return (
     <div
       className="Small"
-      style={{
-        "--name-align": props.align,
-      }}
+      style={
+        {
+          "--name-align": props.align,
+        } as React.CSSProperties
+      }
     >
       <div>{props.children}</div>
     </div>
   );
 }
 
-function Domain(props) {
-  const [scale, setScale] = useState();
-  const domainRef = useRef();
+function Domain(props: DomainProps) {
+  const [scale, setScale] = useState<number | null>(null);
+  const domainRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const domainElement = domainRef.current;
-    const boxElement = domainElement.closest(".Box");
+    if (!domainElement) return;
+    const boxElement = domainElement.closest(".Box") as HTMLElement;
+    if (!boxElement) return;
 
     const calculateScale = () => {
       const domainWidth = domainElement.offsetWidth;
@@ -157,18 +203,24 @@ function Domain(props) {
     <div
       ref={domainRef}
       className="Domain"
-      style={{
-        "--name-white-space": props.title ? "initial" : "nowrap",
-        "--name-padding": props.title ? "0" : props.padding ? "1em 0 0" : "0 0",
-        "--name-transform": scale ? `scale(${scale})` : "initial",
-      }}
+      style={
+        {
+          "--name-white-space": props.title ? "initial" : "nowrap",
+          "--name-padding": props.title
+            ? "0"
+            : props.padding
+              ? "1em 0 0"
+              : "0 0",
+          "--name-transform": scale ? `scale(${scale})` : "initial",
+        } as React.CSSProperties
+      }
     >
       <div>{props.children}</div>
     </div>
   );
 }
 
-const Title = observer(function Title(props) {
+const Title = observer(function Title(props: TitleProps) {
   if (!settings.showTitle) return;
 
   return (
