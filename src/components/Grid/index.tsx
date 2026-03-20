@@ -218,6 +218,7 @@ export const Grid = observer(function Grid() {
     };
 
     const sortable = Sortable.create(gridRef.current!, {
+      filter: ".Divider",
       animation: 150,
       delay: 100,
       delayOnTouchOnly: true,
@@ -371,17 +372,26 @@ export const Grid = observer(function Grid() {
 });
 
 const Dials = observer(function Dials() {
-  return bookmarks.bookmarks.map(({ id, name, title, type, index, url }) => (
-    <Dial
-      {...{
-        id,
-        name,
-        title,
-        index,
-        type,
-        url,
-      }}
-      key={id}
-    />
-  ));
+  return bookmarks.bookmarks.map(({ id, name, title, type, index, url }) => {
+    if (type === "divider") {
+      return settings.showDividers ? <Divider key={id} /> : null;
+    }
+    return (
+      <Dial
+        {...{
+          id,
+          name,
+          title,
+          index,
+          type,
+          url,
+        }}
+        key={id}
+      />
+    );
+  });
 });
+
+function Divider() {
+  return <hr className="Divider" />;
+}

@@ -35,11 +35,12 @@ function getLinkName(url: string): string[] {
 
 function filter(bookmarks: Bookmarks.BookmarkTreeNode[]): FilteredBookmark[] {
   return bookmarks
-    .filter(
-      ({ url = "", type }: Bookmarks.BookmarkTreeNode) =>
-        !url.match(/^(javascript|place|about|chrome|edge|file|data|blob):/i) &&
-        type !== "separator",
-    )
+    .filter(({ url = "", type }: Bookmarks.BookmarkTreeNode) => {
+      if (type === "separator") return true;
+      return !url.match(
+        /^(javascript|place|about|chrome|edge|file|data|blob):/i,
+      );
+    })
     .map(
       ({
         id,
@@ -47,7 +48,12 @@ function filter(bookmarks: Bookmarks.BookmarkTreeNode[]): FilteredBookmark[] {
         parentId,
         title,
         url,
+        type: bookmarkType,
       }: Bookmarks.BookmarkTreeNode): FilteredBookmark => {
+        // Firefox native separator or Chrome convention (title "---")
+        if (bookmarkType === "separator" || title === "---") {
+          return { type: "divider", name: [], id, parentId, index };
+        }
         if (url) {
           const name = getLinkName(url);
           return { title, url, type: "bookmark", name, id, parentId, index };

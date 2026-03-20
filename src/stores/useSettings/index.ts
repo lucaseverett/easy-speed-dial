@@ -91,6 +91,7 @@ const defaultSettings = {
   maxColumns: "7",
   newTab: false,
   showAlertBanner: !lastVersion || isUpgrade,
+  showDividers: false,
   showTitle: true,
   squareDials: false,
   switchTitle: false,
@@ -120,6 +121,8 @@ export const settings = makeAutoObservable({
     storage[`${apiVersion}-max-columns`] || defaultSettings.maxColumns,
   newTab: storage[`${apiVersion}-new-tab`] ?? defaultSettings.newTab,
   showAlertBanner: defaultSettings.showAlertBanner,
+  showDividers:
+    storage[`${apiVersion}-show-dividers`] ?? defaultSettings.showDividers,
   showTitle: storage[`${apiVersion}-show-title`] ?? defaultSettings.showTitle,
   squareDials:
     storage[`${apiVersion}-square-dials`] ?? defaultSettings.squareDials,
@@ -236,6 +239,11 @@ export const settings = makeAutoObservable({
     };
     i.click();
   },
+  handleShowDividers(value: boolean) {
+    browser.storage.local.set({ [`${apiVersion}-show-dividers`]: value });
+    settings.showDividers = value;
+    bc.postMessage({ showDividers: value });
+  },
   handleShowTitle(value: boolean) {
     browser.storage.local.set({ [`${apiVersion}-show-title`]: value });
     settings.showTitle = value;
@@ -322,6 +330,7 @@ export const settings = makeAutoObservable({
     settings.handleDialSize(defaultSettings.dialSize);
     settings.handleMaxColumns(defaultSettings.maxColumns);
     settings.handleNewTab(defaultSettings.newTab);
+    settings.handleShowDividers(defaultSettings.showDividers);
     settings.handleShowTitle(defaultSettings.showTitle);
     settings.handleSquareDials(defaultSettings.squareDials);
     settings.handleSwitchTitle(defaultSettings.switchTitle);

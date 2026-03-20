@@ -22,6 +22,7 @@ export const SettingsContent = observer(function SettingsContent() {
     handleDialSize,
     handleMaxColumns,
     handleNewTab,
+    handleShowDividers,
     handleShowTitle,
     handleSquareDials,
     handleSwitchTitle,
@@ -384,6 +385,27 @@ export const SettingsContent = observer(function SettingsContent() {
             onClick={() => handleShowTitle(!settings.showTitle)}
             className="switch-root"
             checked={settings.showTitle as boolean}
+          >
+            <span className="switch-thumb" />
+          </Switch>
+        </div>
+      </div>
+      <div className="setting-wrapper setting-group">
+        <div className="setting-label">
+          <div className="setting-title" id="show-dividers-title">
+            Show Dividers
+          </div>
+          <div className="setting-description" id="show-dividers-description">
+            Render bookmark separators as horizontal divider lines.
+          </div>
+        </div>
+        <div className="setting-option toggle">
+          <Switch
+            aria-labelledby="show-dividers-title"
+            aria-describedby="show-dividers-description"
+            onClick={() => handleShowDividers(!settings.showDividers)}
+            className="switch-root"
+            checked={settings.showDividers as boolean}
           >
             <span className="switch-thumb" />
           </Switch>
