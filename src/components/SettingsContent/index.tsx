@@ -390,27 +390,29 @@ export const SettingsContent = observer(function SettingsContent() {
           </Switch>
         </div>
       </div>
-      <div className="setting-wrapper setting-group">
-        <div className="setting-label">
-          <div className="setting-title" id="show-dividers-title">
-            Show Dividers
+      {!__CHROME__ && (
+        <div className="setting-wrapper setting-group">
+          <div className="setting-label">
+            <div className="setting-title" id="show-dividers-title">
+              Show Dividers
+            </div>
+            <div className="setting-description" id="show-dividers-description">
+              Render bookmark separators as horizontal divider lines.
+            </div>
           </div>
-          <div className="setting-description" id="show-dividers-description">
-            Render bookmark separators as horizontal divider lines.
+          <div className="setting-option toggle">
+            <Switch
+              aria-labelledby="show-dividers-title"
+              aria-describedby="show-dividers-description"
+              onClick={() => handleShowDividers(!settings.showDividers)}
+              className="switch-root"
+              checked={settings.showDividers as boolean}
+            >
+              <span className="switch-thumb" />
+            </Switch>
           </div>
         </div>
-        <div className="setting-option toggle">
-          <Switch
-            aria-labelledby="show-dividers-title"
-            aria-describedby="show-dividers-description"
-            onClick={() => handleShowDividers(!settings.showDividers)}
-            className="switch-root"
-            checked={settings.showDividers as boolean}
-          >
-            <span className="switch-thumb" />
-          </Switch>
-        </div>
-      </div>
+      )}
       <div className="setting-wrapper setting-group">
         <div className="setting-label">
           <div className="setting-title" id="switch-title-title">

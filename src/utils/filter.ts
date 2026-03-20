@@ -50,8 +50,7 @@ function filter(bookmarks: Bookmarks.BookmarkTreeNode[]): FilteredBookmark[] {
         url,
         type: bookmarkType,
       }: Bookmarks.BookmarkTreeNode): FilteredBookmark => {
-        // Firefox native separator or Chrome convention (title "---")
-        if (bookmarkType === "separator" || title === "---") {
+        if (bookmarkType === "separator") {
           return { type: "divider", name: [], id, parentId, index };
         }
         if (url) {
