@@ -1,20 +1,23 @@
 .Modal {
   .color-scheme-light & {
-    --modal-text-color: #000;
-    --modal-header-background-color: #bdbdbd;
-    --modal-background-color: #eee;
-    --modal-outer-border-color: #e0e0e0;
-    --modal-inner-border-color: #9e9e9e;
-    --modal-shadow: 10px 14px 13px rgb(0, 0, 0, 0.3);
+    --modal-text-color: black;
+    --modal-dismiss-color: var(--grey-500);
+    --modal-dismiss-hover-color: var(--grey-800);
+    --modal-background-color: var(--grey-50);
+    --modal-overlay-background-color: rgba(0, 0, 0, 0.8);
+    --modal-border-color: var(--grey-200);
+    --modal-box-shadow: 0 24px 64px
+      color-mix(in oklch, var(--grey-900) 28%, transparent);
   }
 
   .color-scheme-dark & {
-    --modal-text-color: #e0e0e0;
-    --modal-header-background-color: #373737;
-    --modal-background-color: #484848;
-    --modal-outer-border-color: #424242;
-    --modal-inner-border-color: #212121;
-    --modal-box-shadow: 10px 14px 13px rgb(0, 0, 0, 0.3);
+    --modal-text-color: var(--grey-200);
+    --modal-dismiss-color: var(--grey-400);
+    --modal-dismiss-hover-color: var(--grey-100);
+    --modal-background-color: var(--grey-800);
+    --modal-overlay-background-color: rgba(0, 0, 0, 0.8);
+    --modal-border-color: var(--grey-600);
+    --modal-box-shadow: 0 24px 64px color-mix(in oklch, black 42%, transparent);
   }
 
   -webkit-font-smoothing: antialiased;
@@ -25,32 +28,64 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--modal-overlay-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  .sampling-screen-color & {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   .modal-wrapper {
     color: var(--modal-text-color);
+    width: min(var(--modal-width, 400px), 100%);
+    max-height: min(
+      var(--modal-height, calc(100svh - 48px)),
+      calc(100svh - 48px)
+    );
+    border: 1px solid var(--modal-border-color);
+    border-radius: 6px;
+    box-shadow: var(--modal-box-shadow);
+    overflow: hidden;
   }
 
   .modal-body {
     background-color: var(--modal-background-color);
     display: flex;
     flex-direction: column;
-    height: 100svh;
+    max-height: inherit;
+    position: relative;
+    width: 100%;
+
+    &.without-dismiss {
+      h1 {
+        padding-right: 20px;
+      }
+    }
   }
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 10px 10px 20px;
-    background-color: var(--modal-header-background-color);
+  h1 {
+    margin: 0;
+    padding: 20px 56px 0 20px;
+    font-size: 18px;
+    font-weight: 650;
+    line-height: 1.2;
+    outline: none;
+  }
 
-    h1 {
-      margin: 0;
-      font-size: 20px;
-      margin: 0;
-      outline: none;
-    }
+  .visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 
   .scroll-box {
@@ -58,35 +93,73 @@
     overscroll-behavior: contain;
   }
 
-  .scroll-focus:focus-visible {
+  select.input {
+    &:focus,
+    &:active,
+    &:focus-within {
+      border-color: var(--input-border-color);
+      box-shadow: none;
+      outline: none;
+    }
+
+    &.focus-visible {
+      border-color: var(--input-focus-outline-color);
+      box-shadow: inset 0 0 0 1px var(--input-focus-outline-color);
+      outline: none;
+    }
+  }
+
+  .scroll-focus.focus-visible {
     .color-scheme-light & {
-      --btn-focus-color: #1565c0;
+      --btn-focus-color: var(--blue-700);
     }
 
     .color-scheme-dark & {
-      --btn-focus-color: #64b5f6;
+      --btn-focus-color: var(--blue-400);
     }
 
     outline: 4px solid var(--btn-focus-color);
     outline-offset: -4px;
   }
 
-  .dismiss {
-    width: 30px;
-    height: 30px;
-    fill: var(--modal-text-color);
+  .modal-body .dismiss.dismissBtn {
+    width: 26px;
+    height: 26px;
+    color: var(--modal-dismiss-color);
+    fill: var(--modal-dismiss-color);
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    div {
+      height: 26px;
+      width: 26px;
+
+      &:before,
+      &:after {
+        height: 17px;
+      }
+    }
+
+    &:hover {
+      background-color: transparent;
+      color: var(--modal-dismiss-hover-color);
+      fill: var(--modal-dismiss-hover-color);
+    }
   }
 
   &.right-aligned {
     justify-content: flex-end;
     align-items: stretch;
     background-color: initial;
+    padding: 0;
 
     .modal-wrapper {
+      width: var(--modal-width);
       height: 100vh;
       max-height: 100vh;
       border-radius: 0;
-      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+      box-shadow: -2px 0 8px color-mix(in oklch, black 30%, transparent);
       border: none;
     }
 
@@ -94,6 +167,8 @@
       border: none;
       border-radius: 0;
       height: 100vh;
+      width: var(--modal-width);
+      max-height: 100vh;
     }
 
     @media (max-width: 540px) {
@@ -103,29 +178,7 @@
     }
   }
 
-  @media (min-width: 535px) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .modal-wrapper {
-      max-height: calc(100vh - 100px);
-      height: initial;
-      border-radius: 10px;
-      box-shadow: var(--modal-box-shadow);
-      border: 5px solid var(--modal-outer-border-color);
-    }
-
-    .modal-body {
-      border: 1px solid var(--modal-inner-border-color);
-      border-radius: 5px;
-      overflow: hidden;
-      height: initial;
-    }
-
-    .scroll-box {
-      width: var(--modal-width);
-      max-height: var(--modal-height);
-    }
+  .scroll-box {
+    max-height: inherit;
   }
 }

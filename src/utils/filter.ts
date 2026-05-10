@@ -33,21 +33,47 @@ function getLinkName(url: string): string[] {
   return parts;
 }
 
+function isSeparatorFolder({
+  title,
+  type,
+  url,
+}: Bookmarks.BookmarkTreeNode): boolean {
+  return type !== "separator" && !url && /^-{3,}$/.test(title.trim());
+}
+
 function filter(bookmarks: Bookmarks.BookmarkTreeNode[]): FilteredBookmark[] {
   return bookmarks
-    .filter(
-      ({ url = "", type }: Bookmarks.BookmarkTreeNode) =>
-        !url.match(/^(javascript|place|about|chrome|edge|file|data|blob):/i) &&
-        type !== "separator",
-    )
+    .filter((bookmark: Bookmarks.BookmarkTreeNode) => {
+      const { url = "", type } = bookmark;
+      if (type === "separator" || isSeparatorFolder(bookmark)) return true;
+
+      return !url.match(
+        /^(javascript|place|about|chrome|edge|file|data|blob):/i,
+      );
+    })
     .map(
       ({
         id,
         index,
         parentId,
         title,
+        type,
         url,
       }: Bookmarks.BookmarkTreeNode): FilteredBookmark => {
+        if (
+          type === "separator" ||
+          isSeparatorFolder({ id, index, parentId, title, type, url })
+        ) {
+          return {
+            type: "separator",
+            title,
+            name: [],
+            id,
+            parentId,
+            index,
+          };
+        }
+
         if (url) {
           const name = getLinkName(url);
           return { title, url, type: "bookmark", name, id, parentId, index };
@@ -65,4 +91,4 @@ function filter(bookmarks: Bookmarks.BookmarkTreeNode[]): FilteredBookmark[] {
     );
 }
 
-export { getLinkName, filter };
+export { getLinkName, filter, isSeparatorFolder };

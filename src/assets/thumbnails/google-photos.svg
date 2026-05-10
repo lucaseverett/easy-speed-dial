@@ -1,0 +1,41 @@
+<svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-262.5 -262.5 875 875">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#radial-gradient-4);
+      }
+
+      .cls-2 {
+        fill: url(#radial-gradient-3);
+      }
+
+      .cls-3 {
+        fill: url(#radial-gradient-2);
+      }
+
+      .cls-4 {
+        fill: url(#radial-gradient);
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="173.161" cy="178.716" fx="239.836" fy="36.176" r="170.886" gradientTransform="translate(0 -7.272) scale(1 1.041)" gradientUnits="userSpaceOnUse">
+      <stop offset=".469" stop-color="#7acaff"/>
+      <stop offset=".828" stop-color="#00b054"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-2" cx="173.161" cy="178.716" fx="239.836" fy="36.176" r="170.886" gradientTransform="translate(357.272) rotate(90) scale(1 1.041)" gradientUnits="userSpaceOnUse">
+      <stop offset=".545" stop-color="#fded1c"/>
+      <stop offset=".828" stop-color="#feca01"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-3" cx="173.161" cy="178.716" fx="239.836" fy="36.176" r="170.886" gradientTransform="translate(350 357.272) rotate(-180) scale(1 1.041)" gradientUnits="userSpaceOnUse">
+      <stop offset=".469" stop-color="#ff81d0"/>
+      <stop offset=".828" stop-color="#ff4041"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-4" cx="173.161" cy="178.716" fx="239.836" fy="36.176" r="170.886" gradientTransform="translate(-7.272 350) rotate(-90) scale(1 1.041)" gradientUnits="userSpaceOnUse">
+      <stop offset=".469" stop-color="#aaa7ff"/>
+      <stop offset=".828" stop-color="#2f89ff"/>
+    </radialGradient>
+  </defs>
+  <path class="cls-4" d="M79.6,262.5c0-48.3,39.2-87.5,87.5-87.5h7.9v167.1c0,4.4-3.6,7.9-7.9,7.9-48.3,0-87.5-39.2-87.5-87.5Z"/>
+  <path class="cls-3" d="M87.5,79.6c48.3,0,87.5,39.2,87.5,87.5h0v7.9H7.9c-4.4,0-7.9-3.6-7.9-7.9,0-48.3,39.2-87.5,87.5-87.5Z"/>
+  <path class="cls-2" d="M270.4,87.5c0,48.3-39.2,87.5-87.5,87.5h-7.9V7.9c0-4.4,3.6-7.9,7.9-7.9,48.3,0,87.5,39.2,87.5,87.5Z"/>
+  <path class="cls-1" d="M262.5,270.4c-48.3,0-87.5-39.2-87.5-87.5h0v-7.9h167.1c4.4,0,7.9,3.6,7.9,7.9,0,48.3-39.2,87.5-87.5,87.5Z"/>
+</svg>

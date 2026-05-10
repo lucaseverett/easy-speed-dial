@@ -54,7 +54,7 @@ export const Grid = observer(function Grid() {
       }
     };
 
-    // Check on mount, when window resizes, and when dial settings change
+    // Check on mount, when window resizes, and when grid settings change
     checkFontSize();
     window.addEventListener("resize", checkFontSize);
 
@@ -62,7 +62,12 @@ export const Grid = observer(function Grid() {
       window.removeEventListener("resize", checkFontSize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.dialSize, settings.maxColumns, settings.squareDials]);
+  }, [
+    settings.dialSize,
+    settings.gridSpacing,
+    settings.maxColumns,
+    settings.squareDials,
+  ]);
 
   // Calculate gear color based on root background for optimal contrast
   useEffect(() => {
@@ -218,6 +223,7 @@ export const Grid = observer(function Grid() {
     };
 
     const sortable = Sortable.create(gridRef.current!, {
+      filter: "[data-type='separator']",
       animation: 150,
       delay: 100,
       delayOnTouchOnly: true,
@@ -339,6 +345,8 @@ export const Grid = observer(function Grid() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               className="chevron-left"
+              aria-hidden="true"
+              focusable="false"
             >
               <rect fill="none" height="24" width="24" />
               <g>
@@ -371,17 +379,31 @@ export const Grid = observer(function Grid() {
 });
 
 const Dials = observer(function Dials() {
-  return bookmarks.bookmarks.map(({ id, name, title, type, index, url }) => (
-    <Dial
-      {...{
-        id,
-        name,
-        title,
-        index,
-        type,
-        url,
-      }}
-      key={id}
-    />
-  ));
+  return bookmarks.bookmarks.map(({ id, name, title, type, index, url }) => {
+    if (type === "separator") {
+      return (
+        <hr
+          aria-hidden="true"
+          className="GridSeparator"
+          data-id={id}
+          data-type="separator"
+          key={id}
+        />
+      );
+    }
+
+    return (
+      <Dial
+        {...{
+          id,
+          name,
+          title,
+          index,
+          type,
+          url,
+        }}
+        key={id}
+      />
+    );
+  });
 });

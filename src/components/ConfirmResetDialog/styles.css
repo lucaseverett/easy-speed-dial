@@ -1,0 +1,44 @@
+.ConfirmResetDialog {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 14px;
+  line-height: 1.5;
+  padding: 20px;
+
+  .warning-icon {
+    .color-scheme-light & {
+      --reset-warning-background-color: var(--red-100);
+      --reset-warning-text-color: var(--red-700);
+    }
+
+    .color-scheme-dark & {
+      --reset-warning-background-color: var(--red-900);
+      --reset-warning-text-color: var(--red-300);
+    }
+
+    align-items: center;
+    background-color: var(--reset-warning-background-color);
+    border-radius: 50%;
+    color: var(--reset-warning-text-color);
+    display: flex;
+    font-size: 22px;
+    font-weight: 700;
+    height: 34px;
+    justify-content: center;
+    line-height: 1;
+    width: 34px;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    gap: 10px;
+    width: 100%;
+  }
+}

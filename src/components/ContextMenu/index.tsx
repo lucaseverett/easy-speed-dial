@@ -17,14 +17,11 @@ export const ContextMenu = observer(function ContextMenu() {
   const [menuItems, setMenuItems] = useState<HTMLButtonElement[]>([]);
 
   useEffect(() => {
-    // Set menu items when context menu is opened.
-    // Reset menu items if context menu is opened while another is open.
     setMenuItems([
       ...Array.from(contextMenuRef.current?.querySelectorAll("button") || []),
     ]);
     setCurrIndex(-1);
 
-    // Set menu position.
     contextMenuRef.current?.style.setProperty(
       "--context-menu-top",
       `${
@@ -47,7 +44,6 @@ export const ContextMenu = observer(function ContextMenu() {
   }, [contextMenu.coords]);
 
   useEffect(() => {
-    // Focus current menu item.
     menuItems.forEach((el) => el.classList.remove("selected"));
     if (currIndex === -1) {
       contextMenuRef.current?.focus();
@@ -68,20 +64,15 @@ export const ContextMenu = observer(function ContextMenu() {
     const isLastItem = currIndex === menuItems.length - 1;
 
     const focus = {
-      firstItem: () => {
-        setCurrIndex(0);
-      },
-      lastItem: () => {
-        setCurrIndex(menuItems.length - 1);
-      },
+      firstItem: () => setCurrIndex(0),
+      lastItem: () => setCurrIndex(menuItems.length - 1),
       previousItem: () => {
-        const newIndex =
-          isNotOnMenuItem || isFirstItem ? menuItems.length - 1 : currIndex - 1;
-        setCurrIndex(newIndex);
+        setCurrIndex(
+          isNotOnMenuItem || isFirstItem ? menuItems.length - 1 : currIndex - 1,
+        );
       },
       nextItem: () => {
-        const newIndex = isNotOnMenuItem || isLastItem ? 0 : currIndex + 1;
-        setCurrIndex(newIndex);
+        setCurrIndex(isNotOnMenuItem || isLastItem ? 0 : currIndex + 1);
       },
     };
 
@@ -131,9 +122,7 @@ export const ContextMenu = observer(function ContextMenu() {
       },
     };
 
-    if (keys[e.key]) {
-      keys[e.key]();
-    }
+    keys[e.key]?.();
   }
 
   function handleMouseEnter(e: MouseEvent<HTMLButtonElement>) {
@@ -198,35 +187,23 @@ export const ContextMenu = observer(function ContextMenu() {
             </>
           )}
           <Separator />
-          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") ? (
-            <>
-              <li>
-                <button
-                  role="menuitem"
-                  onClick={handleSelectThumbnail}
-                  onMouseEnter={handleMouseEnter}
-                >
-                  Select custom thumbnail
-                </button>
-              </li>
-              <li>
-                <button
-                  role="menuitem"
-                  onClick={handleClearThumbnail}
-                  onMouseEnter={handleMouseEnter}
-                >
-                  Clear custom thumbnail
-                </button>
-              </li>
-            </>
-          ) : (
+          <li>
+            <button
+              role="menuitem"
+              onClick={handleSelectThumbnail}
+              onMouseEnter={handleMouseEnter}
+            >
+              Select custom thumbnail
+            </button>
+          </li>
+          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") && (
             <li>
               <button
                 role="menuitem"
-                onClick={handleSelectThumbnail}
+                onClick={handleClearThumbnail}
                 onMouseEnter={handleMouseEnter}
               >
-                Select custom thumbnail
+                Clear custom thumbnail
               </button>
             </li>
           )}
@@ -272,52 +249,31 @@ export const ContextMenu = observer(function ContextMenu() {
             </button>
           </li>
           {(__CHROME__ || __FIREFOX__) && (
-            <>
-              <li>
-                <button
-                  onClick={handleOpenAllWindow}
-                  role="menuitem"
-                  onMouseEnter={handleMouseEnter}
-                >
-                  Open all <span className="lowercase">in</span> new window
-                </button>
-              </li>{" "}
-            </>
-          )}
-          <Separator />
-          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") ? (
-            <>
-              <li>
-                <button
-                  role="menuitem"
-                  onClick={handleSelectThumbnail}
-                  onMouseEnter={handleMouseEnter}
-                >
-                  Select custom thumbnail
-                </button>
-              </li>
-              <li>
-                <button
-                  role="menuitem"
-                  onClick={handleClearThumbnail}
-                  onMouseEnter={handleMouseEnter}
-                >
-                  Clear custom thumbnail
-                </button>
-              </li>
-            </>
-          ) : (
             <li>
               <button
+                onClick={handleOpenAllWindow}
                 role="menuitem"
-                onClick={handleSelectThumbnail}
                 onMouseEnter={handleMouseEnter}
               >
-                Select custom thumbnail
+                Open all <span className="lowercase">in</span> new window
               </button>
             </li>
           )}
           <Separator />
+          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") && (
+            <li>
+              <button
+                role="menuitem"
+                onClick={handleClearThumbnail}
+                onMouseEnter={handleMouseEnter}
+              >
+                Clear custom thumbnail
+              </button>
+            </li>
+          )}
+          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") && (
+            <Separator />
+          )}
           <li>
             <button
               role="menuitem"
@@ -346,7 +302,7 @@ export const ContextMenu = observer(function ContextMenu() {
               onMouseEnter={handleMouseEnter}
               onClick={handleShowNewBookmark}
             >
-              New bookmark
+              Add bookmark
             </button>
           </li>
           <li>
@@ -355,7 +311,16 @@ export const ContextMenu = observer(function ContextMenu() {
               onMouseEnter={handleMouseEnter}
               onClick={handleShowNewFolder}
             >
-              New folder
+              Add folder
+            </button>
+          </li>
+          <li>
+            <button
+              role="menuitem"
+              onMouseEnter={handleMouseEnter}
+              onClick={handleShowPopularSites}
+            >
+              Add popular sites
             </button>
           </li>
           <Separator />
@@ -396,8 +361,9 @@ export const ContextMenu = observer(function ContextMenu() {
 
 function handleClearThumbnail() {
   contextMenu.closeContextMenu();
-  if (contextMenu.focusAfterClosed?.dataset.id) {
-    settings.handleClearThumbnail(contextMenu.focusAfterClosed.dataset.id);
+  const id = getDialMetadataId();
+  if (id) {
+    settings.handleClearThumbnail(id);
   }
 }
 
@@ -468,9 +434,19 @@ function handleOpenSettings() {
 
 function handleSelectThumbnail() {
   contextMenu.closeContextMenu();
-  if (contextMenu.focusAfterClosed?.dataset.id) {
-    settings.handleSelectThumbnail(contextMenu.focusAfterClosed.dataset.id);
+  const id = getDialMetadataId();
+  if (id) {
+    settings.handleSelectThumbnail(id);
   }
+}
+
+function getDialMetadataId(): string | null {
+  const element = contextMenu.focusAfterClosed as HTMLAnchorElement | null;
+  const id = element?.dataset.id;
+  const type = element?.dataset.type;
+  if (!id || (type !== "bookmark" && type !== "folder")) return null;
+
+  return id;
 }
 
 function handleShowAbout() {
@@ -510,6 +486,14 @@ function handleShowNewBookmark() {
 function handleShowNewFolder() {
   modals.openModal({
     modal: "new-folder",
+    focusAfterClosed: contextMenu.focusAfterClosed || null,
+  });
+  contextMenu.closeContextMenu({ focusAfterClosed: false });
+}
+
+function handleShowPopularSites() {
+  modals.openModal({
+    modal: "popular-sites",
     focusAfterClosed: contextMenu.focusAfterClosed || null,
   });
   contextMenu.closeContextMenu({ focusAfterClosed: false });

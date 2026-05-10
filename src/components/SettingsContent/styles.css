@@ -1,81 +1,110 @@
 :root {
-  --options-background-color: #eee;
-  --options-text-color: #000;
-  --options-box-shadow: 8px 8px 20px rgb(33, 33, 33, 0.5);
-  --options-outer-border-color: #e0e0e0;
-  --options-inner-border-color: #9e9e9e;
-  --header-background-color: #bdbdbd;
-  --wallpaper-button-box-shadow-color: #9e9e9e;
-  --wallpaper-button-focus-outline-color: #42a5f5;
-  --wallpaper-button-selected-outline-color: #1565c0;
-  --setting-wrapper-border-color: #9e9e9e;
-  --switch-background-color: #c2c2c2;
-  --switch-before-background-color: #f5f5f5;
-  --switch-focus-outline-color: #42a5f5;
-  --switch-checked-background-color: #1565c0;
-
+  --options-background-color: var(--grey-50);
+  --options-text-color: black;
+  --options-box-shadow: 8px 8px 20px
+    color-mix(in oklch, var(--grey-900) 50%, transparent);
+  --options-outer-border-color: var(--grey-200);
+  --options-inner-border-color: var(--grey-400);
+  --header-background-color: var(--grey-400);
+  --wallpaper-button-box-shadow-color: var(--grey-400);
+  --wallpaper-button-focus-outline-color: var(--blue-400);
+  --wallpaper-button-selected-outline-color: var(--blue-700);
+  --setting-wrapper-border-color: var(--grey-300);
+  --switch-background-color: var(--grey-400);
+  --switch-before-background-color: var(--grey-100);
+  --switch-focus-outline-color: var(--blue-400);
+  --switch-checked-background-color: var(--blue-700);
   &.color-scheme-dark,
   .color-scheme-dark {
-    --options-background-color: #484848;
-    --options-text-color: #e0e0e0;
-    --options-box-shadow: 10px 14px 13px rgb(0, 0, 0, 0.6);
-    --options-outer-border-color: #424242;
-    --options-inner-border-color: #212121;
-    --header-background-color: #373737;
-    --wallpaper-button-box-shadow-color: #212121;
-    --wallpaper-button-focus-outline-color: #64b5f6;
-    --wallpaper-button-selected-outline-color: #1565c0;
-    --setting-wrapper-border-color: #373737;
-    --switch-background-color: #616161;
-    --switch-before-background-color: #f5f5f5;
+    --options-background-color: var(--grey-800);
+    --options-text-color: var(--grey-200);
+    --options-box-shadow: 10px 14px 13px
+      color-mix(in oklch, black 60%, transparent);
+    --options-outer-border-color: var(--grey-700);
+    --options-inner-border-color: var(--grey-900);
+    --header-background-color: var(--grey-800);
+    --wallpaper-button-box-shadow-color: var(--grey-900);
+    --wallpaper-button-focus-outline-color: var(--blue-400);
+    --wallpaper-button-selected-outline-color: var(--blue-600);
+    --setting-wrapper-border-color: var(--grey-700);
+    --switch-background-color: var(--grey-600);
+    --switch-before-background-color: var(--grey-100);
   }
 }
 
-.background-buttons {
-  margin: 20px 0;
+.wallpaper-picker-group {
+  margin-top: 14px;
+}
+
+.wallpaper-picker-heading {
   display: flex;
-  gap: 1px;
+  align-items: center;
+  margin-bottom: 4px;
+}
 
-  button {
-    width: 100%;
-
-    &[aria-selected="true"] {
-      background-color: var(--btn-selected-background-color);
-    }
-
-    &:focus-visible {
-      z-index: 10;
-    }
-
-    &:not(:first-of-type) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    &:not(:last-of-type) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
+.wallpaper-picker-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .setting-option.wallpapers {
   display: flex;
   flex-wrap: nowrap;
   gap: 14px;
-  margin-block: 12px 20px;
-  margin-left: -8px;
+  margin-block: 12px 0;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
   max-height: 310px;
   overflow-y: hidden;
   overflow-x: auto;
   padding: 8px;
+  scrollbar-width: thin;
+}
+
+.setting-option.wallpapers[hidden] {
+  display: none;
+}
+
+.wallpaper-radio-option {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.wallpaper-radio {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.wallpaper-radio-label {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
 .wallpaper-button,
 .wallpaper-button-transparent {
   outline: none;
-  width: 120px;
-  height: 90px;
+  width: 102px;
+  height: auto;
+  aspect-ratio: 4 / 3;
   flex-shrink: 0;
   border-radius: 4px;
   border: none;
@@ -85,93 +114,138 @@
   background-position: center;
   background-repeat: no-repeat;
   box-shadow: 0 0 0 1px var(--wallpaper-button-box-shadow-color);
+  display: block;
 }
 
 .wallpaper-button {
-  &:focus-visible {
+  &.focus-visible {
     outline: 4px solid var(--wallpaper-button-focus-outline-color);
     outline-offset: 4px;
   }
 }
 
-.wallpaper-button.selected {
+.wallpaper-radio.focus-visible + .wallpaper-button {
+  outline: 4px solid var(--wallpaper-button-focus-outline-color);
+  outline-offset: 4px;
+}
+
+.wallpaper-action-button {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  padding: 10px;
+  background-color: var(--btn-background-color);
+  color: var(--btn-text-color);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+
+  &:hover {
+    background-color: var(--btn-hover-background-color);
+    color: var(--btn-hover-text-color);
+  }
+}
+
+.wallpaper-action-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.wallpaper-button.selected,
+.wallpaper-radio:checked + .wallpaper-button {
   outline: 4px solid var(--wallpaper-button-selected-outline-color);
 
-  &:focus-visible {
+  &.focus-visible {
     box-shadow: 0 0 0 8px var(--wallpaper-button-selected-outline-color);
     outline-color: var(--wallpaper-button-focus-outline-color);
-  }
-
-  &::before {
-    background-color: #1565c0;
-    color: #fff;
   }
 
   &::before {
     position: absolute;
     top: 50%;
     left: 50%;
-    content: "L";
+    content: "✓";
     height: 24px;
     width: 24px;
-    padding-top: 2px;
     margin-left: -12px;
     margin-top: -12px;
     border-radius: 50%;
-    transform: scaleX(-1) rotate(-35deg);
+    background-color: var(--wallpaper-button-selected-outline-color);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
   }
+}
+
+.wallpaper-radio.focus-visible:checked + .wallpaper-button {
+  box-shadow: 0 0 0 8px var(--wallpaper-button-selected-outline-color);
+  outline-color: var(--wallpaper-button-focus-outline-color);
 }
 
 .wallpaper-button-transparent {
   cursor: initial;
 }
 
-#dark-wallpaper {
-  background-color: #212121;
+.theme-wallpaper-button {
+  background-color: var(--grey-100);
 }
 
-#light-wallpaper {
-  background-color: #f5f5f5;
+.color-scheme-dark .theme-wallpaper-button {
+  background-color: var(--grey-900);
 }
 
-#blue-wallpaper {
-  background-color: #bbdefb;
+.blue-wallpaper-button {
+  background-color: var(--blue-100);
 }
 
-#brown-wallpaper {
-  background-color: #d7ccc8;
+.brown-wallpaper-button {
+  background-color: var(--brown-100);
 }
 
-#yellow-wallpaper {
-  background-color: #ffe082;
+.green-wallpaper-button {
+  background-color: var(--teal-100);
 }
 
-#green-wallpaper {
-  background-color: #b2dfdb;
+.pink-wallpaper-button {
+  background-color: var(--pink-100);
 }
 
-#pink-wallpaper {
-  background-color: #f8bbd0;
+.yellow-wallpaper-button {
+  background-color: var(--amber-200);
 }
 
-.custom-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.setting-wrapper {
-  font-size: 14px;
-  margin: 0 20px;
-  padding-block: 20px;
-
-  &:first-of-type {
-    padding-top: 20px;
-  }
+.settings-section {
+  margin: 0;
+  padding-block: 28px;
 
   &:not(:last-of-type) {
     border-bottom: 1px solid var(--setting-wrapper-border-color);
   }
+}
+
+.settings-section-title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.settings-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.setting-wrapper {
+  font-size: 14px;
 
   &.about {
     display: grid;
@@ -180,43 +254,78 @@
 }
 
 .setting-wrapper.setting-group {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
+}
+
+.setting-label {
+  flex: 1;
+  min-width: 0;
 }
 
 .setting-title {
-  font-weight: bold;
-  padding-bottom: 10px;
+  font-weight: 650;
+  margin: 0;
+  padding-bottom: 7px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.setting-description {
+  line-height: 1.5;
+  margin: 0;
+  max-width: 620px;
+  opacity: 0.78;
+}
+
 .setting-option {
+  flex-shrink: 0;
+
   &.select,
-  &.toggle {
-    margin-left: 20px;
+  &.toggle,
+  &.reset {
+    margin-left: 0;
   }
 
   &.select {
     position: relative;
 
     select {
-      max-width: 175px;
+      max-width: 200px;
     }
   }
 
-  &.reset,
-  &.backup-restore {
+  &.reset {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
 }
 
-.setting-description {
-  line-height: 1.5;
+@media (max-width: 620px) {
+  .settings-section {
+    padding-block: 24px;
+  }
+
+  .settings-section-title {
+    margin-bottom: 18px;
+  }
+
+  .setting-wrapper.setting-group {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .setting-option {
+    justify-self: start;
+
+    &.select select {
+      max-width: min(260px, calc(100vw - 36px));
+    }
+  }
 }
 
 .switch-root {
@@ -230,8 +339,8 @@
   outline: none;
   cursor: pointer;
 
-  &:focus-visible {
-    outline: 4px solid var(--switch-focus-outline-color);
+  &.focus-visible {
+    outline: 2px solid var(--switch-focus-outline-color);
   }
 
   &[aria-checked="true"] {
@@ -244,10 +353,32 @@
   height: 22px;
   background-color: var(--switch-before-background-color);
   border-radius: 50%;
-  transition: 0.2s;
+  transition: transform 0.2s ease;
   transform: translateX(3px);
 
   [aria-checked="true"] & {
     transform: translateX(25px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch-thumb {
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (max-width: 620px) {
+  .setting-wrapper.setting-group {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .setting-option {
+    &.select,
+    &.toggle,
+    &.reset {
+      margin-left: 0;
+    }
   }
 }

@@ -1,22 +1,30 @@
 .SettingsModal {
-  .header {
-    h1 {
-      font-size: 16px;
-    }
+  .modal-header {
+    align-items: center;
+    border-bottom: 1px solid var(--setting-wrapper-border-color);
+    display: flex;
+    padding-right: 20px;
+  }
 
-    .btn.dismissBtn {
-      width: 24px;
-      height: 24px;
+  h1 {
+    flex: 1;
+    font-size: 20px;
+    padding: 20px 0 20px 20px;
+  }
 
-      div {
-        width: 24px;
-        height: 24px;
+  .scroll-box {
+    padding: 20px 20px 0;
+  }
 
-        &:before,
-        &:after {
-          height: 16px;
-        }
-      }
-    }
+  .modal-body > .modal-header > .dismiss.dismissBtn {
+    position: static;
+  }
+
+  .settings-section:first-child {
+    padding-top: 0;
+  }
+
+  .settings-section-title {
+    font-size: 16px;
   }
 }

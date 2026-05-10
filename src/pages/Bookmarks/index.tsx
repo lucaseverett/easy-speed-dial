@@ -4,11 +4,14 @@ import { useEffect, useRef } from "react";
 import "./styles.css";
 
 import { AboutModal } from "#components/AboutModal";
-import { AlertBanner } from "#components/AlertBanner";
 import { BookmarkModal } from "#components/BookmarkModal";
+import { ConfirmResetDialog } from "#components/ConfirmResetDialog";
 import { ContextMenu } from "#components/ContextMenu";
 import { Grid } from "#components/Grid";
+import { OnboardingModal } from "#components/OnboardingModal";
+import { PopularSitesModal } from "#components/PopularSitesModal";
 import { SettingsModal } from "#components/SettingsModal";
+import { UpgradeToast } from "#components/UpgradeToast";
 import { WhatsNewModal } from "#components/WhatsNewModal";
 import { bookmarks } from "#stores/useBookmarks";
 import { contextMenu } from "#stores/useContextMenu";
@@ -18,13 +21,15 @@ import { focusSafely } from "#utils/focus";
 
 export const Bookmarks = observer(function Bookmarks() {
   const focusRef = useRef<HTMLDivElement>(null);
+  const isConfirmResetOpen = modals.isOpen?.startsWith("confirm-reset");
 
   useEffect(() => {
-    // Close the context menu and modal when switching folders.
-    contextMenu.focusAfterClosed = null;
-    modals.focusAfterClosed = null;
-    contextMenu.closeContextMenu();
-    modals.closeModal();
+    // Clear menu/modal focus targets when switching folders.
+    contextMenu.clearTarget();
+    if (modals.isOpen !== "onboarding") {
+      modals.focusAfterClosed = null;
+      modals.closeModal();
+    }
     // Scroll to the top of the bookmarks list.
     if (focusRef.current) {
       focusRef.current.scrollTop = 0;
@@ -33,6 +38,12 @@ export const Bookmarks = observer(function Bookmarks() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookmarks.currentFolder]);
+
+  useEffect(() => {
+    if (settings.firstRun) {
+      modals.openModal({ modal: "onboarding" });
+    }
+  }, []);
 
   useEffect(() => {
     // Restore focus to the appropriate element when the modal closes.
@@ -48,14 +59,24 @@ export const Bookmarks = observer(function Bookmarks() {
 
   return (
     <>
+      {modals.isOpen === "onboarding" && <OnboardingModal />}
+      {modals.isOpen === "popular-sites" && <PopularSitesModal />}
       {modals.isOpen === "whats-new" && <WhatsNewModal />}
       {modals.isOpen === "about" && <AboutModal />}
-      {modals.isOpen === "settings-panel" && <SettingsModal />}
+      {[
+        "settings-panel",
+        "confirm-reset",
+        "confirm-reset-dial-customizations",
+      ].includes(modals.isOpen || "") && (
+        <SettingsModal active={!isConfirmResetOpen} />
+      )}
+      {isConfirmResetOpen && <ConfirmResetDialog />}
       {modals.isOpen &&
         ["new-bookmark", "new-folder", "edit-bookmark", "edit-folder"].includes(
           modals.isOpen,
         ) && <BookmarkModal />}
       {contextMenu.isOpen && <ContextMenu />}
+      <UpgradeToast />
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
         className="Bookmarks"
@@ -66,7 +87,6 @@ export const Bookmarks = observer(function Bookmarks() {
         inert={!!modals.isOpen}
         ref={focusRef}
       >
-        {settings.showAlertBanner && <AlertBanner />}
         <Grid />
       </div>
     </>

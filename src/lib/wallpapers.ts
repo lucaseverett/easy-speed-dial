@@ -152,3 +152,18 @@ export const wallpapers = [
     category: "Abstract",
   },
 ];
+
+export const themeWallpaperPairs = [
+  {
+    id: "Dunes",
+    title: "Dunes",
+    light: "DesertDay",
+    dark: "DesertNight",
+  },
+  {
+    id: "Horizon",
+    title: "Horizon",
+    light: "HorizonLight",
+    dark: "HorizonDark",
+  },
+];

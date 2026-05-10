@@ -9,10 +9,10 @@ export const contextMenu = makeAutoObservable({
   focusAfterClosed: null as HTMLElement | null,
   isOpen: false,
   openContextMenu(e: MouseEvent) {
-    if (e.shiftKey) return; // Shift + right click opens browser context menu.
+    if (e.shiftKey) return;
     e.preventDefault();
     e.stopPropagation();
-    // Derive coordinates. If invoked via keyboard (Context Menu key), pageX/Y may be 0.
+
     if (e.pageX === 0 && e.pageY === 0) {
       const anchor =
         (e.target as HTMLElement | null) ??
@@ -27,6 +27,7 @@ export const contextMenu = makeAutoObservable({
     } else {
       contextMenu.coords = { x: e.pageX, y: e.pageY };
     }
+
     contextMenu.focusAfterClosed = e.currentTarget as HTMLElement;
     contextMenu.isOpen = true;
   },
@@ -36,5 +37,9 @@ export const contextMenu = makeAutoObservable({
     if (focusAfterClosed) {
       focusSafely(contextMenu.focusAfterClosed);
     }
+  },
+  clearTarget() {
+    contextMenu.isOpen = false;
+    contextMenu.focusAfterClosed = null;
   },
 });

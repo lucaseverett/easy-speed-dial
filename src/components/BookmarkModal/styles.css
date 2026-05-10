@@ -21,7 +21,8 @@
       height: 32px;
     }
 
-    .folder-select {
+    .folder-select,
+    .thumbnail-size-select {
       position: relative;
 
       .input {
@@ -48,6 +49,7 @@
         &.connected {
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
+          border-right: 0;
         }
       }
 
@@ -57,7 +59,6 @@
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
         font-size: 14px;
-        margin-left: 1px;
       }
 
       > :focus {
@@ -67,13 +68,10 @@
 
     .buttons {
       display: flex;
+      justify-content: flex-end;
       margin-top: 20px;
       gap: 10px;
       width: 100%;
-
-      .btn {
-        flex-grow: 1;
-      }
     }
   }
 }

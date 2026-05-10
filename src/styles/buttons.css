@@ -1,25 +1,29 @@
 :root {
-  --btn-background-color: #cfcfcf;
-  --btn-text-color: #000;
-  --btn-hover-background-color: #bcbcbc;
-  --btn-hover-text-color: #000;
-  --btn-focus-color: #42a5f5;
-  --btn-selected-background-color: #bcbcbc;
-  --dismiss-btn-hover-background-color: #c62828;
-  --dismiss-btn-hover-fill-color: #fff;
-  --submit-btn-background-color: #1565c0;
-  --submit-btn-hover-background-color: #0d47a1;
+  --btn-background-color: var(--grey-300);
+  --btn-text-color: black;
+  --btn-hover-background-color: var(--grey-400);
+  --btn-hover-text-color: black;
+  --btn-focus-color: var(--blue-400);
+  --btn-selected-background-color: var(--grey-400);
+  --dismiss-btn-hover-background-color: var(--red-700);
+  --dismiss-btn-hover-fill-color: white;
+  --submit-btn-background-color: var(--blue-700);
+  --submit-btn-hover-background-color: var(--blue-600);
+  --danger-btn-background-color: var(--red-700);
+  --danger-btn-hover-background-color: var(--red-800);
 
   &.color-scheme-dark,
   .color-scheme-dark {
-    --btn-background-color: #616161;
-    --btn-text-color: #f5f5f5;
-    --btn-hover-background-color: #373737;
-    --btn-hover-text-color: #f5f5f5;
-    --btn-focus-color: #64b5f6;
-    --btn-selected-background-color: #424242;
-    --dismiss-btn-hover-background-color: #d32f2f;
-    --dismiss-btn-hover-fill-color: #fff;
+    --btn-background-color: var(--grey-700);
+    --btn-text-color: var(--grey-100);
+    --btn-hover-background-color: var(--grey-600);
+    --btn-hover-text-color: var(--grey-100);
+    --btn-focus-color: var(--blue-400);
+    --btn-selected-background-color: var(--grey-700);
+    --dismiss-btn-hover-background-color: var(--red-600);
+    --dismiss-btn-hover-fill-color: white;
+    --danger-btn-background-color: var(--red-700);
+    --danger-btn-hover-background-color: var(--red-600);
   }
 }
 
@@ -40,8 +44,8 @@
     filter: brightness(0.9);
   }
 
-  &:focus-visible {
-    outline: 4px solid var(--btn-focus-color);
+  &.focus-visible {
+    outline: 2px solid var(--btn-focus-color);
     outline-offset: 0; /* shows border with outline in Safari desktop */
   }
 
@@ -57,11 +61,31 @@
 
   &.submitBtn {
     background-color: var(--submit-btn-background-color);
-    color: #fff;
+    color: white;
+
+    &.focus-visible {
+      outline-color: var(--submit-btn-background-color);
+      outline-offset: 2px;
+    }
 
     &:hover {
       background-color: var(--submit-btn-hover-background-color);
-      color: #fff;
+      color: white;
+    }
+  }
+
+  &.dangerBtn {
+    background-color: var(--danger-btn-background-color);
+    color: white;
+
+    &.focus-visible {
+      outline-color: var(--danger-btn-background-color);
+      outline-offset: 2px;
+    }
+
+    &:hover {
+      background-color: var(--danger-btn-hover-background-color);
+      color: white;
     }
   }
 

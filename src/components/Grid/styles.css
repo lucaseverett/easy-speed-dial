@@ -14,12 +14,12 @@
   display: flex;
 }
 
-.gear-button:focus-visible {
-  outline: 3px solid #1976d2;
+.gear-button.focus-visible {
+  outline: 3px solid var(--blue-600);
   outline-offset: 5px;
 
   .color-scheme-dark & {
-    outline-color: #90caf9;
+    outline-color: var(--blue-300);
   }
 }
 
@@ -29,14 +29,27 @@
 }
 
 .Breadcrumbs {
+  --breadcrumbs-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  height: 80px;
+  height: var(--breadcrumbs-height);
   cursor: default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  .grid-spacing-compact & {
+    --breadcrumbs-height: 60px;
+  }
+
+  .grid-spacing-default & {
+    --breadcrumbs-height: 70px;
+  }
+
+  .grid-spacing-spacious & {
+    --breadcrumbs-height: 80px;
+  }
 
   span {
     text-decoration: underline;
@@ -63,28 +76,28 @@
     }
 
     .color-scheme-light & {
-      color: #424242;
-      fill: #424242;
-      background-color: rgba(255, 255, 255, 0.75);
+      color: var(--grey-700);
+      fill: var(--grey-700);
+      background-color: color-mix(in oklch, white 75%, transparent);
     }
 
     .color-scheme-dark & {
-      color: #e0e0e0;
-      fill: #e0e0e0;
-      background-color: rgba(55, 55, 55, 0.75);
+      color: var(--grey-200);
+      fill: var(--grey-200);
+      background-color: color-mix(in oklch, var(--grey-800) 75%, transparent);
     }
 
-    &:focus-visible {
-      background-color: #1976d2;
-      color: #fff;
-      fill: #fff;
+    &.focus-visible {
+      background-color: var(--blue-600);
+      color: white;
+      fill: white;
       outline: none;
       text-decoration: none;
 
       .color-scheme-dark & {
-        background-color: #90caf9;
-        color: #000;
-        fill: #000;
+        background-color: var(--blue-300);
+        color: black;
+        fill: black;
       }
     }
   }
@@ -96,6 +109,8 @@
   --grid-gap-value: 1.75; /* 28px */
   --grid-gap: calc(var(--grid-gap-value) * 1em);
   --grid-padding: 50px;
+  --grid-padding-top: 80px;
+  --grid-padding-bottom: 80px;
   --max-small-width: calc(
     var(--dial-width) * 0.92
   ); /* for <Small> padding when scaling <Domain> */
@@ -109,10 +124,11 @@
   column-gap: var(--grid-gap);
   justify-content: center;
   margin-inline: auto;
-  padding: 80px var(--grid-padding);
+  padding: var(--grid-padding-top) var(--grid-padding)
+    var(--grid-padding-bottom);
 
   &.has-breadcrumbs {
-    padding-block: 0 80px;
+    padding-block: 0 var(--grid-padding-bottom);
   }
 
   &.max-width:not(.unlimited-columns &),
@@ -136,6 +152,27 @@
 
   .square & {
     --dial-width-value: 10.25; /* 164px */
+  }
+
+  .grid-spacing-compact & {
+    --grid-gap-value: 0.75; /* 12px */
+    --grid-padding: 24px;
+    --grid-padding-top: 60px;
+    --grid-padding-bottom: 60px;
+  }
+
+  .grid-spacing-default & {
+    --grid-gap-value: 1.25; /* 20px */
+    --grid-padding: 37px;
+    --grid-padding-top: 70px;
+    --grid-padding-bottom: 70px;
+  }
+
+  .grid-spacing-spacious & {
+    --grid-gap-value: 1.75; /* 28px */
+    --grid-padding: 50px;
+    --grid-padding-top: 80px;
+    --grid-padding-bottom: 80px;
   }
 
   .tiny & {
@@ -174,22 +211,50 @@
   }
 }
 
+.GridSeparator {
+  --grid-separator-color: var(--grey-400);
+  --grid-separator-transparent-color: color-mix(
+    in oklch,
+    var(--grid-separator-color) 75%,
+    transparent
+  );
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: calc(
+    var(--grid-max-cols) * var(--dial-width) + (var(--grid-max-cols) - 1) *
+      var(--grid-gap)
+  );
+  height: 2px;
+  margin: calc(var(--grid-gap) * -0.15) auto;
+  border: 0;
+  background-color: var(--grid-separator-color);
+  pointer-events: none;
+
+  .color-scheme-dark & {
+    --grid-separator-color: var(--grey-700);
+  }
+
+  .transparent-dials & {
+    background-color: var(--grid-separator-transparent-color);
+  }
+}
+
 /* Drag and drop styles */
 .folder-drop-target {
-  outline: 4px dashed #42a5f5 !important;
+  outline: 4px dashed var(--blue-400) !important;
   border-radius: 6px;
 
   .color-scheme-dark & {
-    outline-color: #90caf9 !important;
+    outline-color: var(--blue-300) !important;
   }
 }
 
 .breadcrumb-drop-target {
-  outline: 4px dashed #42a5f5 !important;
+  outline: 4px dashed var(--blue-400) !important;
   border-radius: 18px;
   outline-offset: -12px;
 
   .color-scheme-dark & {
-    outline-color: #90caf9 !important;
+    outline-color: var(--blue-300) !important;
   }
 }

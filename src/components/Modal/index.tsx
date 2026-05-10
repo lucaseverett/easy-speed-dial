@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 import { colorPicker } from "#stores/useColorPicker";
 import { modals } from "#stores/useModals";
+import { focusSafely } from "#utils/focus";
 
 import "./styles.css";
 
@@ -11,71 +12,93 @@ interface ModalProps {
   children: React.ReactNode;
   title: string;
   initialFocus?: string;
+  initialFocusKey?: React.DependencyList[number];
   rightAligned?: boolean;
   height?: string;
   width?: string;
   className?: string;
+  showDismissButton?: boolean;
+  hideTitle?: boolean;
+  dismissOnPointerDownOutside?: boolean;
+  descriptionId?: string;
+  active?: boolean;
+}
+
+const focusableElements = [
+  "a[href]",
+  "area[href]",
+  'input:not([disabled]):not([type="hidden"])',
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "button:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+];
+
+function getFocusableItems(modal: HTMLElement) {
+  return [
+    ...modal.querySelectorAll<HTMLElement>(focusableElements.join(",")),
+  ].reduce((acc: HTMLElement[], element) => {
+    if (getComputedStyle(element).display !== "none") {
+      acc.push(element);
+    }
+    return acc;
+  }, []);
 }
 
 export function Modal(props: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const focusItems = useRef<HTMLElement[]>([]);
+  const titleId = useId();
+  const active = props.active ?? true;
 
   useEffect(() => {
-    const focusableElements = [
-      "a[href]",
-      "area[href]",
-      'input:not([disabled]):not([type="hidden"])',
-      "select:not([disabled])",
-      "textarea:not([disabled])",
-      "button:not([disabled])",
-      '[tabindex]:not([tabindex="-1"])',
-    ];
+    if (!active) return;
 
-    // Get array of all focusable elements.
-    const focusableItems = [
-      ...modalRef.current!.querySelectorAll(focusableElements.join(",")),
-    ].reduce((acc: HTMLElement[], element) => {
-      if (getComputedStyle(element as HTMLElement).display !== "none") {
-        acc.push(element as HTMLElement);
-      }
-      return acc;
-    }, []);
-    focusItems.current = focusableItems;
+    if (modals.focusAfterOpened) {
+      const didFocusAfterOpened = focusSafely(modals.focusAfterOpened);
+      modals.focusAfterOpened = null;
+      if (didFocusAfterOpened) return;
+    }
+
+    const focusableItems = getFocusableItems(modalRef.current!);
 
     if (props.initialFocus) {
-      // Focus the provided initialFocus.
       const focusElement = modalRef.current!.querySelector(
         props.initialFocus,
       ) as HTMLElement;
-      focusElement?.focus();
-    } else {
-      // Focus first focusable element.
-      focusItems.current[0]?.focus();
+      if (focusElement && !focusElement.matches(":disabled")) {
+        focusElement.focus();
+        return;
+      }
     }
-  }, [props.initialFocus]);
 
-  function handleTab(e: React.KeyboardEvent) {
+    focusableItems[0]?.focus();
+  }, [active, props.initialFocus, props.initialFocusKey]);
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (!active) return;
+
     if (e.key === "Escape") {
       colorPicker.closeColorPicker();
       modals.closeModal();
-    } else if (
-      e.shiftKey &&
-      e.key === "Tab" &&
-      document.activeElement === focusItems.current[0]
-    ) {
+      return;
+    }
+
+    if (e.key !== "Tab") return;
+
+    const focusableItems = getFocusableItems(modalRef.current!);
+    const firstItem = focusableItems[0];
+    const lastItem = focusableItems[focusableItems.length - 1];
+
+    if (!firstItem || !lastItem) return;
+
+    if (e.shiftKey && document.activeElement === firstItem) {
       e.preventDefault();
       e.stopPropagation();
-      focusItems.current[focusItems.current.length - 1].focus();
-    } else if (
-      !e.shiftKey &&
-      e.key === "Tab" &&
-      document.activeElement ===
-        focusItems.current[focusItems.current.length - 1]
-    ) {
+      lastItem.focus();
+    } else if (!e.shiftKey && document.activeElement === lastItem) {
       e.preventDefault();
       e.stopPropagation();
-      focusItems.current[0].focus();
+      firstItem.focus();
     }
   }
 
@@ -85,13 +108,16 @@ export function Modal(props: ModalProps) {
       onMouseDown={(e) => {
         if (e.currentTarget === e.target) {
           e.preventDefault();
-          modals.closeModal();
+          if (props.dismissOnPointerDownOutside !== false) {
+            modals.closeModal();
+          }
         }
         colorPicker.closeColorPicker();
       }}
       className={clsx(
         "Modal",
         props.rightAligned && "right-aligned",
+        !active && "inactive",
         props.className,
       )}
       style={
@@ -101,28 +127,44 @@ export function Modal(props: ModalProps) {
         } as React.CSSProperties
       }
     >
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <div
         className="modal-wrapper"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
+        role={active ? "dialog" : undefined}
+        aria-modal={active ? "true" : undefined}
+        aria-labelledby={active ? titleId : undefined}
+        aria-describedby={active ? props.descriptionId : undefined}
+        inert={!active}
         ref={modalRef}
-        onKeyDown={handleTab}
+        onKeyDown={handleKeyDown}
       >
-        <div className="modal-body" tabIndex={-1}>
-          <div className="header">
-            <h1 id="modal-title" tabIndex={-1}>
+        <div
+          className={clsx(
+            "modal-body",
+            props.showDismissButton === false && "without-dismiss",
+          )}
+          tabIndex={-1}
+        >
+          <div className="modal-header">
+            <h1
+              id={titleId}
+              className={clsx(
+                "modal-title",
+                props.hideTitle && "visually-hidden",
+              )}
+              tabIndex={-1}
+            >
               {props.title}
             </h1>
-            <button
-              className="btn dismissBtn dismiss"
-              aria-label="Close"
-              onClick={() => modals.closeModal()}
-              id="dismiss-btn"
-            >
-              <div />
-            </button>
+            {props.showDismissButton !== false && (
+              <button
+                className="btn dismissBtn dismiss"
+                aria-label="Close"
+                onClick={() => modals.closeModal()}
+                id="dismiss-btn"
+              >
+                <div />
+              </button>
+            )}
           </div>
           <div className="scroll-box scrollbars">{props.children}</div>
         </div>

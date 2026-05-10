@@ -9,12 +9,18 @@
   }
 }
 
+.Options {
+  min-height: 100vh;
+  background: var(--options-background-color);
+  color: var(--options-text-color);
+}
+
 .options-wrapper {
-  height: 100%;
+  min-height: 100vh;
 }
 
 .options-content {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-flow: column;
   background-color: var(--options-background-color);
@@ -27,54 +33,62 @@
 }
 
 h1 {
-  font-size: 20px;
+  font-size: 28px;
+  line-height: 1.15;
   margin: 0;
-  padding: 10px 20px;
+  padding: 20px 24px 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--header-background-color);
   outline: none;
 }
 
+.settings-content {
+  flex: 1;
+  width: 100%;
+  max-width: 862px;
+  margin: 0 auto;
+  padding: 0 24px 28px;
+}
+
 @media (min-width: 747px) {
-  .Options {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .options-wrapper {
-    border: 5px solid var(--options-outer-border-color);
-    outline: 1px solid var(--options-inner-border-color);
-    box-shadow: var(--options-box-shadow);
-    max-height: calc(100vh - 100px);
-    border-radius: 10px;
-  }
-
   .options-content {
-    height: initial;
-    overflow: hidden;
-    border: 1px solid var(--options-inner-border-color);
-    height: 100%;
-    border-radius: 5px;
+    overflow: visible;
+  }
+
+  h1 {
+    width: 100%;
+    max-width: 862px;
+    margin: 0 auto;
+    padding: 32px 24px 16px;
+    font-size: 34px;
   }
 
   .setting-wrapper {
-    max-width: 680px;
+    container-type: inline-size;
     font-size: 16px;
-    padding-block: 30px;
   }
 
   .settings-content {
-    overflow-y: auto;
+    overflow-y: visible;
     overflow-x: hidden;
-    position: relative;
   }
 
   .setting-option.wallpapers {
-    flex-wrap: wrap;
-    overflow-y: auto;
-    overflow-x: hidden;
+    display: flex;
+    max-height: none;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  h1 {
+    padding-inline: 18px;
+    font-size: 26px;
+  }
+
+  .settings-content {
+    padding-inline: 18px;
+    padding-bottom: 24px;
   }
 }

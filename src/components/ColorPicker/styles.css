@@ -1,6 +1,6 @@
 .ColorPicker {
-  position: absolute;
-  z-index: 1;
+  position: fixed;
+  z-index: 2;
   top: var(--picker-top);
   left: var(--picker-left);
   box-shadow:
@@ -10,14 +10,23 @@
   background-color: var(--picker-background-color);
   border: 1px solid var(--setting-wrapper-border-color);
 
+  .sampling-screen-color & {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   .color-scheme-light & {
-    --picker-background-color: #e0e0e0;
-    --picker-border-color: #9e9e9e;
+    --picker-background-color: var(--grey-50);
+    --picker-border-color: var(--grey-400);
+    --picker-control-hover-background-color: var(--grey-200);
+    --picker-control-text-color: var(--input-text-color);
   }
 
   .color-scheme-dark & {
-    --picker-background-color: #424242;
-    --picker-border-color: #212121;
+    --picker-background-color: var(--grey-800);
+    --picker-border-color: var(--grey-900);
+    --picker-control-hover-background-color: var(--grey-700);
+    --picker-control-text-color: var(--input-text-color);
   }
 
   .heading {
@@ -31,13 +40,53 @@
     width: 220px;
   }
 
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 10px;
+    width: 200px;
+  }
+
+  .sample-button {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 32px;
+    height: 31px;
+    padding: 0;
+    border: 1px solid var(--input-border-color);
+    border-radius: 4px;
+    background-color: var(--input-background-color);
+    color: var(--picker-control-text-color);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--picker-control-hover-background-color);
+    }
+
+    &.focus-visible {
+      border-color: var(--input-focus-outline-color);
+      box-shadow: inset 0 0 0 1px var(--input-focus-outline-color);
+      outline: none;
+    }
+  }
+
+  .eyedropper-icon {
+    width: 18px;
+    height: 18px;
+  }
+
   input {
+    flex: 1 1 auto;
+    box-sizing: border-box;
     text-align: center;
     padding: 6px;
-    margin: 10px;
+    margin: 0;
     line-height: 0;
     border-radius: 6px;
-    width: 200px;
+    min-width: 0;
+    width: 0;
   }
 
   .react-colorful__saturation {

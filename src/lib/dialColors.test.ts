@@ -4,10 +4,10 @@ import { dialColors } from "./dialColors";
 
 describe("getColorByDomain", () => {
   test("should return the color for a domain", () => {
-    expect(dialColors("x.com")).toBe("#000");
+    expect(dialColors("x.com")).toBe("#616161");
   });
   test("should not return the color for a partial match", () => {
-    expect(dialColors("somethingx.com")).not.toBe("#000");
+    expect(dialColors("somethingx.com")).not.toBe("#616161");
   });
   test("should return the color for a subdomain", () => {
     expect(dialColors("www.google.com")).toBe("#689f38");

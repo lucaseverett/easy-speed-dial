@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import "focus-visible";
+
 import { Bookmarks } from "#pages/Bookmarks";
 import { bookmarks } from "#stores/useBookmarks";
 import { settings } from "#stores/useSettings";

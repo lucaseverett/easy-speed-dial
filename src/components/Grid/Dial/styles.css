@@ -1,5 +1,14 @@
 :root {
   --border-radius: 0.375em;
+  --dial-rim-color: rgba(255, 255, 255, 0.2);
+  --dial-rim-top: inset 0 1px 0 var(--dial-rim-color);
+  --dial-rim-sides:
+    inset 1px 0 0 var(--dial-rim-color), inset -1px 0 0 var(--dial-rim-color);
+  --dial-rim-bottom: inset 0 -1px 0 var(--dial-rim-color);
+  --dial-inner-highlight:
+    var(--dial-rim-top), var(--dial-rim-sides), var(--dial-rim-bottom);
+  --dial-inner-highlight-no-bottom: var(--dial-rim-top), var(--dial-rim-sides);
+  --dial-inner-highlight-no-top: var(--dial-rim-sides), var(--dial-rim-bottom);
 }
 
 .Link {
@@ -11,12 +20,12 @@
     box-shadow: var(--dial-box-shadow);
     border-radius: var(--border-radius);
 
-    &:focus-visible:is(a) {
-      outline: 5px solid #1976d2;
+    &.focus-visible:is(a) {
+      outline: 5px solid var(--blue-600);
       outline-offset: 1px;
 
       .color-scheme-dark & {
-        outline-color: #90caf9;
+        outline-color: var(--blue-300);
       }
     }
   }
@@ -28,36 +37,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: white;
   font-weight: 500;
   overflow: hidden;
   pointer-events: none;
 
+  .show-dial-borders & {
+    box-shadow: var(--dial-inner-highlight);
+  }
+
   .folder {
     width: 5em; /* 80px */
     height: 5em; /* 80px */
-    fill: #fff;
+    fill: currentColor;
   }
 
   .normal-title & {
     box-shadow: var(--dial-box-shadow);
 
-    :focus-visible:is(a) & {
-      outline: 5px solid #1976d2;
+    .show-dial-borders & {
+      box-shadow: var(--dial-box-shadow), var(--dial-inner-highlight);
+    }
+
+    .focus-visible:is(a) & {
+      outline: 5px solid var(--blue-600);
       outline-offset: 1px;
 
       .color-scheme-dark & {
-        outline-color: #90caf9;
+        outline-color: var(--blue-300);
       }
     }
   }
 
   .attach-title.show-title & {
     border-radius: var(--border-radius) var(--border-radius) 0 0;
-  }
 
-  .square & {
-    height: var(--dial-height-attached-title);
+    .show-dial-borders & {
+      box-shadow: var(--dial-inner-highlight-no-bottom);
+    }
   }
 }
 
@@ -118,25 +135,29 @@
 
     .color-scheme-light & {
       background-color: rgba(255, 255, 255, 0.75);
-      color: #373737;
+      color: var(--grey-800);
     }
 
     .color-scheme-dark & {
       background-color: rgba(55, 55, 55, 0.75);
-      color: #eeeeee;
+      color: var(--grey-200);
     }
 
     .attach-title & {
       border-radius: 0 0 var(--border-radius) var(--border-radius);
+
+      .show-dial-borders & {
+        box-shadow: var(--dial-inner-highlight-no-top);
+      }
     }
 
-    :focus-visible:is(a) & {
-      background-color: #1976d2;
-      color: #fff;
+    .focus-visible:is(a) & {
+      background-color: var(--blue-600);
+      color: white;
 
       .color-scheme-dark & {
-        background-color: #90caf9;
-        color: #000;
+        background-color: var(--blue-300);
+        color: black;
       }
     }
   }

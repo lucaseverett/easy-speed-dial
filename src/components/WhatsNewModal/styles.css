@@ -2,16 +2,34 @@
   font-size: 16px;
   padding: 20px;
 
+  .WhatsNew-link {
+    display: inline-block;
+    margin-top: 20px;
+  }
+
+  .WhatsNew-backLink {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .WhatsNew-backLink + div {
+    border: none;
+
+    h2 {
+      margin-top: 0;
+    }
+  }
+
   h2 {
     margin: 20px 0 0;
     font-size: 16px;
 
     .color-scheme-light & {
-      color: #1565c0;
+      color: var(--blue-700);
     }
 
     .color-scheme-dark & {
-      color: #64b5f6;
+      color: var(--blue-400);
     }
   }
 
@@ -35,11 +53,11 @@
 
   div {
     .color-scheme-light & {
-      border-top: 1px solid #bdbdbd;
+      border-top: 1px solid var(--grey-400);
     }
 
     .color-scheme-dark & {
-      border-top: 1px solid #373737;
+      border-top: 1px solid var(--grey-800);
     }
 
     &:first-child {

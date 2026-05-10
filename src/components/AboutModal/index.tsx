@@ -8,7 +8,8 @@ export function AboutModal() {
     <Modal
       {...{
         title: "About",
-        initialFocus: "#modal-title",
+        hideTitle: true,
+        width: "360px",
       }}
     >
       <div className="AboutModal">

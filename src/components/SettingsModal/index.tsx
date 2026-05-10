@@ -3,15 +3,20 @@ import { SettingsContent } from "#components/SettingsContent";
 
 import "./styles.css";
 
-export function SettingsModal() {
+interface SettingsModalProps {
+  active?: boolean;
+}
+
+export function SettingsModal({ active = true }: SettingsModalProps) {
   return (
     <Modal
       {...{
         title: "Settings",
-        width: "535px",
+        width: "525px",
         rightAligned: true,
-        initialFocus: "#modal-title",
+        initialFocus: ".modal-title",
         className: "SettingsModal",
+        active,
       }}
     >
       <SettingsContent />
