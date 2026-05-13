@@ -35,6 +35,32 @@ export function WhatsNewModal() {
           {!showPreviousUpdates ? (
             <>
               <div>
+                <h2>Version 2.14.1</h2>
+                <h3>Changes</h3>
+                <ul>
+                  <li>
+                    Reduced bottom padding when using Compact grid spacing.
+                  </li>
+                </ul>
+              </div>
+              <a
+                href="#previous-updates"
+                className="textLink WhatsNew-link"
+                onClick={(e) => handleViewChange(e, true)}
+              >
+                View previous updates
+              </a>
+            </>
+          ) : (
+            <>
+              <a
+                href="#latest"
+                className="textLink WhatsNew-backLink"
+                onClick={(e) => handleViewChange(e, false)}
+              >
+                Back to latest
+              </a>
+              <div>
                 <h2>Version 2.14.0</h2>
                 <h3>New features</h3>
                 <ul>
@@ -113,23 +139,6 @@ export function WhatsNewModal() {
                   <li>Minor bug fixes and accessibility enhancements.</li>
                 </ul>
               </div>
-              <a
-                href="#previous-updates"
-                className="textLink WhatsNew-link"
-                onClick={(e) => handleViewChange(e, true)}
-              >
-                View previous updates
-              </a>
-            </>
-          ) : (
-            <>
-              <a
-                href="#latest"
-                className="textLink WhatsNew-backLink"
-                onClick={(e) => handleViewChange(e, false)}
-              >
-                Back to latest
-              </a>
               <div>
                 <h2>Version 2.13.1</h2>
                 <h3>Resolved Issues</h3>

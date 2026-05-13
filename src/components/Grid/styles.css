@@ -110,7 +110,7 @@
   --grid-gap: calc(var(--grid-gap-value) * 1em);
   --grid-padding: 50px;
   --grid-padding-top: 80px;
-  --grid-padding-bottom: 80px;
+  --grid-padding-bottom: var(--grid-padding);
   --max-small-width: calc(
     var(--dial-width) * 0.92
   ); /* for <Small> padding when scaling <Domain> */
@@ -158,21 +158,21 @@
     --grid-gap-value: 0.75; /* 12px */
     --grid-padding: 24px;
     --grid-padding-top: 60px;
-    --grid-padding-bottom: 60px;
+    --grid-padding-bottom: var(--grid-padding);
   }
 
   .grid-spacing-default & {
     --grid-gap-value: 1.25; /* 20px */
     --grid-padding: 37px;
     --grid-padding-top: 70px;
-    --grid-padding-bottom: 70px;
+    --grid-padding-bottom: var(--grid-padding);
   }
 
   .grid-spacing-spacious & {
     --grid-gap-value: 1.75; /* 28px */
     --grid-padding: 50px;
     --grid-padding-top: 80px;
-    --grid-padding-bottom: 80px;
+    --grid-padding-bottom: var(--grid-padding);
   }
 
   .tiny & {
