@@ -1,0 +1,162 @@
+.OnboardingModalWrapper .modal-backdrop {
+  background-color: transparent;
+}
+
+.OnboardingModalWrapper,
+.OnboardingModalLayout {
+  .modal-body {
+    /* Reserve space at the bottom for the footer so scrolling content
+       never overlaps the buttons. */
+    padding-bottom: 0;
+  }
+
+  .scroll-box {
+    /* Make the OnboardingModal layout drive scrolling instead of the modal's
+       default scroll-box, so the footer can be sticky inside it. */
+    overflow: visible;
+  }
+}
+
+.OnboardingModal {
+  display: flex;
+  flex-direction: column;
+}
+
+.onboarding-step-description {
+  margin: 6px 0 0;
+  padding-inline: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--setting-wrapper-border-color);
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: 0.78;
+}
+
+.onboarding-step-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.onboarding-intro {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.onboarding-logo {
+  display: block;
+}
+
+.onboarding-intro p {
+  justify-self: stretch;
+  margin: 0;
+  opacity: 0.85;
+}
+
+.onboarding-product-name {
+  justify-self: center;
+  text-align: center;
+  padding-bottom: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  opacity: 1;
+}
+
+.onboarding-popular-sites {
+  margin: -4px;
+}
+
+.onboarding-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--modal-background-color);
+  border-top: 1px solid var(--setting-wrapper-border-color);
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  gap: 12px;
+}
+
+.onboarding-footer-with-progress {
+  justify-content: space-between;
+}
+
+.onboarding-footer-actions {
+  justify-content: flex-end;
+}
+
+.onboarding-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.onboarding-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--grey-300);
+  display: inline-block;
+}
+
+.color-scheme-dark .onboarding-progress-dot {
+  background-color: var(--grey-700);
+}
+
+.onboarding-progress-dot.active {
+  background-color: var(--blue-700);
+  width: 22px;
+  border-radius: 4px;
+}
+
+.color-scheme-dark .onboarding-progress-dot.active {
+  background-color: var(--blue-400);
+}
+
+.onboarding-progress-dot.completed {
+  background-color: var(--blue-700);
+  opacity: 0.55;
+}
+
+.color-scheme-dark .onboarding-progress-dot.completed {
+  background-color: var(--blue-400);
+  opacity: 0.55;
+}
+
+.onboarding-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 540px) {
+  .onboarding-step-description {
+    padding-inline: 16px;
+  }
+
+  .onboarding-step-body {
+    padding: 14px 16px 16px;
+    gap: 18px;
+  }
+
+  .onboarding-footer {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .onboarding-footer-with-progress {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .onboarding-buttons {
+    justify-content: flex-end;
+  }
+}

@@ -28,7 +28,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--modal-overlay-background-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,8 +38,15 @@
     pointer-events: none;
   }
 
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: var(--modal-overlay-background-color);
+  }
+
   .modal-wrapper {
     color: var(--modal-text-color);
+    position: relative;
     width: min(var(--modal-width, 400px), 100%);
     max-height: min(
       var(--modal-height, calc(100svh - 48px)),
@@ -109,19 +115,6 @@
     }
   }
 
-  .scroll-focus.focus-visible {
-    .color-scheme-light & {
-      --btn-focus-color: var(--blue-700);
-    }
-
-    .color-scheme-dark & {
-      --btn-focus-color: var(--blue-400);
-    }
-
-    outline: 4px solid var(--btn-focus-color);
-    outline-offset: -4px;
-  }
-
   .modal-body .dismiss.dismissBtn {
     width: 26px;
     height: 26px;
@@ -151,8 +144,11 @@
   &.right-aligned {
     justify-content: flex-end;
     align-items: stretch;
-    background-color: initial;
     padding: 0;
+
+    .modal-backdrop {
+      background-color: transparent;
+    }
 
     .modal-wrapper {
       width: var(--modal-width);

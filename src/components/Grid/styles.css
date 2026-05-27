@@ -4,14 +4,18 @@
 
 .gear-button {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 18px;
+  right: 18px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 6px;
   border-radius: 50%;
   display: flex;
+
+  &:hover {
+    background-color: color-mix(in oklch, currentColor 20%, transparent);
+  }
 }
 
 .gear-button.focus-visible {
@@ -26,6 +30,18 @@
 .settings-gear {
   height: 16px;
   width: 16px;
+}
+
+.gear-newDot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--blue-600);
+  box-shadow: 0 0 0 1px var(--wallpaper-gear-color);
+  pointer-events: none;
 }
 
 .Breadcrumbs {
@@ -51,21 +67,13 @@
     --breadcrumbs-height: 80px;
   }
 
-  span {
-    text-decoration: underline;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
   a {
     display: flex;
     align-items: center;
     column-gap: 3px;
     text-decoration: none;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 4px;
     height: 30px;
     padding: 0 8px 0 4px;
     border: none;
@@ -79,12 +87,24 @@
       color: var(--grey-700);
       fill: var(--grey-700);
       background-color: color-mix(in oklch, white 75%, transparent);
+
+      &:hover {
+        background-color: color-mix(in oklch, white 90%, transparent);
+      }
     }
 
     .color-scheme-dark & {
       color: var(--grey-200);
       fill: var(--grey-200);
       background-color: color-mix(in oklch, var(--grey-800) 75%, transparent);
+
+      &:hover {
+        background-color: color-mix(in oklch, var(--grey-800) 90%, transparent);
+      }
+    }
+
+    &:active {
+      filter: brightness(0.9);
     }
 
     &.focus-visible {
@@ -99,6 +119,10 @@
         color: black;
         fill: black;
       }
+    }
+
+    .show-dial-borders & {
+      box-shadow: var(--dial-inner-highlight);
     }
   }
 }

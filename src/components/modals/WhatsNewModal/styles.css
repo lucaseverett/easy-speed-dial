@@ -1,0 +1,94 @@
+.WhatsNew {
+  font-size: 16px;
+  padding: 20px;
+
+  .WhatsNew-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .WhatsNew-card {
+    padding-block: 13px;
+
+    .color-scheme-light & {
+      border-top: 1px solid var(--grey-400);
+    }
+
+    .color-scheme-dark & {
+      border-top: 1px solid var(--grey-600);
+    }
+
+    &:first-child {
+      border: none;
+      padding-top: 0;
+    }
+
+    p {
+      margin: 4px 0 5px;
+      line-height: 1.5;
+    }
+  }
+
+  .WhatsNew-cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    h2 {
+      font-size: 15px;
+      font-weight: 650;
+      margin-block: 5px;
+    }
+  }
+
+  .WhatsNew-newPill {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: 20px;
+
+    .color-scheme-light & {
+      background-color: var(--blue-100);
+      color: var(--blue-700);
+    }
+
+    .color-scheme-dark & {
+      background-color: color-mix(in oklch, var(--blue-400) 20%, transparent);
+      color: var(--blue-400);
+    }
+  }
+
+  .WhatsNew-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    margin-top: 4px;
+
+    .color-scheme-light & {
+      border-top: 1px solid var(--grey-400);
+    }
+
+    .color-scheme-dark & {
+      border-top: 1px solid var(--grey-600);
+    }
+  }
+
+  .WhatsNew-releaseNotesLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .WhatsNew-externalIcon {
+    flex-shrink: 0;
+  }
+
+  .WhatsNew-settingsBtn {
+    font-size: 14px;
+  }
+}

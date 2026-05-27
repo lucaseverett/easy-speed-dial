@@ -69,7 +69,7 @@ import yellowPagesThumbnail from "#assets/thumbnails/yellow-pages.svg";
 import youTubeMusicThumbnail from "#assets/thumbnails/youtube-music.svg";
 import youTubeThumbnail from "#assets/thumbnails/youtube.svg";
 import { dialColors } from "#lib/dialColors";
-import { getLinkName } from "#utils/filter";
+import { getLinkName } from "#lib/filter";
 
 export interface SitePreset {
   url: string;

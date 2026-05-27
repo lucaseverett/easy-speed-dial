@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
   "name": "Easy Speed Dial",
-  "version": "2.14.1",
+  "version": "2.15.0",
   "permissions": ["bookmarks", "storage", "unlimitedStorage"],
+  "optional_permissions": ["https://icons.duckduckgo.com/*"],
   "description": "Easy Speed Dial replaces the new tab page with a colorful grid of your bookmarks and folders.",
   "chrome_settings_overrides": {
     "homepage": "index.html"

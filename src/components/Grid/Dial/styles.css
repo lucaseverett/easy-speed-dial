@@ -109,8 +109,8 @@
 .Title {
   text-align: center;
   padding-top: 0.5em;
-  display: grid;
-  place-content: center;
+  display: flex;
+  justify-content: center;
 
   .attach-title & {
     padding-top: 0;
@@ -119,18 +119,34 @@
 
   .title {
     border-radius: 0.625em;
+    min-width: 0;
     max-width: 100%;
     height: var(--title-height);
-    display: grid;
-    place-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding-inline: 8px;
 
+    .show-favicons & {
+      gap: 0.25em;
+    }
+
+    .favicon {
+      flex: none;
+      width: 1em;
+      height: 1em;
+      object-fit: contain;
+      fill: currentColor;
+    }
+
     div {
+      min-width: 0;
       font-size: clamp(10px, 0.8125em, 15px);
       line-height: initial;
       text-overflow: ellipsis;
       white-space: nowrap;
-      overflow: hidden;
+      overflow: clip;
+      overflow-clip-margin: 4px;
     }
 
     .color-scheme-light & {

@@ -1,191 +1,144 @@
 .Wallpapers {
+  --wallpaper-gear-color: black;
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
   background-color: var(--background-color);
 
+  .gear-button {
+    color: var(--wallpaper-gear-color);
+  }
+
   &.theme-wallpaper {
     --background-color: var(--grey-100);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.color-scheme-dark.theme-wallpaper {
     --background-color: var(--grey-900);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.pink-wallpaper {
     --background-color: var(--pink-100);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.green-wallpaper {
     --background-color: var(--teal-100);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.blue-wallpaper {
     --background-color: var(--blue-100);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.brown-wallpaper {
     --background-color: var(--brown-100);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.yellow-wallpaper {
     --background-color: var(--amber-200);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.SandDune {
     background-image: url(https://media.easyspeeddial.com/SandDune.jpg);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.WavySand {
     background-image: url(https://media.easyspeeddial.com/WavySand.jpg);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.Galaxy {
     background-image: url(https://media.easyspeeddial.com/Galaxy.jpg);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.EarthHorizon {
     background-image: url(https://media.easyspeeddial.com/EarthHorizon.jpg);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.BeachForest {
     background-image: url(https://media.easyspeeddial.com/BeachForest.jpg);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.Water {
     background-image: url(https://media.easyspeeddial.com/Water.jpg);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.Flowers {
     background-image: url(https://media.easyspeeddial.com/Flowers.jpg);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.SnowCoveredMountainwithSunnySky {
     background-image: url(https://media.easyspeeddial.com/SnowCoveredMountain.jpg);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.DesertDay {
     background-image: url(https://media.easyspeeddial.com/DunesDay.png);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.DesertNight {
     background-image: url(https://media.easyspeeddial.com/DunesNight.png);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.Crayons {
     background-image: url(https://media.easyspeeddial.com/Crayons.jpg);
     background-position: bottom;
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.Underwater {
     background-image: url(https://media.easyspeeddial.com/Underwater.jpg);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.HorizonLight {
     background-image: url(https://media.easyspeeddial.com/HorizonLight.png);
     background-position: bottom left;
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.HorizonDark {
     background-image: url(https://media.easyspeeddial.com/HorizonDark.png);
     background-position: bottom left;
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.AbstractPurple {
     background-image: url(https://media.easyspeeddial.com/AbstractPurple.jpg);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.Gradient1 {
     background-image: url(https://media.easyspeeddial.com/RiceFlower.png);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.Gradient2 {
     background-image: url(https://media.easyspeeddial.com/ColumbiaBlue.png);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 
   &.Gradient3 {
     background-image: url(https://media.easyspeeddial.com/Fuchsia.png);
-    .gear-button {
-      color: white;
-    }
+    --wallpaper-gear-color: white;
   }
 
   &.Gradient4 {
     background-image: url(https://media.easyspeeddial.com/VioletBlue.png);
-    .gear-button {
-      color: black;
-    }
+    --wallpaper-gear-color: black;
   }
 }

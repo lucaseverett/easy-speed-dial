@@ -1,0 +1,53 @@
+.ConfirmDialog {
+  line-height: 1.5;
+  padding: 20px;
+
+  &[data-variant="info"],
+  &[data-variant="warning"] {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+  }
+
+  .ConfirmDialog-icon {
+    align-items: center;
+    border-radius: 50%;
+    display: flex;
+    font-weight: 700;
+    height: 34px;
+    justify-content: center;
+    line-height: 1;
+    width: 34px;
+
+    &.warning {
+      background-color: var(--red-600);
+      color: white;
+      font-size: 22px;
+    }
+
+    &.info {
+      background-color: var(--blue-600);
+      color: white;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-style: italic;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    gap: 10px;
+    width: 100%;
+  }
+
+  &[data-variant="info"] .buttons,
+  &[data-variant="warning"] .buttons {
+    grid-column: 1 / -1;
+  }
+}

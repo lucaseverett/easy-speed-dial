@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src ="screenshot.webp" /></div>
+<div style="text-align:center"><img src ="screenshot.png" /></div>
 
 # Easy Speed Dial
 
@@ -23,7 +23,7 @@ git clone https://github.com/lucaseverett/easy-speed-dial.git
 ### Install packages
 
 ```sh
-npm install
+bun install
 ```
 
 ## Usage
@@ -31,19 +31,27 @@ npm install
 ### Start dev server
 
 ```sh
-npm run dev
+bun dev
 ```
+
+#### Dev URL params
+
+The dev server's new tab page recognizes these query params:
+
+- `?dev=new` — simulates a fresh install.
+- `?dev=upgrade` — simulates an upgrade from 2.14.0.
+  - `&v=<version>` simulates an upgrade from the passed version instead. Anything `semver` can coerce works, e.g. `v=1` or `v=2.10`.
 
 ### Run tests once
 
 ```sh
-npm run test
+bun run test
 ```
 
 ### Run tests and watch for changes
 
 ```sh
-npm run test:watch
+bun run test:watch
 ```
 
 ## Type Checking
@@ -51,7 +59,7 @@ npm run test:watch
 ### Check types with TypeScript
 
 ```sh
-npm run tsc
+bun tsc
 ```
 
 ## Linting
@@ -59,13 +67,13 @@ npm run tsc
 ### Lint with ESLint
 
 ```sh
-npm run lint
+bun lint
 ```
 
 ### Format with Prettier
 
 ```sh
-npm run format
+bun format
 ```
 
 ## Building
@@ -73,23 +81,23 @@ npm run format
 ### Build web demo
 
 ```sh
-npm run build
+bun build
 ```
 
 ### Preview web build
 
 ```sh
-npm run preview
+bun preview
 ```
 
 ### Build Chrome
 
 ```sh
-npm run build:chrome
+bun build:chrome
 ```
 
 ### Build Firefox
 
 ```sh
-npm run build:firefox
+bun build:firefox
 ```

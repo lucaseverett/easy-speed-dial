@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["*.config.ts"]
+  "include": ["*.config.ts", "update-manifest-version.ts"]
 }

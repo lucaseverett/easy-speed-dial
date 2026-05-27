@@ -32,8 +32,14 @@ export default defineConfig({
   publicDir: `public/${PROJECT}`,
   resolve: {
     alias: {
-      "webextension-polyfill":
-        PROJECT === "demo" ? "./browser-polyfill.js" : "webextension-polyfill",
+      ...(PROJECT === "demo"
+        ? {
+            "webextension-polyfill": resolve(
+              __dirname,
+              "src/platform/browser-polyfill.ts",
+            ),
+          }
+        : {}),
     },
   },
 });

@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import "focus-visible";
 
-import { Settings } from "#pages/Settings";
+import { Settings } from "#app/Settings";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
