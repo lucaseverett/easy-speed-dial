@@ -5,17 +5,25 @@ import { applyBackup, buildBackup } from "./backup";
 // The backup functions import #lib/storage; mock it so importing backup.ts
 // does not pull in the webextension polyfill (which throws outside an
 // extension context). getStoredCustomImage is configurable so buildBackup
-// tests can vary the stored custom image.
-const { customImageKey, getStoredCustomImageMock } = vi.hoisted(() => ({
-  customImageKey: "2.0-custom-image",
-  getStoredCustomImageMock: vi.fn(() =>
-    Promise.resolve<Record<string, unknown>>({}),
-  ),
-}));
+// tests can vary the stored custom image. The modals store is mocked so
+// favicon-opt-in modal calls are observable as a plain spy.
+const { customImageKey, getStoredCustomImageMock, openModalMock } = vi.hoisted(
+  () => ({
+    customImageKey: "2.0-custom-image",
+    getStoredCustomImageMock: vi.fn(() =>
+      Promise.resolve<Record<string, unknown>>({}),
+    ),
+    openModalMock: vi.fn(),
+  }),
+);
 
 vi.mock("#lib/storage", () => ({
   storageKeys: { customImage: customImageKey },
   getStoredCustomImage: getStoredCustomImageMock,
+}));
+
+vi.mock("#stores/modals", () => ({
+  modals: { openModal: openModalMock },
 }));
 
 // A fake settings store: every method applyBackup calls, recorded as a spy.
@@ -85,6 +93,7 @@ describe("applyBackup", () => {
 
   beforeEach(() => {
     settings = createFakeSettings();
+    openModalMock.mockClear();
   });
 
   test("applies every field from a current-format backup", async () => {
@@ -95,7 +104,13 @@ describe("applyBackup", () => {
       "data:image/png;base64,QUFB",
     );
     expect(settings.handleUsePresetThumbnails).toHaveBeenCalledWith(true);
-    expect(settings.handleShowFavicons).toHaveBeenCalledWith(true);
+    // showFavicons: true in the backup queues the opt-in modal instead of
+    // flipping the setting directly; the modal's Continue path enables it
+    // after the permission grant.
+    expect(settings.handleShowFavicons).not.toHaveBeenCalled();
+    expect(openModalMock).toHaveBeenCalledWith(
+      expect.objectContaining({ modal: "confirm-favicon-permission" }),
+    );
     expect(settings.handleAttachTitle).toHaveBeenCalledWith(true);
     expect(settings._restoreCustomColor).toHaveBeenCalledWith("#ff0000");
     expect(settings.handleDefaultFolder).toHaveBeenCalledWith("folder-1");

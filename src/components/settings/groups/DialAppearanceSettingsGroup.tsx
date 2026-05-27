@@ -261,14 +261,10 @@ export const DialAppearanceSettingsGroup = observer(
                   settings.handleShowFavicons(false);
                   return;
                 }
-                if (__FIREFOX__) {
-                  modals.openModal({
-                    modal: "confirm-favicon-permission",
-                    focusAfterClosed: e.currentTarget,
-                  });
-                  return;
-                }
-                settings.handleShowFavicons(true);
+                modals.openModal({
+                  modal: "confirm-favicon-permission",
+                  focusAfterClosed: e.currentTarget,
+                });
               }}
               className="switch-root"
               checked={settings.showFavicons as boolean}

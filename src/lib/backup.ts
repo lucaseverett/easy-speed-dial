@@ -100,18 +100,18 @@ export async function applyBackup(
         ? backup.usePresetThumbnails
         : false,
     );
-    // On Firefox, resetSettings has already turned favicons off and revoked the
-    // DDG host permission via handleShowFavicons(false). If the backup wanted
+    // resetSettings has already turned favicons off and revoked any held
+    // favicon permission via handleShowFavicons(false). If the backup wanted
     // favicons on, queue the confirm modal after import so the user can opt
     // back in (re-granting the permission) or dismiss it to stay off.
     let shouldOfferFaviconPermission = false;
     if (hasKey(backup, "showFavicons")) {
-      if (__FIREFOX__ && backup.showFavicons) {
+      if (backup.showFavicons) {
         shouldOfferFaviconPermission = true;
         // Leave showFavicons at false; the modal's Continue path will flip it
         // on after the permission grant.
       } else {
-        settings.handleShowFavicons(backup.showFavicons);
+        settings.handleShowFavicons(false);
       }
     }
     if (hasKey(backup, "attachTitle")) {

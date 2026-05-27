@@ -88,7 +88,7 @@ function resolveDialImageSizes(
 
 const defaultSettings = {
   usePresetThumbnails: true,
-  showFavicons: true,
+  showFavicons: false,
   attachTitle: false,
   colorScheme: window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "color-scheme-dark"
@@ -120,8 +120,7 @@ export const settings = makeAutoObservable({
     storage[storageKeys.usePresetThumbnails] ??
     defaultSettings.usePresetThumbnails,
   showFavicons:
-    storage[storageKeys.showFavicons] ??
-    (__FIREFOX__ ? false : defaultSettings.showFavicons),
+    storage[storageKeys.showFavicons] ?? defaultSettings.showFavicons,
   attachTitle: storage[storageKeys.attachTitle] ?? defaultSettings.attachTitle,
   colorScheme,
   customColor,
@@ -178,9 +177,10 @@ export const settings = makeAutoObservable({
   handleShowFavicons(value: boolean) {
     settings._persist({ showFavicons: value });
     // On Firefox, turning the feature off also revokes the DDG host permission
-    // and clears the cache. Re-enabling always goes through the confirm modal
-    // (which calls requestFaviconPermission), so this stays consistent across
-    // user toggles, resetSettings, and applyBackup.
+    // and clears the cache so no further network calls can reach DDG. Chrome's
+    // `favicon` permission is a local API gate with no external side effects,
+    // and a remove-then-re-request cycle on the silent permission has proven
+    // unreliable — leave it held once the user has granted it.
     if (__FIREFOX__ && !value) {
       void removeFaviconPermission();
       void faviconCache.clear();
@@ -330,9 +330,7 @@ export const settings = makeAutoObservable({
   },
   resetSettings() {
     settings.handleUsePresetThumbnails(defaultSettings.usePresetThumbnails);
-    settings.handleShowFavicons(
-      __FIREFOX__ ? false : defaultSettings.showFavicons,
-    );
+    settings.handleShowFavicons(defaultSettings.showFavicons);
     settings.handleAttachTitle(defaultSettings.attachTitle);
     settings._clearCustomColor();
     settings._clearCustomImage();

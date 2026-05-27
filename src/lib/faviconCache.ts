@@ -26,7 +26,13 @@ export function isFresh(entry: FaviconCacheEntry, now = Date.now()): boolean {
 const FLUSH_DELAY_MS = 500;
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
-const memory = observable.map<string, FaviconCacheEntry>();
+// Shallow so entry values stay plain objects. Deep observation would wrap each
+// entry in a Proxy, which structured-clone (and thus browser.storage.local.set)
+// rejects with DataCloneError — silently breaking persistence. Entries are
+// always replaced wholesale, never mutated in place, so we lose nothing.
+const memory = observable.map<string, FaviconCacheEntry>(undefined, {
+  deep: false,
+});
 
 function scheduleFlush() {
   if (flushTimer !== null) return;

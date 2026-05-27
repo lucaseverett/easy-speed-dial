@@ -1,8 +1,6 @@
 import semverCoerce from "semver/functions/coerce";
 import semverGt from "semver/functions/gt";
 import semverLt from "semver/functions/lt";
-import semverMajor from "semver/functions/major";
-import semverMinor from "semver/functions/minor";
 
 import { loadFaviconCache } from "./faviconCache";
 import {
@@ -14,7 +12,6 @@ import {
 
 export interface SettingsStorageInit {
   devTool: string | null;
-  isFeatureUpgrade: boolean | "";
   lastVersion: string | false;
   storage: Record<string, unknown>;
 }
@@ -23,12 +20,10 @@ async function migrateTo2_14_0(storage: Record<string, unknown>) {
   storage[storageKeys.showDialBorders] = false;
   storage[storageKeys.gridSpacing] = "spacious";
   storage[storageKeys.usePresetThumbnails] = false;
-  storage[storageKeys.showFavicons] = false;
   await setStorage({
     [storageKeys.showDialBorders]: false,
     [storageKeys.gridSpacing]: "spacious",
     [storageKeys.usePresetThumbnails]: false,
-    [storageKeys.showFavicons]: false,
   });
 }
 
@@ -53,7 +48,6 @@ export async function initializeSettingsStorage(
         storageKeys.showDialBorders,
         storageKeys.gridSpacing,
         storageKeys.usePresetThumbnails,
-        storageKeys.showFavicons,
       ]);
       await setStorage({ "last-version": upgradeFromVersion });
     }
@@ -63,10 +57,6 @@ export async function initializeSettingsStorage(
   const lastVersion =
     semverCoerce(storage["last-version"] as string)?.version || false;
   const isUpgrade = lastVersion && semverGt(appVersion, lastVersion);
-  const isFeatureUpgrade =
-    isUpgrade &&
-    (semverMajor(appVersion) !== semverMajor(lastVersion as string) ||
-      semverMinor(appVersion) !== semverMinor(lastVersion as string));
   const shouldRunUpgradeMigrations = !__DEMO__ || devTool === "upgrade";
 
   if (
@@ -81,12 +71,12 @@ export async function initializeSettingsStorage(
     await loadFaviconCache(storage);
   }
 
-  if (isFeatureUpgrade) {
+  if (isUpgrade) {
     storage[storageKeys.showUpgradeIndicator] = true;
     setStorage({ [storageKeys.showUpgradeIndicator]: true });
   }
 
   setStorage({ "last-version": appVersion });
 
-  return { devTool, isFeatureUpgrade, lastVersion, storage };
+  return { devTool, lastVersion, storage };
 }

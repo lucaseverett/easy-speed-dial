@@ -1,26 +1,31 @@
+import type { Permissions } from "webextension-polyfill";
+
 import browser from "#platform/browser";
 
-const FAVICON_ORIGINS = { origins: ["https://icons.duckduckgo.com/*"] };
-
-// Optional host permission only applies to Firefox. Chrome doesn't need it
-// (favicons come from the built-in _favicon API) and Demo has no extension
-// host to grant against — so both short-circuit before hitting the API.
-function withFaviconPermission(
-  action: (origins: typeof FAVICON_ORIGINS) => Promise<boolean>,
-): Promise<boolean> {
-  if (__CHROME__) return Promise.resolve(true);
-  if (__DEMO__) return Promise.resolve(false);
-  return action(FAVICON_ORIGINS);
+// Firefox needs the DDG host permission to fetch icons; Chrome needs the
+// `favicon` API permission to read its local cache. Demo has no extension
+// host (browser.permissions is undefined), so the modal's user-facing consent
+// stands in for an actual grant and these calls resolve true without touching
+// the API. "favicon" is a Chrome-only optional permission not present in the
+// polyfill types.
+function getFaviconPermissions(): Permissions.Permissions {
+  if (__CHROME__) {
+    return { permissions: ["favicon"] } as unknown as Permissions.Permissions;
+  }
+  return { origins: ["https://icons.duckduckgo.com/*"] };
 }
 
-export function hasFaviconPermission() {
-  return withFaviconPermission(browser.permissions.contains);
+export function hasFaviconPermission(): Promise<boolean> {
+  if (__DEMO__) return Promise.resolve(true);
+  return browser.permissions.contains(getFaviconPermissions());
 }
 
-export function requestFaviconPermission() {
-  return withFaviconPermission(browser.permissions.request);
+export function requestFaviconPermission(): Promise<boolean> {
+  if (__DEMO__) return Promise.resolve(true);
+  return browser.permissions.request(getFaviconPermissions());
 }
 
-export function removeFaviconPermission() {
-  return withFaviconPermission(browser.permissions.remove);
+export function removeFaviconPermission(): Promise<boolean> {
+  if (__DEMO__) return Promise.resolve(true);
+  return browser.permissions.remove(getFaviconPermissions());
 }
