@@ -30,6 +30,37 @@ interface TitleProps {
 }
 
 export const Dial = observer(function Dial(props: DialProps) {
+  const isIconSize = settings.dialSize === "icon";
+  const accessibleName = props.title || props.name.join(".");
+
+  if (isIconSize) {
+    return (
+      <a
+        href={props.type === "bookmark" ? props.url : `#${props.id}`}
+        aria-label={accessibleName}
+        data-id={props.id}
+        data-title={props.title}
+        data-type={props.type}
+        rel={props.type === "bookmark" ? "noreferrer" : undefined}
+        className="Link"
+        target={
+          props.type === "bookmark" && settings.newTab ? "_blank" : undefined
+        }
+        onContextMenu={contextMenu.openContextMenu}
+      >
+        <div className="Box IconBox">
+          <IconDialContent type={props.type} url={props.url} />
+        </div>
+        <Title
+          title={props.title}
+          name={props.name}
+          type={props.type}
+          url={props.url}
+        />
+      </a>
+    );
+  }
+
   const customDialColor = settings.dialColors[props.id];
   const customThumbnailImage = settings.dialImages[props.id];
   const preset =
@@ -48,6 +79,7 @@ export const Dial = observer(function Dial(props: DialProps) {
   const presetThumbnailImage = preset?.image;
   const thumbnailImage = customThumbnailImage || presetThumbnailImage;
   const backgroundImage = thumbnailImage;
+  const showThumbnail = Boolean(backgroundImage);
   const backgroundSize = customThumbnailImage
     ? settings.getDialImageSize(props.id)
     : "cover";
@@ -64,8 +96,6 @@ export const Dial = observer(function Dial(props: DialProps) {
     : dialLuminance > 0.5
       ? 0.82
       : 0.65;
-  const accessibleName = props.title || props.name.join(".");
-
   return (
     <a
       href={props.type === "bookmark" ? props.url : `#${props.id}`}
@@ -85,7 +115,7 @@ export const Dial = observer(function Dial(props: DialProps) {
         className="Box"
         style={{
           backgroundColor,
-          backgroundImage: backgroundImage
+          backgroundImage: showThumbnail
             ? `url("${backgroundImage}")`
             : undefined,
           backgroundPosition: "center",
@@ -95,7 +125,7 @@ export const Dial = observer(function Dial(props: DialProps) {
             props.type !== "folder" ? "2px 1px 0 rgb(33,33,33,0.7)" : "none",
         }}
       >
-        {!backgroundImage &&
+        {!showThumbnail &&
           (props.type === "bookmark" ? (
             <div>
               <DialName
@@ -128,10 +158,30 @@ export const Dial = observer(function Dial(props: DialProps) {
   );
 });
 
+const IconDialContent = observer(function IconDialContent({
+  type,
+  url,
+}: {
+  type: "bookmark" | "folder";
+  url?: string;
+}) {
+  if (type === "folder") {
+    return (
+      <DialFolder className="dialIcon" topOpacity={0.35} bottomOpacity={0.65} />
+    );
+  }
+
+  return settings.showFavicons ? (
+    <BookmarkFavicon key={url} url={url} className="dialIcon" />
+  ) : (
+    <Globe className="dialIcon" />
+  );
+});
+
 const Title = observer(function Title(props: TitleProps) {
   if (!settings.showTitle) return;
 
-  const showFavicon = settings.showFavicons;
+  const showFavicon = settings.showFavicons && settings.dialSize !== "icon";
 
   return (
     <div className="Title">
@@ -153,8 +203,10 @@ const Title = observer(function Title(props: TitleProps) {
 // stay bounded by the favicon store's concurrency queue. Falls back to the
 // Globe icon while unresolved, when the site has no favicon, or on image error.
 const BookmarkFavicon = observer(function BookmarkFavicon({
+  className = "favicon",
   url,
 }: {
+  className?: string;
   url?: string;
 }) {
   const [failed, setFailed] = useState(false);
@@ -164,9 +216,14 @@ const BookmarkFavicon = observer(function BookmarkFavicon({
   }, [url]);
 
   const src = favicons.getFavicon(url);
-  if (!src || failed) return <Globe />;
+  if (!src || failed) return <Globe className={className} />;
 
   return (
-    <img className="favicon" src={src} alt="" onError={() => setFailed(true)} />
+    <img
+      className={className}
+      src={src}
+      alt=""
+      onError={() => setFailed(true)}
+    />
   );
 });

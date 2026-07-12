@@ -16,6 +16,7 @@ export const storageKeys = {
   maxColumns: `${apiVersion}-max-columns`,
   newTab: `${apiVersion}-new-tab`,
   showDialBorders: `${apiVersion}-show-dial-borders`,
+  showSearchBar: `${apiVersion}-show-search-bar`,
   showTitle: `${apiVersion}-show-title`,
   showUpgradeIndicator: `${apiVersion}-show-upgrade-indicator`,
   squareDials: `${apiVersion}-square-dials`,

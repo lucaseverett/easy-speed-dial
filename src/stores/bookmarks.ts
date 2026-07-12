@@ -29,8 +29,11 @@ export const bookmarks = makeAutoObservable({
   currentFolder: {} as BookmarkFolder,
   folders: [] as Array<{ id: string; title: string }>,
   parentId: "",
-  async changeFolder(id: string) {
+  async changeFolder(id: string, shouldCommit: () => boolean = () => true) {
     const newBookmarks = await getBookmarkSubTree(id);
+    // A newer route may have finished while this subtree was loading. Do not
+    // let the stale request overwrite the current folder or session state.
+    if (!shouldCommit()) return;
     sessionStorage.setItem("last-folder", id);
     runInAction(() => {
       bookmarks.bookmarks = filter(newBookmarks[0].children || []).sort(

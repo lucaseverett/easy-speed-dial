@@ -99,21 +99,15 @@ const colors: Record<string, string> = {
   "zillow.com": "#1976d2",
 };
 
-/**
- * The purpose of this function is to produce a consistent random number based
- * on a given key. This ensures that the same key will always produce the
- * same pseudo-random number.
- */
 function randomIntFromHash(key: string, max: number): number {
   const hash = murmur3_32(key);
 
-  // Normalize the hash value.
   const normalized = hash / 10000000000;
 
-  // Apply a bias to reduce the likelihood of generating red colors.
+  // Bias away from the low end of the range to reduce how often red is
+  // chosen, since red collides with common default/error UI colors.
   const biased = normalized < 0.1 ? normalized * 10 : normalized;
 
-  // Scale the value to the range [0, max).
   const result = Math.floor(biased * max);
 
   return result;
@@ -122,7 +116,6 @@ function randomIntFromHash(key: string, max: number): number {
 function dialColors(name: string | string[]): string {
   if (Array.isArray(name)) name = name.join(".");
 
-  // If the name matches a key, return the corresponding color.
   const matchedKey = Object.keys(colors).find((key) =>
     new RegExp(`^(.*\\.)?${key.replace(/\./g, "\\.")}`).test(name),
   );
@@ -130,7 +123,6 @@ function dialColors(name: string | string[]): string {
     return colors[matchedKey];
   }
 
-  // Otherwise, return a pseudo-random color.
   const colorsFrom700 = getColorsByShade("700");
   const shade = randomIntFromHash(name, colorsFrom700.length);
   return colorsFrom700[shade];

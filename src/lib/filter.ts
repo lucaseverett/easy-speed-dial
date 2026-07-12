@@ -11,16 +11,13 @@ export interface FilteredBookmark {
 }
 
 function getLinkName(url: string): string[] {
-  // Split by '://'
   const protocolSplit = url.split("://");
   let parts = [];
 
-  // If '://' exists in the url
   if (protocolSplit[1]) {
     const domainPathSplit = protocolSplit[1].split("/");
     const domainParts = domainPathSplit[0].split(".");
 
-    // Check if first part is 'www', if yes then remove it
     if (domainParts[0] === "www") {
       domainParts.shift();
     }

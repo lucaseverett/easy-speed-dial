@@ -32,7 +32,8 @@ import { getColorScheme, resolveWallpaper } from "#lib/wallpaper";
 // ==================================================================
 
 const appVersion = __APP_VERSION__;
-const { lastVersion, storage } = await initializeSettingsStorage(appVersion);
+const { lastVersion, showNewBadges, storage } =
+  await initializeSettingsStorage(appVersion);
 const themeOption =
   (storage[storageKeys.themeOption] as string) || "System Theme";
 const colorScheme = getColorScheme(themeOption);
@@ -44,10 +45,8 @@ const customColor =
 
 const customImage = await getCustomImageUrl();
 
-/* Handle changes page between open tabs. */
 const bc = new BroadcastChannel("easy-settings");
 bc.onmessage = (e) => {
-  // When settings are updated in another tab, update this tab's settings as well.
   runInAction(() => set(settings, e.data));
 };
 
@@ -106,6 +105,7 @@ const defaultSettings = {
   maxColumns: "7",
   newTab: false,
   showDialBorders: true,
+  showSearchBar: false,
   showUpgradeIndicator: false,
   showTitle: true,
   squareDials: false,
@@ -141,11 +141,15 @@ export const settings = makeAutoObservable({
   dialSize: storage[storageKeys.dialSize] || defaultSettings.dialSize,
   dragAndDrop: storage[storageKeys.dragAndDrop] ?? defaultSettings.dragAndDrop,
   firstRun: defaultSettings.firstRun,
+  // Runtime-only: gates "New" feature badges to upgraders (see init.ts).
+  showNewBadges,
   gridSpacing: storage[storageKeys.gridSpacing] || defaultSettings.gridSpacing,
   maxColumns: storage[storageKeys.maxColumns] || defaultSettings.maxColumns,
   newTab: storage[storageKeys.newTab] ?? defaultSettings.newTab,
   showDialBorders:
     storage[storageKeys.showDialBorders] ?? defaultSettings.showDialBorders,
+  showSearchBar:
+    storage[storageKeys.showSearchBar] ?? defaultSettings.showSearchBar,
   showUpgradeIndicator:
     storage[storageKeys.showUpgradeIndicator] ??
     defaultSettings.showUpgradeIndicator,
@@ -251,6 +255,9 @@ export const settings = makeAutoObservable({
   handleShowDialBorders(value: boolean) {
     settings._persist({ showDialBorders: value });
   },
+  handleShowSearchBar(value: boolean) {
+    settings._persist({ showSearchBar: value });
+  },
   handleSelectThumbnail(id: string) {
     selectImageFile((_image, base64) => {
       settings.handleSetThumbnail(id, base64);
@@ -285,11 +292,10 @@ export const settings = makeAutoObservable({
     settings._persist({ transparentDials: value });
   },
   handleWallpaper(value: string) {
-    // Automatically clear custom image when switching to a different wallpaper
+    // Leaving a custom wallpaper clears its stored custom asset/value.
     if (value !== "custom-image" && settings.wallpaper === "custom-image") {
       settings._clearCustomImage();
     }
-    // Automatically clear custom color when switching to a different wallpaper
     if (value !== "custom-color" && settings.wallpaper === "custom-color") {
       settings._clearCustomColor();
     }
@@ -344,6 +350,7 @@ export const settings = makeAutoObservable({
     settings.handleMaxColumns(defaultSettings.maxColumns);
     settings.handleNewTab(defaultSettings.newTab);
     settings.handleShowDialBorders(defaultSettings.showDialBorders);
+    settings.handleShowSearchBar(defaultSettings.showSearchBar);
     settings.handleShowTitle(defaultSettings.showTitle);
     settings.handleSquareDials(defaultSettings.squareDials);
     settings.handleSwitchTitle(defaultSettings.switchTitle);

@@ -5,6 +5,7 @@
 @import "./wallpapers.css";
 
 :root {
+  --white: #ffffff;
   --grey-50: #fafafa;
   --grey-100: #f5f5f5;
   --grey-200: #eeeeee;
@@ -14,6 +15,7 @@
   --grey-600: #757575;
   --grey-700: #616161;
   --grey-800: #424242;
+  --grey-850: #373737;
   --grey-900: #212121;
   --brown-100: #d7ccc8;
   --amber-200: #ffe082;

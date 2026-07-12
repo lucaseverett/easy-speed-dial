@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import browser from "./browser.bookmarks";
 
@@ -882,5 +882,95 @@ describe("error handling", () => {
     expect(() =>
       browser.bookmarks.create({ parentId: bookmark.id, title: "X" }),
     ).toThrow();
+  });
+});
+
+describe("search", () => {
+  test("should match bookmarks by title (case-insensitive)", async () => {
+    browser.bookmarks.create({
+      parentId: "1",
+      title: "Search Title Example",
+      url: "http://example-title.com",
+    });
+
+    const results = await browser.bookmarks.search("search title");
+
+    expect(results.some((b) => b.title === "Search Title Example")).toBe(true);
+  });
+
+  test("should match bookmarks by url", async () => {
+    browser.bookmarks.create({
+      parentId: "1",
+      title: "No Match Here",
+      url: "http://uniqueurltoken.example",
+    });
+
+    const results = await browser.bookmarks.search("uniqueurltoken");
+
+    expect(results.some((b) => b.url === "http://uniqueurltoken.example")).toBe(
+      true,
+    );
+  });
+
+  test("should match folders by title", async () => {
+    browser.bookmarks.create({
+      parentId: "1",
+      title: "Searchable Folder Name",
+    });
+
+    const results = await browser.bookmarks.search("searchable folder");
+
+    expect(
+      results.some(
+        (b) => b.title === "Searchable Folder Name" && b.type === "folder",
+      ),
+    ).toBe(true);
+  });
+
+  test("should require all whitespace-separated tokens to match", async () => {
+    browser.bookmarks.create({
+      parentId: "1",
+      title: "Alpha Bravo",
+      url: "http://alphabravo.com",
+    });
+
+    expect(
+      (await browser.bookmarks.search("alpha bravo")).some(
+        (b) => b.title === "Alpha Bravo",
+      ),
+    ).toBe(true);
+    expect(
+      (await browser.bookmarks.search("alpha zulu")).some(
+        (b) => b.title === "Alpha Bravo",
+      ),
+    ).toBe(false);
+  });
+
+  test("should not return the hidden root container", async () => {
+    const results = await browser.bookmarks.search("Bookmarks");
+    expect(results.some((b) => b.id === "0")).toBe(false);
+  });
+});
+
+describe("bookmark events", () => {
+  test("deduplicates and removes listeners", async () => {
+    const listener = vi.fn();
+    browser.bookmarks.onCreated.addListener(listener);
+    browser.bookmarks.onCreated.addListener(listener);
+
+    await browser.bookmarks.create({
+      parentId: "1",
+      title: "Listener test bookmark",
+      url: "https://example.com/listener-test",
+    });
+    expect(listener).toHaveBeenCalledTimes(1);
+
+    browser.bookmarks.onCreated.removeListener(listener);
+    await browser.bookmarks.create({
+      parentId: "1",
+      title: "Removed listener test bookmark",
+      url: "https://example.com/removed-listener-test",
+    });
+    expect(listener).toHaveBeenCalledTimes(1);
   });
 });

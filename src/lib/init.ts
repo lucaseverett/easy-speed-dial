@@ -13,6 +13,11 @@ import {
 export interface SettingsStorageInit {
   devTool: string | null;
   lastVersion: string | false;
+  installVersion: string;
+  // True when the user upgraded into the current version (their install
+  // predates it), so "New" feature badges are relevant. False for fresh
+  // installs, where nothing in this release is actually new to them.
+  showNewBadges: boolean;
   storage: Record<string, unknown>;
 }
 
@@ -48,6 +53,9 @@ export async function initializeSettingsStorage(
         storageKeys.showDialBorders,
         storageKeys.gridSpacing,
         storageKeys.usePresetThumbnails,
+        // Clear so it backfills from the simulated (older) last-version,
+        // faithfully reproducing an upgrader rather than a fresh install.
+        "install-version",
       ]);
       await setStorage({ "last-version": upgradeFromVersion });
     }
@@ -71,12 +79,31 @@ export async function initializeSettingsStorage(
     await loadFaviconCache(storage);
   }
 
+  const storagePatch: Record<string, unknown> = {
+    "last-version": appVersion,
+  };
   if (isUpgrade) {
     storage[storageKeys.showUpgradeIndicator] = true;
-    setStorage({ [storageKeys.showUpgradeIndicator]: true });
+    storagePatch[storageKeys.showUpgradeIndicator] = true;
   }
 
-  setStorage({ "last-version": appVersion });
+  // Record the version the user first installed at, once. Fresh installs record
+  // the current version. Existing users predating this tracking are backfilled
+  // with their last-seen version (the best available approximation; their true
+  // install version is unrecoverable). This can only be captured going forward.
+  const storedInstallVersion = semverCoerce(
+    storage["install-version"] as string,
+  )?.version;
+  const installVersion = storedInstallVersion || lastVersion || appVersion;
+  if (!storedInstallVersion) {
+    storage["install-version"] = installVersion;
+    storagePatch["install-version"] = installVersion;
+  }
 
-  return { devTool, lastVersion, storage };
+  // Only upgraders (install predates the current version) see "New" badges.
+  const showNewBadges = semverLt(installVersion, appVersion);
+
+  setStorage(storagePatch);
+
+  return { devTool, lastVersion, installVersion, showNewBadges, storage };
 }

@@ -3,6 +3,7 @@ import type { FocusTarget } from "#lib/focus";
 import { makeAutoObservable } from "mobx";
 
 import { focusByDataId, targetFromEvent } from "#lib/focus";
+import { colorPicker } from "#stores/colorPicker";
 
 // Modals that stack on top of a parent modal and return focus to it on close,
 // instead of fully unmounting the modal stack. Listed explicitly so we don't
@@ -59,6 +60,7 @@ export const modals: ModalStore = makeAutoObservable({
   },
   closeModal({ focusAfterClosed = null } = {}) {
     if (!modals.isOpen) return;
+    colorPicker.closeColorPicker({ restoreFocus: false });
     const nextFocus = focusAfterClosed || modals.focusAfterClosed;
     const shouldReturnToParentModal =
       !!modals.parentModal && CHILD_MODALS.has(modals.isOpen);

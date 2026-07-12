@@ -35,6 +35,10 @@ export function getBookmarkTree() {
   return browser.bookmarks.getTree();
 }
 
+export function searchBookmarks(query: string) {
+  return browser.bookmarks.search(query);
+}
+
 export async function getBookmarksBarId() {
   let bookmarksBar = "1";
 

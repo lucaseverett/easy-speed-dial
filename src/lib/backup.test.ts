@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { applyBackup, buildBackup } from "./backup";
 
-// The backup functions import #lib/storage; mock it so importing backup.ts
-// does not pull in the webextension polyfill (which throws outside an
-// extension context). getStoredCustomImage is configurable so buildBackup
-// tests can vary the stored custom image. The modals store is mocked so
+// Mock extension-bound modules so backup tests run outside an extension
+// context (importing #lib/storage would pull in the webextension polyfill,
+// which throws). getStoredCustomImage is a configurable mock so buildBackup
+// tests can vary the stored custom image; the modals store is mocked so
 // favicon-opt-in modal calls are observable as a plain spy.
 const { customImageKey, getStoredCustomImageMock, openModalMock } = vi.hoisted(
   () => ({

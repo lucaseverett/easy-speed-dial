@@ -49,7 +49,6 @@ let bookmarkTree: BookmarkTreeNode = {
   ],
 };
 
-// Maintain separate listener arrays for each bookmark event type
 const listeners: Record<EventType, ListenerCallback[]> = {
   onChanged: [],
   onCreated: [],
@@ -57,21 +56,19 @@ const listeners: Record<EventType, ListenerCallback[]> = {
   onRemoved: [],
 };
 
-// Flags to prevent infinite loops and redundant broadcasts during programmatic or cross-tab updates
+// Guard against rebroadcast loops (isProcessingBroadcast) and debounce
+// redundant broadcasts (broadcastTimeout) during programmatic or cross-tab
+// updates.
 let isProcessingBroadcast = false;
 let broadcastTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const bc = new BroadcastChannel("easy-bookmarks");
 
-// Listen for bookmark changes from other tabs via BroadcastChannel
 bc.onmessage = (e) => {
-  // Set flag to prevent re-broadcasting
   isProcessingBroadcast = true;
 
-  // Replace the local bookmark tree with the version received from another tab
   bookmarkTree = e.data;
 
-  // Notify all onChanged listeners to update the UI, but avoid rebroadcasting
   listeners.onChanged.forEach((callback) => {
     try {
       callback();
@@ -80,13 +77,11 @@ bc.onmessage = (e) => {
     }
   });
 
-  // Reset the isProcessingBroadcast flag after a short delay
   setTimeout(() => {
     isProcessingBroadcast = false;
   }, 100);
 };
 
-// Call all registered listeners for a given event type
 function triggerListeners(eventType: EventType, ...args: unknown[]) {
   listeners[eventType].forEach((callback) => {
     try {
@@ -99,7 +94,6 @@ function triggerListeners(eventType: EventType, ...args: unknown[]) {
 
 // Broadcast bookmark tree changes to other tabs (debounced to avoid flooding)
 function broadcastChanges() {
-  // Skip broadcasting if currently processing an incoming broadcast
   if (isProcessingBroadcast) {
     return;
   }
@@ -112,13 +106,19 @@ function broadcastChanges() {
   }, 50);
 }
 
-// Register a callback for a specific event type
 function addListener(eventType: EventType, callback: ListenerCallback) {
   if (typeof callback !== "function") {
     throw new Error("Callback must be a function");
   }
 
-  listeners[eventType].push(callback);
+  if (!listeners[eventType].includes(callback)) {
+    listeners[eventType].push(callback);
+  }
+}
+
+function removeListener(eventType: EventType, callback: ListenerCallback) {
+  const index = listeners[eventType].indexOf(callback);
+  if (index !== -1) listeners[eventType].splice(index, 1);
 }
 
 function create({
@@ -147,10 +147,8 @@ function create({
 
   parent.children!.push(newBookmark);
 
-  // Trigger onCreated listeners
   triggerListeners("onCreated", newBookmark.id, newBookmark);
 
-  // Broadcast changes to other tabs
   broadcastChanges();
 
   return newBookmark;
@@ -234,14 +232,12 @@ function findBookmarkById(
   }
 
   if (bookmarks.children) {
-    // First check direct children
     for (const child of bookmarks.children) {
       if (child.id === id) {
         return child;
       }
     }
 
-    // Then recursively search folders
     for (const child of bookmarks.children) {
       if (child.type === "folder") {
         const result = findBookmarkById(id, child);
@@ -276,13 +272,10 @@ function move(id: string, { index, parentId }: BookmarkMoveDestination): void {
     throw new Error("New parent is not a folder");
   }
 
-  // Store old values for the event
   const oldIndex = bookmark.index;
   const oldParentId = bookmark.parentId;
 
-  // If moving to a different folder
   if (newParentId !== bookmark.parentId) {
-    // Remove the bookmark from its old parent folder
     if (!oldParent.children) {
       oldParent.children = [];
     }
@@ -291,14 +284,12 @@ function move(id: string, { index, parentId }: BookmarkMoveDestination): void {
       oldParent.children.splice(oldIndex, 1);
     }
 
-    // Add the bookmark to the new parent folder
     bookmark.parentId = newParentId;
 
     if (!newParent.children) {
       newParent.children = [];
     }
 
-    // Set the bookmark's index in the new folder; add to end if index is not specified
     if (index !== undefined) {
       bookmark.index = index;
       newParent.children.splice(index, 0, bookmark);
@@ -307,53 +298,42 @@ function move(id: string, { index, parentId }: BookmarkMoveDestination): void {
       newParent.children.push(bookmark);
     }
 
-    // Reindex all children in both the old and new parent folders
     oldParent.children.forEach((b, i) => {
       b.index = i;
     });
-    // Sort the old parent's children by their updated indices
     oldParent.children.sort((a, b) => a.index! - b.index!);
 
     newParent.children.forEach((b, i) => {
       b.index = i;
     });
-    // Sort the new parent's children by their updated indices
     newParent.children.sort((a, b) => a.index! - b.index!);
   } else {
-    // Handle reordering bookmarks within the same folder
     const parent = findBookmarkById(bookmark.parentId!);
     if (!parent || !parent.children) {
       throw new Error("Parent or children not found");
     }
     const bookmarks = parent.children;
 
-    // Determine the original and target indices for the bookmark being moved
     const from = bookmark.index!;
     const to = index!;
 
-    // Adjust indices of affected bookmarks depending on move direction
     bookmarks.forEach((b) => {
       if (from < to) {
-        // moving down
         if (b.index! > from && b.index! <= to) {
           b.index!--;
         }
       } else if (from > to) {
-        // moving up
         if (b.index! >= to && b.index! < from) {
           b.index!++;
         }
       }
     });
 
-    // Assign the bookmark its new index
     bookmark.index = to;
 
-    // Sort all bookmarks in the folder by their index
     bookmarks.sort((a, b) => a.index! - b.index!);
   }
 
-  // Notify all onMoved listeners about the move
   triggerListeners("onMoved", id, {
     index: bookmark.index,
     oldIndex: oldIndex,
@@ -361,7 +341,6 @@ function move(id: string, { index, parentId }: BookmarkMoveDestination): void {
     oldParentId: oldParentId,
   });
 
-  // Broadcast the updated bookmark tree to other tabs
   broadcastChanges();
 }
 
@@ -380,20 +359,17 @@ function remove(id: string): void {
   if (index !== -1) {
     parent.children.splice(index, 1);
 
-    // Reindex the remaining children to ensure indices are sequential
     parent.children.forEach((b, i) => {
       b.index = i;
     });
   }
 
-  // Notify all onRemoved listeners about the removal
   triggerListeners("onRemoved", id, {
     parentId: bookmark.parentId,
     index: bookmark.index,
     node: bookmark,
   });
 
-  // Broadcast changes to other tabs
   broadcastChanges();
 }
 
@@ -415,13 +391,33 @@ function update(id: string, changes: BookmarkUpdateChanges): BookmarkTreeNode {
   };
   parent.children[index] = updatedBookmark;
 
-  // Notify all onChanged listeners about the update
   triggerListeners("onChanged", id, changes);
 
-  // Broadcast changes to other tabs
   broadcastChanges();
 
   return updatedBookmark;
+}
+
+// Mimic chrome.bookmarks.search(query): all whitespace-separated tokens must
+// match (case-insensitive) against the node's title and url. Returns a flat
+// list of matching nodes (bookmarks match on title+url, folders on title),
+// excluding the hidden root container.
+function search(query: string): Promise<BookmarkTreeNode[]> {
+  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const results: BookmarkTreeNode[] = [];
+
+  function walk(node: BookmarkTreeNode) {
+    if (node.id !== "0") {
+      const haystack = `${node.title ?? ""} ${node.url ?? ""}`.toLowerCase();
+      if (tokens.length > 0 && tokens.every((t) => haystack.includes(t))) {
+        results.push(node);
+      }
+    }
+    node.children?.forEach(walk);
+  }
+
+  walk(bookmarkTree);
+  return Promise.resolve(results);
 }
 
 function createTab({ url }: CreateTabDetails): void {
@@ -437,22 +433,31 @@ const bookmarks = {
   move,
   remove,
   removeTree: remove,
+  search,
   update,
   onChanged: {
     addListener: (callback: ListenerCallback) =>
       addListener("onChanged", callback),
+    removeListener: (callback: ListenerCallback) =>
+      removeListener("onChanged", callback),
   },
   onCreated: {
     addListener: (callback: ListenerCallback) =>
       addListener("onCreated", callback),
+    removeListener: (callback: ListenerCallback) =>
+      removeListener("onCreated", callback),
   },
   onMoved: {
     addListener: (callback: ListenerCallback) =>
       addListener("onMoved", callback),
+    removeListener: (callback: ListenerCallback) =>
+      removeListener("onMoved", callback),
   },
   onRemoved: {
     addListener: (callback: ListenerCallback) =>
       addListener("onRemoved", callback),
+    removeListener: (callback: ListenerCallback) =>
+      removeListener("onRemoved", callback),
   },
 };
 

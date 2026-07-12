@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { Modal } from "#components/Modal/Modal";
+import { NewPill } from "#components/NewPill/NewPill";
 import { modals } from "#stores/modals";
 import { settings } from "#stores/settings";
 
@@ -30,10 +31,28 @@ export function WhatsNewModal() {
         <div className="WhatsNew-highlights">
           <section className="WhatsNew-card">
             <div className="WhatsNew-cardHeader">
+              <h2>Search your bookmarks</h2>
+              <NewPill />
+            </div>
+            <p>
+              Turn on &quot;Show Search Bar&quot; in Settings to filter your
+              bookmarks across every folder from one search box.
+            </p>
+          </section>
+          <section className="WhatsNew-card">
+            <div className="WhatsNew-cardHeader">
+              <h2>Icon dial size</h2>
+              <NewPill />
+            </div>
+            <p>
+              Pick the new &quot;Icon&quot; dial size in Settings for a tidy,
+              app-launcher look with favicon-only dials.
+            </p>
+          </section>
+          <section className="WhatsNew-card">
+            <div className="WhatsNew-cardHeader">
               <h2>Show Favicons</h2>
-              <span className="WhatsNew-newPill" aria-label="New feature">
-                New
-              </span>
+              <NewPill />
             </div>
             <p>
               Turn on &quot;Show Favicons&quot; in Settings to display each
@@ -44,10 +63,18 @@ export function WhatsNewModal() {
           </section>
           <section className="WhatsNew-card">
             <div className="WhatsNew-cardHeader">
+              <h2>Dial borders</h2>
+              <NewPill />
+            </div>
+            <p>
+              Turn on &quot;Show Borders&quot; in Settings to add subtle borders
+              around your dials.
+            </p>
+          </section>
+          <section className="WhatsNew-card">
+            <div className="WhatsNew-cardHeader">
               <h2>Drag and Drop control</h2>
-              <span className="WhatsNew-newPill" aria-label="New feature">
-                New
-              </span>
+              <NewPill />
             </div>
             <p>
               A new &quot;Drag and Drop&quot; setting lets you turn dial
@@ -57,9 +84,7 @@ export function WhatsNewModal() {
           <section className="WhatsNew-card">
             <div className="WhatsNew-cardHeader">
               <h2>Grid spacing options</h2>
-              <span className="WhatsNew-newPill" aria-label="New feature">
-                New
-              </span>
+              <NewPill />
             </div>
             <p>
               Pick Compact, Default, or Spacious in Settings to control how
@@ -69,9 +94,7 @@ export function WhatsNewModal() {
           <section className="WhatsNew-card">
             <div className="WhatsNew-cardHeader">
               <h2>Quickly add popular sites</h2>
-              <span className="WhatsNew-newPill" aria-label="New feature">
-                New
-              </span>
+              <NewPill />
             </div>
             <p>
               Right-click an empty spot in the grid and choose &quot;Add popular

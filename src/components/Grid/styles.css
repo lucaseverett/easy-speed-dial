@@ -77,6 +77,7 @@
     height: 30px;
     padding: 0 8px 0 4px;
     border: none;
+    background-color: var(--title-background-color);
 
     .chevron-left {
       width: 17px;
@@ -86,20 +87,18 @@
     .color-scheme-light & {
       color: var(--grey-700);
       fill: var(--grey-700);
-      background-color: color-mix(in oklch, white 75%, transparent);
 
       &:hover {
-        background-color: color-mix(in oklch, white 90%, transparent);
+        background-color: rgba(255, 255, 255, 0.9);
       }
     }
 
     .color-scheme-dark & {
       color: var(--grey-200);
       fill: var(--grey-200);
-      background-color: color-mix(in oklch, var(--grey-800) 75%, transparent);
 
       &:hover {
-        background-color: color-mix(in oklch, var(--grey-800) 90%, transparent);
+        background-color: rgba(55, 55, 55, 0.9);
       }
     }
 
@@ -125,6 +124,136 @@
       box-shadow: var(--dial-inner-highlight);
     }
   }
+}
+
+.SearchBar {
+  display: flex;
+  justify-content: center;
+  /* The gap below the bar is the grid's top padding, which scales with the
+     grid spacing setting. Match it as the bar's top padding so the gap above
+     equals the gap below at every spacing. */
+  padding: 70px 50px 0;
+
+  .grid-spacing-compact & {
+    padding-top: 60px;
+  }
+
+  .grid-spacing-default & {
+    padding-top: 70px;
+  }
+
+  .grid-spacing-spacious & {
+    padding-top: 80px;
+  }
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  width: 100%;
+  max-width: 480px;
+  height: 44px;
+  padding: 0 8px 0 14px;
+  border-radius: 22px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--search-color);
+  background-color: var(--search-background-color);
+  box-shadow: var(--dial-box-shadow), var(--dial-inner-highlight);
+
+  &:has(.search-input.focus-visible) {
+    outline: 3px solid var(--blue-600);
+    outline-offset: 0;
+
+    .color-scheme-dark & {
+      outline-color: var(--blue-300);
+    }
+  }
+}
+
+.search-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+
+  .color-scheme-light & {
+    color: var(--grey-600);
+  }
+
+  .color-scheme-dark & {
+    color: var(--grey-500);
+  }
+}
+
+.search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: none;
+  font-size: 16px;
+  color: inherit;
+
+  &:focus,
+  &.focus-visible {
+    outline: none;
+  }
+}
+
+.color-scheme-light .search-input::placeholder {
+  color: var(--grey-600);
+}
+
+.color-scheme-dark .search-input::placeholder {
+  color: var(--grey-500);
+}
+
+.search-clear {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background-color: color-mix(in oklch, currentColor 20%, transparent);
+  }
+
+  &.focus-visible {
+    outline: 3px solid var(--blue-600);
+    outline-offset: 2px;
+
+    .color-scheme-dark & {
+      outline-color: var(--blue-300);
+    }
+  }
+}
+
+.SearchEmpty {
+  width: fit-content;
+  max-width: calc(100% - 48px);
+  margin: 0 auto;
+  padding: 8px 14px;
+  border-radius: 18px;
+  font-size: 18px;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--title-color);
+  background-color: var(--title-background-color);
 }
 
 .Grid {
@@ -178,6 +307,11 @@
     --dial-width-value: 10.25; /* 164px */
   }
 
+  .icon & {
+    --dial-width-value: 5.625; /* 72px */
+    font-size: 0.8em;
+  }
+
   .grid-spacing-compact & {
     --grid-gap-value: 0.75; /* 12px */
     --grid-padding: 24px;
@@ -197,6 +331,18 @@
     --grid-padding: 50px;
     --grid-padding-top: 80px;
     --grid-padding-bottom: var(--grid-padding);
+  }
+
+  .icon.grid-spacing-compact & {
+    --grid-gap-value: 1.25; /* 16px */
+  }
+
+  .icon.grid-spacing-default & {
+    --grid-gap-value: 2.1875; /* 28px */
+  }
+
+  .icon.grid-spacing-spacious & {
+    --grid-gap-value: 3.125; /* 40px */
   }
 
   .tiny & {

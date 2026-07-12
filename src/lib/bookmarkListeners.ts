@@ -8,6 +8,9 @@ import { getBookmarkSubTree, getBookmarkTree } from "./bookmarkApi";
 import { filter } from "./filter";
 import { reconcile } from "./reconcile";
 
+// Debounce for reconciling bookmark-change events into the store.
+export const BOOKMARK_DEBOUNCE_MS = 200;
+
 interface BookmarkStoreShape {
   bookmarks: FilteredBookmark[];
   currentFolder: { id: string; title: string };
@@ -99,7 +102,7 @@ export function registerBookmarkListeners(bookmarks: BookmarkStoreShape) {
     } catch (error) {
       console.error("Error receiving bookmarks:", error);
     }
-  }, 200);
+  }, BOOKMARK_DEBOUNCE_MS);
 
   function receiveBookmarks() {
     debouncedReceiveBookmarks();

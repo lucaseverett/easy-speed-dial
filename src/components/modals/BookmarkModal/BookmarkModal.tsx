@@ -39,7 +39,6 @@ export const BookmarkModal = observer(function BookmarkModal() {
   const hasCustomThumbnail = !!dialTarget && !!settings.dialImages[dialTarget];
   const submitLabel = isEditing ? "Save" : "Add";
 
-  // Load bookmark details when editing an existing bookmark or folder.
   useEffect(() => {
     async function loadBookmarkData() {
       if (editingBookmarkId) {
@@ -49,7 +48,6 @@ export const BookmarkModal = observer(function BookmarkModal() {
           setBookmarkTitle(bookmark.title || "");
           setBookmarkURL(bookmark.url || "");
           setparentFolderId(bookmark.parentId || "");
-          // Load the custom dial color for this bookmark, if set.
           const customColor = settings.dialColors[editingBookmarkId];
           setCustomDialColor(customColor || "");
           setThumbnailSize(settings.getDialImageSize(editingBookmarkId));
@@ -65,7 +63,12 @@ export const BookmarkModal = observer(function BookmarkModal() {
       ? getSitePresetByUrl(bookmarkURL)
       : null;
   const isUsingPresetThumbnail = !!preset && !hasCustomThumbnail;
-  const showDialColorInput = isEditing && !isUsingPresetThumbnail;
+  // Icon-size dials render a neutral favicon/folder glyph, so custom color and
+  // thumbnail have no visual effect. Hide those controls (stored values are
+  // preserved and reapply when switching back to a larger size).
+  const isIconSize = settings.dialSize === "icon";
+  const showDialColorInput =
+    isEditing && !isUsingPresetThumbnail && !isIconSize;
   const defaultDialColor =
     (preset ? getSitePresetColor(preset) : undefined) ||
     dialColors(
@@ -83,8 +86,6 @@ export const BookmarkModal = observer(function BookmarkModal() {
     e.preventDefault();
     if (isEditing) {
       if (!isUsingPresetThumbnail && dialTarget) {
-        // Save a custom dial color if it differs from the default.
-        // Remove the custom dial color if it matches the default.
         const color = dialColor !== defaultDialColor ? customDialColor : "";
         if (color) {
           settings.handleDialColors(dialTarget, color);
@@ -95,7 +96,6 @@ export const BookmarkModal = observer(function BookmarkModal() {
       if (hasCustomThumbnail && dialTarget) {
         settings.handleDialImageSize(dialTarget, thumbnailSize);
       }
-      // Determine which bookmark details have changed.
       const detailsChanged =
         ((bookmarkType === "folder" || bookmarkType === "bookmark") &&
           bookmarkTitle !== editingBookmark?.title) ||
@@ -105,7 +105,6 @@ export const BookmarkModal = observer(function BookmarkModal() {
       let updatedBookmark: Bookmarks.BookmarkTreeNode | undefined;
       let closeModalOptions: { focusAfterClosed?: FocusTarget } | undefined;
 
-      // Update bookmark details if they changed.
       if (detailsChanged && modals.editingBookmarkId) {
         updatedBookmark = await bookmarks.updateBookmark(
           modals.editingBookmarkId,
@@ -114,14 +113,12 @@ export const BookmarkModal = observer(function BookmarkModal() {
             ...(bookmarkType === "bookmark" ? { url: bookmarkURL } : {}),
           },
         );
-        // Focus on the updated bookmark after closing.
         closeModalOptions = {
           focusAfterClosed: () =>
             document.querySelector(`[data-id="${updatedBookmark!.id}"]`),
         };
       }
 
-      // Move bookmark to different folder if parent changed.
       if (parentChanged) {
         bookmarks.moveBookmark({
           id: modals.editingBookmarkId!,
@@ -129,14 +126,12 @@ export const BookmarkModal = observer(function BookmarkModal() {
           to: undefined,
           parentId: parentFolderId,
         });
-        // Don't focus since the bookmark is no longer visible in current folder.
         closeModalOptions = undefined;
       }
 
-      // Close modal with appropriate focus behavior:
-      // - If details changed: focus on updated bookmark
-      // - If parent changed: no focus (item moved away)
-      // - If no changes: undefined lets modal handle focus automatically
+      // Close with focus matching what changed: focus the updated bookmark on
+      // edit, skip focus when it moved away from this folder, and leave
+      // undefined (modal handles focus automatically) when nothing changed.
       modals.closeModal(closeModalOptions);
     } else {
       const newBookmark = await bookmarks.createBookmark({
@@ -262,7 +257,7 @@ export const BookmarkModal = observer(function BookmarkModal() {
                 </div>
               </>
             )}
-            {hasCustomThumbnail && (
+            {hasCustomThumbnail && !isIconSize && (
               <>
                 <label htmlFor="thumbnail-size-select">Thumbnail:</label>
                 <div className="thumbnail-size-select">

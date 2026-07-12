@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 
 import { CaretDown } from "#components/icons/CaretDown.tsx";
+import { NewPill } from "#components/NewPill/NewPill";
 import { Switch } from "#components/Switch";
 import { bookmarks } from "#stores/bookmarks";
 import { settings } from "#stores/settings";
@@ -20,6 +21,11 @@ export const BookmarkSettingsGroup = observer(function BookmarkSettingsGroup({
   );
   const dragAndDropTitleId = getId(idPrefix, "drag-and-drop-title");
   const dragAndDropDescriptionId = getId(idPrefix, "drag-and-drop-description");
+  const showSearchBarTitleId = getId(idPrefix, "show-search-bar-title");
+  const showSearchBarDescriptionId = getId(
+    idPrefix,
+    "show-search-bar-description",
+  );
   const openNewTabsTitleId = getId(idPrefix, "open-new-tabs-title");
   const openNewTabsDescriptionId = getId(idPrefix, "open-new-tabs-description");
   const defaultFolder = settings.defaultFolder;
@@ -78,6 +84,7 @@ export const BookmarkSettingsGroup = observer(function BookmarkSettingsGroup({
         <div className="setting-label">
           <div className="setting-title" id={dragAndDropTitleId}>
             Drag and Drop
+            <NewPill />
           </div>
           <div className="setting-description" id={dragAndDropDescriptionId}>
             Drag dials to reorder them or move them into folders.
@@ -90,6 +97,31 @@ export const BookmarkSettingsGroup = observer(function BookmarkSettingsGroup({
             onClick={() => settings.handleDragAndDrop(!settings.dragAndDrop)}
             className="switch-root"
             checked={settings.dragAndDrop as boolean}
+          >
+            <span className="switch-thumb" />
+          </Switch>
+        </div>
+      </div>
+
+      <div className="setting-wrapper setting-group">
+        <div className="setting-label">
+          <div className="setting-title" id={showSearchBarTitleId}>
+            Show Search Bar
+            <NewPill />
+          </div>
+          <div className="setting-description" id={showSearchBarDescriptionId}>
+            Show a search bar to filter your bookmarks.
+          </div>
+        </div>
+        <div className="setting-option toggle">
+          <Switch
+            aria-labelledby={showSearchBarTitleId}
+            aria-describedby={showSearchBarDescriptionId}
+            onClick={() =>
+              settings.handleShowSearchBar(!settings.showSearchBar)
+            }
+            className="switch-root"
+            checked={settings.showSearchBar as boolean}
           >
             <span className="switch-thumb" />
           </Switch>

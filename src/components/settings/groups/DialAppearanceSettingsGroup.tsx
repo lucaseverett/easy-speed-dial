@@ -3,6 +3,7 @@ import type { SettingsGroupProps } from "./settingsGroupUtils";
 import { observer } from "mobx-react-lite";
 
 import { CaretDown } from "#components/icons/CaretDown.tsx";
+import { NewPill } from "#components/NewPill/NewPill";
 import { Switch } from "#components/Switch";
 import { modals } from "#stores/modals";
 import { settings } from "#stores/settings";
@@ -49,6 +50,10 @@ export const DialAppearanceSettingsGroup = observer(
       : settings.attachTitle
         ? "attached"
         : "below";
+    // Icon-size dials render a neutral glyph on a fixed square surface, so dial
+    // shape, inner dial text, and preset thumbnails have no visual effect. Hide
+    // those controls (stored values are preserved and reapply at larger sizes).
+    const isIconSize = settings.dialSize === "icon";
 
     return (
       <>
@@ -56,6 +61,7 @@ export const DialAppearanceSettingsGroup = observer(
           <div className="setting-label">
             <div className="setting-title" id={dialSizeTitleId}>
               Dial Size
+              <NewPill />
             </div>
             <div className="setting-description" id={dialSizeDescriptionId}>
               Set a fixed size, or use Scale to Fit to fill the current column
@@ -80,57 +86,61 @@ export const DialAppearanceSettingsGroup = observer(
           </div>
         </div>
 
-        <div className="setting-wrapper setting-group">
-          <div className="setting-label">
-            <div className="setting-title" id={dialShapeTitleId}>
-              Dial Shape
+        {!isIconSize && (
+          <div className="setting-wrapper setting-group">
+            <div className="setting-label">
+              <div className="setting-title" id={dialShapeTitleId}>
+                Dial Shape
+              </div>
+              <div className="setting-description" id={dialShapeDescriptionId}>
+                Show dials as rectangles or squares.
+              </div>
             </div>
-            <div className="setting-description" id={dialShapeDescriptionId}>
-              Show dials as rectangles or squares.
+            <div className="setting-option select">
+              <select
+                onChange={(e) =>
+                  settings.handleSquareDials(e.target.value === "square")
+                }
+                value={settings.squareDials ? "square" : "rectangle"}
+                className="input"
+                aria-labelledby={dialShapeTitleId}
+                aria-describedby={dialShapeDescriptionId}
+              >
+                <option value="rectangle">Rectangle</option>
+                <option value="square">Square</option>
+              </select>
+              <CaretDown />
             </div>
           </div>
-          <div className="setting-option select">
-            <select
-              onChange={(e) =>
-                settings.handleSquareDials(e.target.value === "square")
-              }
-              value={settings.squareDials ? "square" : "rectangle"}
-              className="input"
-              aria-labelledby={dialShapeTitleId}
-              aria-describedby={dialShapeDescriptionId}
-            >
-              <option value="rectangle">Rectangle</option>
-              <option value="square">Square</option>
-            </select>
-            <CaretDown />
-          </div>
-        </div>
+        )}
 
-        <div className="setting-wrapper setting-group">
-          <div className="setting-label">
-            <div className="setting-title" id={dialTextTitleId}>
-              Dial Text
+        {!isIconSize && (
+          <div className="setting-wrapper setting-group">
+            <div className="setting-label">
+              <div className="setting-title" id={dialTextTitleId}>
+                Dial Text
+              </div>
+              <div className="setting-description" id={dialTextDescriptionId}>
+                Sets the text shown inside each dial.
+              </div>
             </div>
-            <div className="setting-description" id={dialTextDescriptionId}>
-              Sets the text shown inside each dial.
+            <div className="setting-option select">
+              <select
+                onChange={(e) =>
+                  settings.handleSwitchTitle(e.target.value === "name")
+                }
+                value={settings.switchTitle ? "name" : "url"}
+                className="input"
+                aria-labelledby={dialTextTitleId}
+                aria-describedby={dialTextDescriptionId}
+              >
+                <option value="url">URL</option>
+                <option value="name">Name</option>
+              </select>
+              <CaretDown />
             </div>
           </div>
-          <div className="setting-option select">
-            <select
-              onChange={(e) =>
-                settings.handleSwitchTitle(e.target.value === "name")
-              }
-              value={settings.switchTitle ? "name" : "url"}
-              className="input"
-              aria-labelledby={dialTextTitleId}
-              aria-describedby={dialTextDescriptionId}
-            >
-              <option value="url">URL</option>
-              <option value="name">Name</option>
-            </select>
-            <CaretDown />
-          </div>
-        </div>
+        )}
 
         <div className="setting-wrapper setting-group">
           <div className="setting-label">
@@ -191,6 +201,7 @@ export const DialAppearanceSettingsGroup = observer(
           <div className="setting-label">
             <div className="setting-title" id={showDialBordersTitleId}>
               Show Borders
+              <NewPill />
             </div>
             <div
               className="setting-description"
@@ -214,42 +225,48 @@ export const DialAppearanceSettingsGroup = observer(
           </div>
         </div>
 
-        <div className="setting-wrapper setting-group">
-          <div className="setting-label">
-            <div className="setting-title" id={usePresetThumbnailsTitleId}>
-              Use Preset Thumbnails
+        {!isIconSize && (
+          <div className="setting-wrapper setting-group">
+            <div className="setting-label">
+              <div className="setting-title" id={usePresetThumbnailsTitleId}>
+                Use Preset Thumbnails
+                <NewPill />
+              </div>
+              <div
+                className="setting-description"
+                id={usePresetThumbnailsDescriptionId}
+              >
+                Automatically apply preset thumbnails to popular sites.
+              </div>
             </div>
-            <div
-              className="setting-description"
-              id={usePresetThumbnailsDescriptionId}
-            >
-              Automatically apply preset thumbnails to popular sites.
+            <div className="setting-option toggle">
+              <Switch
+                aria-labelledby={usePresetThumbnailsTitleId}
+                aria-describedby={usePresetThumbnailsDescriptionId}
+                onClick={() =>
+                  settings.handleUsePresetThumbnails(
+                    !settings.usePresetThumbnails,
+                  )
+                }
+                className="switch-root"
+                checked={settings.usePresetThumbnails as boolean}
+              >
+                <span className="switch-thumb" />
+              </Switch>
             </div>
           </div>
-          <div className="setting-option toggle">
-            <Switch
-              aria-labelledby={usePresetThumbnailsTitleId}
-              aria-describedby={usePresetThumbnailsDescriptionId}
-              onClick={() =>
-                settings.handleUsePresetThumbnails(
-                  !settings.usePresetThumbnails,
-                )
-              }
-              className="switch-root"
-              checked={settings.usePresetThumbnails as boolean}
-            >
-              <span className="switch-thumb" />
-            </Switch>
-          </div>
-        </div>
+        )}
 
         <div className="setting-wrapper setting-group">
           <div className="setting-label">
             <div className="setting-title" id={showFaviconsTitleId}>
               Show Favicons
+              <NewPill />
             </div>
             <div className="setting-description" id={showFaviconsDescriptionId}>
-              Show a site favicon next to each dial title.
+              {isIconSize
+                ? "Show each site's favicon inside its dial."
+                : "Show a site favicon next to each dial title."}
             </div>
           </div>
           <div className="setting-option toggle">

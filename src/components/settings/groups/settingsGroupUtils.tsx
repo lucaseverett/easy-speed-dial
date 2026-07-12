@@ -22,6 +22,7 @@ export const maxColumns = [
 ];
 
 export const dialSizes = [
+  { label: "Icon", value: "icon" },
   { label: "Tiny", value: "tiny" },
   { label: "Small", value: "small" },
   { label: "Medium", value: "medium" },

@@ -9,6 +9,33 @@
     var(--dial-rim-top), var(--dial-rim-sides), var(--dial-rim-bottom);
   --dial-inner-highlight-no-bottom: var(--dial-rim-top), var(--dial-rim-sides);
   --dial-inner-highlight-no-top: var(--dial-rim-sides), var(--dial-rim-bottom);
+  --title-background-color: color-mix(in srgb, var(--white) 75%, transparent);
+  --title-color: var(--grey-800);
+  --search-background-color: var(--title-background-color);
+  --search-color: var(--title-color);
+  --icon-dial-background-color: var(--grey-200);
+  --icon-dial-color: var(--grey-800);
+  --icon-dial-transparent-background-color: color-mix(
+    in srgb,
+    var(--grey-200) 75%,
+    transparent
+  );
+
+  &.color-scheme-dark {
+    --title-background-color: color-mix(
+      in srgb,
+      var(--grey-850) 75%,
+      transparent
+    );
+    --title-color: var(--grey-200);
+    --icon-dial-background-color: var(--grey-800);
+    --icon-dial-color: var(--grey-200);
+    --icon-dial-transparent-background-color: color-mix(
+      in srgb,
+      var(--grey-800) 75%,
+      transparent
+    );
+  }
 }
 
 .Link {
@@ -75,6 +102,38 @@
     .show-dial-borders & {
       box-shadow: var(--dial-inner-highlight-no-bottom);
     }
+  }
+}
+
+.IconBox {
+  width: var(--dial-width);
+  height: var(--dial-width);
+  color: var(--icon-dial-color);
+  background-color: var(--icon-dial-background-color);
+
+  /* Shrink the body by the title strip so body + attached title stays square. */
+  .attach-title.show-title & {
+    height: var(--dial-height-attached-title);
+  }
+
+  .transparent-dials & {
+    background-color: var(--icon-dial-transparent-background-color);
+  }
+
+  .normal-title & {
+    box-shadow: var(--dial-box-shadow);
+
+    .show-dial-borders & {
+      box-shadow: var(--dial-box-shadow), var(--dial-inner-highlight);
+    }
+  }
+
+  .dialIcon {
+    flex: none;
+    width: 2.7em;
+    height: 2.7em;
+    fill: currentColor;
+    object-fit: contain;
   }
 }
 
@@ -149,15 +208,8 @@
       overflow-clip-margin: 4px;
     }
 
-    .color-scheme-light & {
-      background-color: rgba(255, 255, 255, 0.75);
-      color: var(--grey-800);
-    }
-
-    .color-scheme-dark & {
-      background-color: rgba(55, 55, 55, 0.75);
-      color: var(--grey-200);
-    }
+    background-color: var(--title-background-color);
+    color: var(--title-color);
 
     .attach-title & {
       border-radius: 0 0 var(--border-radius) var(--border-radius);

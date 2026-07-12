@@ -267,6 +267,9 @@
 }
 
 .setting-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-weight: 650;
   margin: 0;
   padding-bottom: 7px;

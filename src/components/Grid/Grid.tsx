@@ -10,8 +10,10 @@ import { contrastRatio } from "random-color-library";
 
 import { getImageAverageColor } from "#lib/imageLuminance";
 import { bookmarks } from "#stores/bookmarks";
+import { search } from "#stores/search";
 import { settings } from "#stores/settings";
 import { Dial } from "./Dial/Dial";
+import { SearchBar } from "./SearchBar";
 import { SettingsGear } from "./SettingsGear";
 
 interface ExtendedSortableEvent extends Sortable.SortableEvent {
@@ -41,17 +43,15 @@ export const Grid = observer(function Grid() {
   const customColor = settings.customColor;
   const customImage = settings.customImage;
   const dragAndDrop = settings.dragAndDrop;
+  const showSearchBar = settings.showSearchBar;
+  const searching = search.isShowingResults;
 
-  // Show breadcrumbs unless in the root folder.
   const isRoot =
     (settings.defaultFolder !== undefined &&
       bookmarks.currentFolder.id === settings.defaultFolder) ||
     !bookmarks.parentId;
 
-  // Check if font size is at maximum (1.6em) for scale mode.
-  // This is used to determine if the grid should have a max-width applied.
-  // It's a workaround for a Firefox glitch where the grid does not scale properly.
-  // By removing the max-width when the font size is at maximum, we work around the issue.
+  // Firefox scale-mode workaround: remove max-width at the 1.6em cap.
   useLayoutEffect(() => {
     const gridElement = gridRef.current;
     if (!gridElement) return;
@@ -63,7 +63,6 @@ export const Grid = observer(function Grid() {
       setIsMaxFontSize(fontSize === 25.6);
     };
 
-    // Check on mount, when window resizes, and when grid settings change.
     checkFontSize();
     window.addEventListener("resize", checkFontSize);
 
@@ -72,10 +71,9 @@ export const Grid = observer(function Grid() {
     };
   }, [dialSize, gridSpacing, maxColumns, squareDials]);
 
-  // Calculate gear color based on root background for optimal contrast
   useEffect(() => {
-    // Only run for custom image or custom color.
-    // Otherwise the gear color is set manually.
+    // Only derive the gear color for custom image/color wallpapers; for the
+    // others the gear color is set manually.
     if (wallpaper !== "custom-image" && wallpaper !== "custom-color") {
       setGearColor(null);
       return;
@@ -86,7 +84,7 @@ export const Grid = observer(function Grid() {
       const computedStyle = window.getComputedStyle(rootElement);
       const bgColor = computedStyle.backgroundColor;
 
-      // Handle background image (rgba indicates transparent background with image)
+      // An rgba background color indicates a transparent background with an image.
       if (bgColor.startsWith("rgba")) {
         const backgroundImage = computedStyle.backgroundImage;
         const match = backgroundImage.match(/url\(['"]?([^'"]*?)['"]?\)/);
@@ -105,7 +103,6 @@ export const Grid = observer(function Grid() {
           }
         }
       } else {
-        // Handle solid background color
         const whiteContrast = contrastRatio(bgColor, "#ffffff");
         const blackContrast = contrastRatio(bgColor, "#000000");
 
@@ -122,9 +119,8 @@ export const Grid = observer(function Grid() {
   }, [wallpaper, customColor, customImage]);
 
   useEffect(() => {
-    if (!dragAndDrop || !gridRef.current) return;
+    if (!dragAndDrop || searching || !gridRef.current) return;
 
-    // Check if the cursor is in a dial's drop zone
     function isInDragZone(x: number, width: number) {
       const zoneWidth = width * dropZonePercent;
       const start = (width - zoneWidth) / 2;
@@ -132,7 +128,6 @@ export const Grid = observer(function Grid() {
       return x >= start && x <= end;
     }
 
-    // Attach hover event listeners to all sortable items.
     const addHoverListeners = () => {
       const sortableItems = gridRef.current?.querySelectorAll("[data-id]");
 
@@ -167,7 +162,6 @@ export const Grid = observer(function Grid() {
         item.addEventListener("dragover", handleDragOver);
         item.addEventListener("dragleave", handleDragLeave);
 
-        // Save the cleanup function for drag event listeners.
         item._hoverCleanup = () => {
           item.removeEventListener("dragover", handleDragOver);
           item.removeEventListener("dragleave", handleDragLeave);
@@ -175,7 +169,6 @@ export const Grid = observer(function Grid() {
       });
     };
 
-    // Attach drag-and-drop event listeners to the breadcrumb element.
     const addBreadcrumbListeners = () => {
       const breadcrumbElement = breadcrumbsRef.current;
       if (!breadcrumbElement) return;
@@ -196,7 +189,6 @@ export const Grid = observer(function Grid() {
       breadcrumbElement.addEventListener("dragover", handleDragOver);
       breadcrumbElement.addEventListener("dragleave", handleDragLeave);
       breadcrumbElement.addEventListener("drop", handleDrop);
-      // Save the cleanup function for breadcrumb event listeners.
       (breadcrumbElement as HTMLElementWithCleanup)._cleanup = () => {
         breadcrumbElement.removeEventListener("dragover", handleDragOver);
         breadcrumbElement.removeEventListener("dragleave", handleDragLeave);
@@ -239,7 +231,6 @@ export const Grid = observer(function Grid() {
       async onEnd(e: ExtendedSortableEvent) {
         cleanupBreadcrumbListeners();
         cleanupHoverListeners();
-        // Remove the folder-drop-target class from the drop target.
         if (e.originalEvent?.target) {
           (e.originalEvent.target as HTMLElement).classList?.remove(
             "folder-drop-target",
@@ -259,7 +250,6 @@ export const Grid = observer(function Grid() {
         const droppedType = (e.originalEvent?.target as HTMLElement | null)
           ?.dataset.type;
 
-        // Check if the drop happened on the breadcrumb.
         const breadcrumbElement = breadcrumbsRef.current;
         const droppedOnBreadcrumb =
           breadcrumbElement &&
@@ -275,7 +265,6 @@ export const Grid = observer(function Grid() {
           droppedId &&
           (droppedType === "folder" || droppedType === "bookmark")
         ) {
-          // Check if the drop happened in the middle third of the target
           const targetElement = (
             e.originalEvent?.target as HTMLElement | null
           )?.closest("[data-id]");
@@ -292,13 +281,11 @@ export const Grid = observer(function Grid() {
                 });
               } else if (droppedType === "bookmark" && draggedId && droppedId) {
                 runInAction(async () => {
-                  // Create a new folder inside the current folder.
                   const newFolder = await bookmarks.createBookmark({
                     title: "New Folder",
                     parentId: bookmarks.currentFolder.id,
                   });
                   const newFolderId = newFolder.id;
-                  // Move the new folder to the position of the drop.
                   bookmarks.moveBookmark({
                     id: newFolderId,
                     // Find the index of the added bookmark.
@@ -309,12 +296,10 @@ export const Grid = observer(function Grid() {
                       (b) => b.id === droppedId,
                     ),
                   });
-                  // Move the dragged item inside the new folder.
                   bookmarks.moveBookmark({
                     id: draggedId,
                     parentId: newFolderId,
                   });
-                  // Move the dropped-on bookmark inside the new folder.
                   bookmarks.moveBookmark({
                     id: droppedId,
                     parentId: newFolderId,
@@ -324,7 +309,6 @@ export const Grid = observer(function Grid() {
             }
           }
         } else if (e.oldIndex !== e.newIndex && draggedId) {
-          // Handle standard reordering of dials.
           bookmarks.moveBookmark({
             id: draggedId,
             from: e.oldIndex,
@@ -337,7 +321,7 @@ export const Grid = observer(function Grid() {
     return () => {
       sortable.destroy();
     };
-  }, [dragAndDrop]);
+  }, [dragAndDrop, searching]);
 
   return (
     <div
@@ -349,8 +333,8 @@ export const Grid = observer(function Grid() {
       }
     >
       <SettingsGear />
-      {/* Render breadcrumbs if not in the root folder */}
-      {!isRoot && (
+      {showSearchBar && <SearchBar />}
+      {!isRoot && !searching && (
         <div className="Breadcrumbs" ref={breadcrumbsRef}>
           <a href={`#${bookmarks.parentId}`} title="Go to parent folder">
             <svg
@@ -372,7 +356,10 @@ export const Grid = observer(function Grid() {
       <div
         className={clsx(
           "Grid",
-          !isRoot && "has-breadcrumbs",
+          // Only collapse the top padding when a breadcrumb is actually shown.
+          // While searching, breadcrumbs are hidden, so the grid keeps its top
+          // padding to preserve the gap below the search bar.
+          !isRoot && !searching && "has-breadcrumbs",
           isMaxFontSize && "max-width",
         )}
         id="sortable"
@@ -385,12 +372,17 @@ export const Grid = observer(function Grid() {
       >
         <Dials />
       </div>
+      {searching && search.searched && search.results.length === 0 && (
+        <div className="SearchEmpty">No bookmarks found</div>
+      )}
     </div>
   );
 });
 
 const Dials = observer(function Dials() {
-  return bookmarks.bookmarks.map(({ id, name, title, type, index, url }) => {
+  const searching = search.isShowingResults;
+  const source = searching ? search.results : bookmarks.bookmarks;
+  return source.map(({ id, name, title, type, index, url }) => {
     if (type === "separator") {
       return (
         <hr

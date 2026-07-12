@@ -7,6 +7,7 @@ import { openTab } from "#lib/tabs";
 import { bookmarks } from "#stores/bookmarks";
 import { contextMenu } from "#stores/contextMenu";
 import { modals } from "#stores/modals";
+import { search } from "#stores/search";
 import { settings } from "#stores/settings";
 
 import "./styles.css";
@@ -16,6 +17,9 @@ export const ContextMenu = observer(function ContextMenu() {
   const menuItemsRef = useRef<HTMLButtonElement[]>([]);
   const contextMenuX = contextMenu.coords.x;
   const contextMenuY = contextMenu.coords.y;
+  // While search results are displayed there is no single target folder, so
+  // "add" actions (which create into the current folder) are hidden.
+  const searching = search.isShowingResults;
 
   const [currIndex, setCurrIndex] = useState(-1);
 
@@ -147,6 +151,33 @@ export const ContextMenu = observer(function ContextMenu() {
     );
   }
 
+  // Thumbnails are not rendered at icon size, so the controls are hidden there.
+  const thumbnailMenuItems = settings.dialSize !== "icon" && (
+    <>
+      <Separator />
+      <li>
+        <button
+          role="menuitem"
+          onClick={handleSelectThumbnail}
+          onMouseEnter={handleMouseEnter}
+        >
+          Select custom thumbnail
+        </button>
+      </li>
+      {contextMenu.focusAfterClosed?.hasAttribute("data-thumbnail") && (
+        <li>
+          <button
+            role="menuitem"
+            onClick={handleClearThumbnail}
+            onMouseEnter={handleMouseEnter}
+          >
+            Clear custom thumbnail
+          </button>
+        </li>
+      )}
+    </>
+  );
+
   return (
     <div
       tabIndex={-1}
@@ -190,27 +221,7 @@ export const ContextMenu = observer(function ContextMenu() {
               </li>
             </>
           )}
-          <Separator />
-          <li>
-            <button
-              role="menuitem"
-              onClick={handleSelectThumbnail}
-              onMouseEnter={handleMouseEnter}
-            >
-              Select custom thumbnail
-            </button>
-          </li>
-          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") && (
-            <li>
-              <button
-                role="menuitem"
-                onClick={handleClearThumbnail}
-                onMouseEnter={handleMouseEnter}
-              >
-                Clear custom thumbnail
-              </button>
-            </li>
-          )}
+          {thumbnailMenuItems}
           <Separator />
           <li>
             <button
@@ -263,27 +274,7 @@ export const ContextMenu = observer(function ContextMenu() {
               </button>
             </li>
           )}
-          <Separator />
-          <li>
-            <button
-              role="menuitem"
-              onClick={handleSelectThumbnail}
-              onMouseEnter={handleMouseEnter}
-            >
-              Select custom thumbnail
-            </button>
-          </li>
-          {contextMenu.focusAfterClosed.hasAttribute("data-thumbnail") && (
-            <li>
-              <button
-                role="menuitem"
-                onClick={handleClearThumbnail}
-                onMouseEnter={handleMouseEnter}
-              >
-                Clear custom thumbnail
-              </button>
-            </li>
-          )}
+          {thumbnailMenuItems}
           <Separator />
           <li>
             <button
@@ -307,34 +298,38 @@ export const ContextMenu = observer(function ContextMenu() {
         </ul>
       ) : (
         <ul>
-          <li>
-            <button
-              role="menuitem"
-              onMouseEnter={handleMouseEnter}
-              onClick={handleShowNewBookmark}
-            >
-              Add bookmark
-            </button>
-          </li>
-          <li>
-            <button
-              role="menuitem"
-              onMouseEnter={handleMouseEnter}
-              onClick={handleShowNewFolder}
-            >
-              Add folder
-            </button>
-          </li>
-          <li>
-            <button
-              role="menuitem"
-              onMouseEnter={handleMouseEnter}
-              onClick={handleShowPopularSites}
-            >
-              Add popular sites
-            </button>
-          </li>
-          <Separator />
+          {!searching && (
+            <>
+              <li>
+                <button
+                  role="menuitem"
+                  onMouseEnter={handleMouseEnter}
+                  onClick={handleShowNewBookmark}
+                >
+                  Add bookmark
+                </button>
+              </li>
+              <li>
+                <button
+                  role="menuitem"
+                  onMouseEnter={handleMouseEnter}
+                  onClick={handleShowNewFolder}
+                >
+                  Add folder
+                </button>
+              </li>
+              <li>
+                <button
+                  role="menuitem"
+                  onMouseEnter={handleMouseEnter}
+                  onClick={handleShowPopularSites}
+                >
+                  Add popular sites
+                </button>
+              </li>
+              <Separator />
+            </>
+          )}
           {__CHROME__ && (
             <>
               <li>

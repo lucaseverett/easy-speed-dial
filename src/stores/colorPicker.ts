@@ -13,10 +13,13 @@ export const colorPicker = makeAutoObservable({
     colorPicker.focusAfterClosed = target;
     colorPicker.isOpen = true;
   },
-  closeColorPicker() {
+  closeColorPicker({ restoreFocus = true } = {}) {
     if (!colorPicker.isOpen) return;
     colorPicker.isOpen = false;
     colorPicker.anchor = null;
-    colorPicker.focusAfterClosed?.focus();
+    if (restoreFocus) {
+      colorPicker.focusAfterClosed?.focus();
+    }
+    colorPicker.focusAfterClosed = null;
   },
 });
