@@ -7,6 +7,7 @@ import { SettingsContent } from "#components/settings/SettingsContent";
 import { focusSafely } from "#lib/focus";
 import { colorPicker } from "#stores/colorPicker";
 import { modals } from "#stores/modals";
+import { settings } from "#stores/settings";
 
 import "./Settings.css";
 
@@ -15,6 +16,7 @@ export const Settings = observer(function Settings() {
   const modalOpen = modals.isOpen;
 
   useLayoutEffect(() => {
+    settings.showSettingsIcon();
     focusRef.current?.focus();
   }, []);
 

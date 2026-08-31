@@ -22,6 +22,7 @@ interface ModalProps {
   dismissOnPointerDownOutside?: boolean;
   descriptionId?: string;
   active?: boolean;
+  onDismiss?: () => void;
 }
 
 const focusableElements = [
@@ -49,6 +50,11 @@ export function Modal(props: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const active = props.active ?? true;
+
+  function dismiss() {
+    props.onDismiss?.();
+    modals.closeModal();
+  }
 
   useEffect(() => {
     if (!active) return;
@@ -79,7 +85,7 @@ export function Modal(props: ModalProps) {
 
     if (e.key === "Escape") {
       colorPicker.closeColorPicker();
-      modals.closeModal();
+      dismiss();
       return;
     }
 
@@ -106,7 +112,7 @@ export function Modal(props: ModalProps) {
     e.preventDefault();
     colorPicker.closeColorPicker();
     if (props.dismissOnPointerDownOutside !== false) {
-      modals.closeModal();
+      dismiss();
     }
   }
 
@@ -162,7 +168,7 @@ export function Modal(props: ModalProps) {
               <button
                 className="btn dismissBtn dismiss"
                 aria-label="Close"
-                onClick={() => modals.closeModal()}
+                onClick={dismiss}
                 id="dismiss-btn"
               >
                 <div />

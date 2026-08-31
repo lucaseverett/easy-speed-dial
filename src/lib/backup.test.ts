@@ -2,11 +2,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { applyBackup, buildBackup } from "./backup";
 
-// Mock extension-bound modules so backup tests run outside an extension
-// context (importing #lib/storage would pull in the webextension polyfill,
-// which throws). getStoredCustomImage is a configurable mock so buildBackup
-// tests can vary the stored custom image; the modals store is mocked so
-// favicon-opt-in modal calls are observable as a plain spy.
+// Avoid loading the WebExtension polyfill outside an extension context.
 const { customImageKey, getStoredCustomImageMock, openModalMock } = vi.hoisted(
   () => ({
     customImageKey: "2.0-custom-image",
@@ -26,7 +22,6 @@ vi.mock("#stores/modals", () => ({
   modals: { openModal: openModalMock },
 }));
 
-// A fake settings store: every method applyBackup calls, recorded as a spy.
 function createFakeSettings() {
   return {
     resetSettings: vi.fn(),
@@ -63,7 +58,6 @@ function apply(settings: FakeSettings, backup: unknown) {
   );
 }
 
-// A backup as produced by the current buildBackup (all 21 keys present).
 const MODERN_BACKUP = {
   usePresetThumbnails: true,
   showFavicons: true,
@@ -104,9 +98,6 @@ describe("applyBackup", () => {
       "data:image/png;base64,QUFB",
     );
     expect(settings.handleUsePresetThumbnails).toHaveBeenCalledWith(true);
-    // showFavicons: true in the backup queues the opt-in modal instead of
-    // flipping the setting directly; the modal's Continue path enables it
-    // after the permission grant.
     expect(settings.handleShowFavicons).not.toHaveBeenCalled();
     expect(openModalMock).toHaveBeenCalledWith(
       expect.objectContaining({ modal: "confirm-favicon-permission" }),
@@ -157,7 +148,6 @@ describe("applyBackup", () => {
   });
 
   test("applies a field even when its value is false", async () => {
-    // Relies on hasOwnProperty rather than truthiness.
     await apply(settings, { attachTitle: false });
 
     expect(settings.handleAttachTitle).toHaveBeenCalledWith(false);
@@ -262,7 +252,6 @@ describe("applyBackup", () => {
   });
 });
 
-// A settings store with every persisted field populated.
 function createSettingsValues() {
   return {
     usePresetThumbnails: true,
@@ -304,7 +293,6 @@ describe("buildBackup", () => {
 
     const backup = await build(values);
 
-    // Exact shape: all 21 persisted keys, nothing else.
     expect(backup).toEqual(values);
   });
 
@@ -315,7 +303,6 @@ describe("buildBackup", () => {
 
     const backup = await build(createSettingsValues());
 
-    // The in-memory value is a blob URL; the backup must hold the base64.
     expect(backup.customImage).toBe("data:image/png;base64,QUFB");
   });
 

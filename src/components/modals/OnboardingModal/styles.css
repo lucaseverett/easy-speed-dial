@@ -5,14 +5,12 @@
 .OnboardingModalWrapper,
 .OnboardingModalLayout {
   .modal-body {
-    /* Reserve space at the bottom for the footer so scrolling content
-       never overlaps the buttons. */
+    /* The footer owns the bottom spacing. */
     padding-bottom: 0;
   }
 
   .scroll-box {
-    /* Make the OnboardingModal layout drive scrolling instead of the modal's
-       default scroll-box, so the footer can be sticky inside it. */
+    /* Let the onboarding layout scroll so its footer can remain sticky. */
     overflow: visible;
   }
 }

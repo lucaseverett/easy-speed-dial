@@ -40,7 +40,7 @@ export const bookmarks = makeAutoObservable({
         (a, b) => a.index! - b.index!,
       );
       bookmarks.currentFolder = { id, title: newBookmarks[0].title };
-      // Set parentId for the current folder. If parentId is empty, breadcrumbs will not be shown.
+      // Browser root folders have no breadcrumb parent.
       bookmarks.parentId =
         newBookmarks[0].parentId !== "root________" &&
         newBookmarks[0].parentId !== "0"
@@ -87,16 +87,10 @@ export const bookmarks = makeAutoObservable({
     const moveOptions: { index?: number; parentId?: string } = {};
 
     if (from !== undefined && to !== undefined) {
-      /*
-      Some bookmarks may be filtered out.
-      bookmarks.bookmarks[to]["index"] gives the correct index for filtered bookmarks.
-      */
+      // Use the underlying index because the displayed list may be filtered.
       moveOptions.index = bookmarks.bookmarks[to]?.index;
 
-      /*
-      Required for Chrome, not Firefox.
-      See: https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
-      */
+      // Chrome calculates forward moves before removing the original item.
       if (__CHROME__ && from < to && moveOptions.index !== undefined) {
         moveOptions.index++;
       }
@@ -106,7 +100,6 @@ export const bookmarks = makeAutoObservable({
       moveOptions.parentId = parentId;
     }
 
-    // Remove the bookmark from the current folder if moving to a different folder.
     if (parentId && parentId !== bookmarks.currentFolder.id) {
       const indexToRemove = bookmarks.bookmarks.findIndex(
         (bookmark) => bookmark.id === id,
@@ -115,7 +108,6 @@ export const bookmarks = makeAutoObservable({
         bookmarks.bookmarks.splice(indexToRemove, 1);
       }
     } else if (from !== undefined && to !== undefined && from !== to) {
-      // Reorder the bookmark within the same folder for immediate UI feedback.
       const bookmark = bookmarks.bookmarks.splice(from, 1)[0];
       bookmarks.bookmarks.splice(to, 0, bookmark);
     }

@@ -8,12 +8,10 @@ import { filter } from "#lib/filter";
 import browser from "#platform/browser";
 import { settings } from "#stores/settings";
 
-// Matches the listener debounce used for folder reconciliation.
 export const SEARCH_DEBOUNCE_MS = BOOKMARK_DEBOUNCE_MS;
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-// Monotonic counter guarding against out-of-order async responses: only the
-// most recently issued query is allowed to write results.
+// Only the latest async query may update results.
 let seq = 0;
 
 function displayName(b: FilteredBookmark): string {
@@ -32,18 +30,12 @@ function scheduleRun() {
 export const search = makeAutoObservable({
   query: "",
   results: [] as FilteredBookmark[],
-  // True whenever there is a non-empty (trimmed) query.
   isActive: false,
-  // True only once a query has finished running. Guards the no-results message
-  // from flashing before the first (debounced, async) search returns.
+  // Prevents an empty-state flash before the first search completes.
   searched: false,
-  // True while a restored search is waiting for its first result set. The grid
-  // uses this to avoid briefly rendering the current folder on load/navigation.
+  // Prevents the folder from flashing while restored results load.
   restoring: false,
-  // The grid renders search results instead of the current folder while true.
-  // Typing keeps the current result set in place until the next query returns,
-  // but restored searches enter search mode immediately so the fallback folder
-  // does not flash on load/navigation.
+  // Keep prior results while typing, but switch immediately when restoring.
   get isShowingResults(): boolean {
     return (
       settings.showSearchBar &&
@@ -61,8 +53,7 @@ export const search = makeAutoObservable({
     search.isActive = true;
     scheduleRun();
   },
-  // Restore a query from the URL on load / back-navigation. Runs immediately
-  // (no debounce) so results appear promptly; URL syncing is handled elsewhere.
+  // Restored navigation bypasses the typing debounce.
   restoreQuery(value: string) {
     if (!value.trim()) {
       search.clear();
@@ -75,8 +66,6 @@ export const search = makeAutoObservable({
     search.restoring = true;
     void search._run(value.trim());
   },
-  // Re-run the active query after a bookmark mutation so results stay in sync
-  // with the live tree (edits update, deletions drop out, etc.).
   rerun() {
     if (search.isActive && search.query.trim()) scheduleRun();
   },
@@ -86,14 +75,13 @@ export const search = makeAutoObservable({
       const raw = await searchBookmarks(query);
       const filtered = filter(raw)
         .filter((b) => b.type !== "separator")
-        // Folders first, then bookmarks; alphabetical within each group.
         .sort((a, b) => {
           const aFolder = a.type === "folder";
           const bFolder = b.type === "folder";
           if (aFolder !== bFolder) return aFolder ? -1 : 1;
           return displayName(a).localeCompare(displayName(b));
         });
-      if (current !== seq) return; // A newer query superseded this one.
+      if (current !== seq) return;
       runInAction(() => {
         search.results = filtered;
         search.searched = true;
@@ -115,7 +103,7 @@ export const search = makeAutoObservable({
       clearTimeout(debounceTimer);
       debounceTimer = null;
     }
-    seq++; // Invalidate any in-flight query.
+    seq++;
     search.query = "";
     search.results = [];
     search.isActive = false;
@@ -134,8 +122,7 @@ function syncBookmarkListeners(listen: boolean) {
   browser.bookmarks.onRemoved[method](handleBookmarkChange);
 }
 
-// Keep live results in sync without retaining global bookmark listeners while
-// search is disabled or idle.
+// Subscribe only while results need live bookmark updates.
 reaction(
   () => settings.showSearchBar && search.isActive,
   syncBookmarkListeners,

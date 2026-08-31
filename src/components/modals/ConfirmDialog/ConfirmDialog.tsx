@@ -31,8 +31,7 @@ export function ConfirmDialog({
     try {
       await onConfirm();
     } finally {
-      // Always close — leaving the modal open on a thrown onConfirm strands
-      // the user with no path forward besides Cancel.
+      // Confirmation owns cleanup even when the action fails.
       modals.closeModal();
     }
   }

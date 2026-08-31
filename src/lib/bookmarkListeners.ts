@@ -8,7 +8,6 @@ import { getBookmarkSubTree, getBookmarkTree } from "./bookmarkApi";
 import { filter } from "./filter";
 import { reconcile } from "./reconcile";
 
-// Debounce for reconciling bookmark-change events into the store.
 export const BOOKMARK_DEBOUNCE_MS = 200;
 
 interface BookmarkStoreShape {

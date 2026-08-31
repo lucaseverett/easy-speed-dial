@@ -2,9 +2,7 @@ import { faviconCache, isFresh, ONE_HOUR_MS } from "#lib/faviconCache";
 import { hasFaviconPermission } from "#lib/optionalPermissions";
 import browser from "#platform/browser";
 
-// Single-handler hook (not pub/sub). Setting a new handler replaces the
-// previous one, which matches the call site: the favicons store registers
-// once at module load to react to permission loss by disabling the feature.
+// A single store owns permission-loss handling; later registration replaces it.
 let permissionLostHandler: (() => void) | undefined;
 
 export function setPermissionLostHandler(handler: () => void) {
@@ -30,9 +28,7 @@ export async function hashBytes(buffer: ArrayBuffer) {
 }
 
 export function getFallbackHash() {
-  // Memoize the fingerprint of the API's generic fallback icon. On failure,
-  // clear the cache so the next call retries instead of poisoning the whole
-  // session with a permanently rejected promise.
+  // Do not retain a rejected promise; transient failures must remain retryable.
   fallbackHashPromise ??= fetch(buildFaviconUrl(FALLBACK_PAGE_URL))
     .then((response) => response.arrayBuffer())
     .then(hashBytes)
@@ -70,9 +66,7 @@ function blobToBase64(blob: Blob): Promise<string> {
 }
 
 export async function fetchDuckDuckGoFavicon(hostname: string): Promise<void> {
-  // Concurrent-fetch dedup lives in the caller (favicons store queue); the
-  // freshness check here covers the race where two URLs for the same
-  // hostname arrive back-to-back after the first one populated the cache.
+  // Recheck after queueing because another URL may have populated this host.
   const cached = faviconCache.get(hostname);
   if (cached && isFresh(cached)) return;
 
@@ -85,9 +79,7 @@ export async function fetchDuckDuckGoFavicon(hostname: string): Promise<void> {
     } else if (response.status === 404) {
       faviconCache.set(hostname, { dataUrl: null, fetchedAt: Date.now() });
     } else {
-      // 5xx or other unexpected status. Cache short so a flaky response
-      // doesn't burn a request per page load, but recover quickly once
-      // DDG is healthy again.
+      // Avoid repeated requests while letting transient failures recover soon.
       faviconCache.set(hostname, {
         dataUrl: null,
         fetchedAt: Date.now(),
@@ -95,13 +87,11 @@ export async function fetchDuckDuckGoFavicon(hostname: string): Promise<void> {
       });
     }
   } catch {
-    // TypeError from fetch when the host permission is missing or network fails.
+    // Distinguish revoked permission from transient network failure.
     const permissionGranted = await hasFaviconPermission();
     if (!permissionGranted) {
       permissionLostHandler?.();
     } else {
-      // Permission is intact, so this is a genuine network error (offline,
-      // DNS, etc.). Same short-TTL treatment as a 5xx.
       faviconCache.set(hostname, {
         dataUrl: null,
         fetchedAt: Date.now(),

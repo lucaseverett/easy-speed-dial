@@ -1,20 +1,26 @@
 import { observer } from "mobx-react-lite";
 
+import { contextMenu } from "#stores/contextMenu";
 import { modals } from "#stores/modals";
 import { settings } from "#stores/settings";
 
 export const SettingsGear = observer(function SettingsGear() {
   const showDot = settings.showUpgradeIndicator;
 
+  if (settings.settingsIconHidden) return null;
+
   return (
     <button
       className="gear-button"
+      data-context-menu="settings-icon"
+      data-id="settings-icon"
       onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
         modals.openModal({
           modal: showDot ? "whats-new" : "settings-panel",
           focusAfterClosed: e.currentTarget,
         })
       }
+      onContextMenu={contextMenu.openContextMenu}
       aria-label={showDot ? "Open What's New" : "Open Settings"}
     >
       <svg

@@ -56,9 +56,7 @@ const listeners: Record<EventType, ListenerCallback[]> = {
   onRemoved: [],
 };
 
-// Guard against rebroadcast loops (isProcessingBroadcast) and debounce
-// redundant broadcasts (broadcastTimeout) during programmatic or cross-tab
-// updates.
+// Suppress cross-tab echoes and coalesce local bursts.
 let isProcessingBroadcast = false;
 let broadcastTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -92,7 +90,6 @@ function triggerListeners(eventType: EventType, ...args: unknown[]) {
   });
 }
 
-// Broadcast bookmark tree changes to other tabs (debounced to avoid flooding)
 function broadcastChanges() {
   if (isProcessingBroadcast) {
     return;
@@ -398,10 +395,7 @@ function update(id: string, changes: BookmarkUpdateChanges): BookmarkTreeNode {
   return updatedBookmark;
 }
 
-// Mimic chrome.bookmarks.search(query): all whitespace-separated tokens must
-// match (case-insensitive) against the node's title and url. Returns a flat
-// list of matching nodes (bookmarks match on title+url, folders on title),
-// excluding the hidden root container.
+// Match Chrome's flat, case-insensitive AND search without exposing the root.
 function search(query: string): Promise<BookmarkTreeNode[]> {
   const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
   const results: BookmarkTreeNode[] = [];

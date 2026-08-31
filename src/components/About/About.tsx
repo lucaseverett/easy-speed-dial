@@ -11,7 +11,18 @@ export function About() {
       <div className="identity">
         <img src={logo} width="72" height="72" alt="" aria-hidden="true" />
         <p className="title">Easy Speed Dial</p>
-        <p className="version">Version {displayAppVersion}</p>
+        <p className="version">
+          Version {displayAppVersion}
+          <span aria-hidden="true"> · </span>
+          <a
+            className="textLink"
+            href="https://easyspeeddial.com/release-notes"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Release notes
+          </a>
+        </p>
       </div>
 
       <div className="support">

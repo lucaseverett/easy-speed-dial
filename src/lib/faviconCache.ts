@@ -5,9 +5,7 @@ import { setStorage, storageKeys } from "#lib/storage";
 export type FaviconCacheEntry = {
   dataUrl: string | null;
   fetchedAt: number;
-  // Per-entry freshness window. Omitted on successful lookups (200/404),
-  // which fall back to the default. Set on transient failures so they
-  // retry quickly rather than persisting like a real "no favicon" result.
+  // Transient failures override the default TTL so they retry sooner.
   ttlMs?: number;
 };
 type FaviconCacheMap = Record<string, FaviconCacheEntry>;
@@ -20,16 +18,12 @@ export function isFresh(entry: FaviconCacheEntry, now = Date.now()): boolean {
   return now - entry.fetchedAt < ttl;
 }
 
-// Coalesce rapid set() calls into a single storage write. Cold-start
-// resolves N favicons in quick succession; without batching, each one
-// re-serializes and re-writes the entire snapshot.
+// Batch cold-start lookups to avoid repeatedly serializing the full cache.
 const FLUSH_DELAY_MS = 500;
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
-// Shallow so entry values stay plain objects. Deep observation would wrap each
-// entry in a Proxy, which structured-clone (and thus browser.storage.local.set)
-// rejects with DataCloneError — silently breaking persistence. Entries are
-// always replaced wholesale, never mutated in place, so we lose nothing.
+// Proxied entries fail browser storage's structured clone. Whole-entry
+// replacement makes shallow observation sufficient.
 const memory = observable.map<string, FaviconCacheEntry>(undefined, {
   deep: false,
 });
@@ -69,12 +63,6 @@ export async function loadFaviconCache(
         if (isFresh(entry as FaviconCacheEntry, now)) {
           memory.set(hostname, entry as FaviconCacheEntry);
         } else {
-          // Stale entries are either deleted bookmarks, bookmarks in a
-          // folder the user hasn't opened in over a week (favicons are only
-          // requested for the current folder, so unvisited folders age out),
-          // or transient failures past their short window. Dropping all of
-          // them keeps storage proportional to recent usage; the cost is a
-          // re-fetch the next time the user opens that folder.
           pruned++;
         }
       } else {
@@ -83,8 +71,6 @@ export async function loadFaviconCache(
     }
   });
 
-  // Persist the trimmed snapshot once if anything was dropped, so storage
-  // doesn't keep accumulating dead entries across launches.
   if (pruned > 0) {
     const snapshot = Object.fromEntries(memory.entries());
     await setStorage({ [storageKeys.faviconCache]: snapshot });

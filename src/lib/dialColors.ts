@@ -104,8 +104,7 @@ function randomIntFromHash(key: string, max: number): number {
 
   const normalized = hash / 10000000000;
 
-  // Bias away from the low end of the range to reduce how often red is
-  // chosen, since red collides with common default/error UI colors.
+  // Reduce red selections because red commonly signals errors.
   const biased = normalized < 0.1 ? normalized * 10 : normalized;
 
   const result = Math.floor(biased * max);

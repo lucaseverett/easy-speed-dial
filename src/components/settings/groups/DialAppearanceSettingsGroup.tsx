@@ -3,7 +3,6 @@ import type { SettingsGroupProps } from "./settingsGroupUtils";
 import { observer } from "mobx-react-lite";
 
 import { CaretDown } from "#components/icons/CaretDown.tsx";
-import { NewPill } from "#components/NewPill/NewPill";
 import { Switch } from "#components/Switch";
 import { modals } from "#stores/modals";
 import { settings } from "#stores/settings";
@@ -50,9 +49,7 @@ export const DialAppearanceSettingsGroup = observer(
       : settings.attachTitle
         ? "attached"
         : "below";
-    // Icon-size dials render a neutral glyph on a fixed square surface, so dial
-    // shape, inner dial text, and preset thumbnails have no visual effect. Hide
-    // those controls (stored values are preserved and reapply at larger sizes).
+    // Icon dials preserve these settings but do not render them.
     const isIconSize = settings.dialSize === "icon";
 
     return (
@@ -61,7 +58,6 @@ export const DialAppearanceSettingsGroup = observer(
           <div className="setting-label">
             <div className="setting-title" id={dialSizeTitleId}>
               Dial Size
-              <NewPill />
             </div>
             <div className="setting-description" id={dialSizeDescriptionId}>
               Set a fixed size, or use Scale to Fit to fill the current column
@@ -201,7 +197,6 @@ export const DialAppearanceSettingsGroup = observer(
           <div className="setting-label">
             <div className="setting-title" id={showDialBordersTitleId}>
               Show Borders
-              <NewPill />
             </div>
             <div
               className="setting-description"
@@ -230,7 +225,6 @@ export const DialAppearanceSettingsGroup = observer(
             <div className="setting-label">
               <div className="setting-title" id={usePresetThumbnailsTitleId}>
                 Use Preset Thumbnails
-                <NewPill />
               </div>
               <div
                 className="setting-description"
@@ -261,7 +255,6 @@ export const DialAppearanceSettingsGroup = observer(
           <div className="setting-label">
             <div className="setting-title" id={showFaviconsTitleId}>
               Show Favicons
-              <NewPill />
             </div>
             <div className="setting-description" id={showFaviconsDescriptionId}>
               {isIconSize

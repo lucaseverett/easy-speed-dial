@@ -63,9 +63,7 @@ export const BookmarkModal = observer(function BookmarkModal() {
       ? getSitePresetByUrl(bookmarkURL)
       : null;
   const isUsingPresetThumbnail = !!preset && !hasCustomThumbnail;
-  // Icon-size dials render a neutral favicon/folder glyph, so custom color and
-  // thumbnail have no visual effect. Hide those controls (stored values are
-  // preserved and reapply when switching back to a larger size).
+  // Icon dials preserve customizations but do not render them.
   const isIconSize = settings.dialSize === "icon";
   const showDialColorInput =
     isEditing && !isUsingPresetThumbnail && !isIconSize;
@@ -129,9 +127,7 @@ export const BookmarkModal = observer(function BookmarkModal() {
         closeModalOptions = undefined;
       }
 
-      // Close with focus matching what changed: focus the updated bookmark on
-      // edit, skip focus when it moved away from this folder, and leave
-      // undefined (modal handles focus automatically) when nothing changed.
+      // A bookmark moved away has no local element to receive focus.
       modals.closeModal(closeModalOptions);
     } else {
       const newBookmark = await bookmarks.createBookmark({

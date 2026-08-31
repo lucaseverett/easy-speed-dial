@@ -72,8 +72,6 @@ export const Grid = observer(function Grid() {
   }, [dialSize, gridSpacing, maxColumns, squareDials]);
 
   useEffect(() => {
-    // Only derive the gear color for custom image/color wallpapers; for the
-    // others the gear color is set manually.
     if (wallpaper !== "custom-image" && wallpaper !== "custom-color") {
       setGearColor(null);
       return;
@@ -84,7 +82,7 @@ export const Grid = observer(function Grid() {
       const computedStyle = window.getComputedStyle(rootElement);
       const bgColor = computedStyle.backgroundColor;
 
-      // An rgba background color indicates a transparent background with an image.
+      // Custom images expose an rgba background; custom colors expose rgb.
       if (bgColor.startsWith("rgba")) {
         const backgroundImage = computedStyle.backgroundImage;
         const match = backgroundImage.match(/url\(['"]?([^'"]*?)['"]?\)/);
@@ -288,9 +286,7 @@ export const Grid = observer(function Grid() {
                   const newFolderId = newFolder.id;
                   bookmarks.moveBookmark({
                     id: newFolderId,
-                    // Find the index of the added bookmark.
-                    // The new index returned by the API may not be the literal index.
-                    // There are sometimes skipped indices.
+                    // Use display position because browser indices may be sparse.
                     from: bookmarks.bookmarks.length - 1,
                     to: bookmarks.bookmarks.findIndex(
                       (b) => b.id === droppedId,
@@ -356,9 +352,7 @@ export const Grid = observer(function Grid() {
       <div
         className={clsx(
           "Grid",
-          // Only collapse the top padding when a breadcrumb is actually shown.
-          // While searching, breadcrumbs are hidden, so the grid keeps its top
-          // padding to preserve the gap below the search bar.
+          // Preserve search-bar spacing when breadcrumbs are hidden.
           !isRoot && !searching && "has-breadcrumbs",
           isMaxFontSize && "max-width",
         )}

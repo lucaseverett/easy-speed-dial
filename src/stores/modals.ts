@@ -5,10 +5,7 @@ import { makeAutoObservable } from "mobx";
 import { focusByDataId, targetFromEvent } from "#lib/focus";
 import { colorPicker } from "#stores/colorPicker";
 
-// Modals that stack on top of a parent modal and return focus to it on close,
-// instead of fully unmounting the modal stack. Listed explicitly so we don't
-// rely on naming conventions like `startsWith("confirm-")` — adding a new
-// `confirm-*` modal that isn't a child would otherwise break parent tracking.
+// Explicit membership prevents unrelated `confirm-*` modals becoming children.
 const CHILD_MODALS = new Set([
   "confirm-reset",
   "confirm-reset-dial-customizations",
@@ -40,7 +37,7 @@ export const modals: ModalStore = makeAutoObservable({
   parentFocusAfterClosed: null,
   parentModal: null,
   isOpen: null,
-  editingBookmarkId: null, // Holds the ID of the bookmark currently being edited
+  editingBookmarkId: null,
   openModal({ focusAfterClosed, modal, editingBookmarkId = null }) {
     if (
       modals.isOpen &&
@@ -88,11 +85,10 @@ export const modals: ModalStore = makeAutoObservable({
     document.documentElement.classList.remove("modal-open");
   },
   setFocusFromEvent(e) {
-    // Store the element that triggered the action so focus can be restored later
     modals.focusAfterClosed = targetFromEvent(e);
   },
   setFocusById(id) {
-    // Defer finding the element until after modal close and DOM updates
+    // Resolve after closing because the target may not exist yet.
     modals.focusAfterClosed = focusByDataId(id);
   },
 });

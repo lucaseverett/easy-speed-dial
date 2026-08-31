@@ -46,7 +46,7 @@
 
   &.focus-visible {
     outline: 2px solid var(--btn-focus-color);
-    outline-offset: 0; /* shows border with outline in Safari desktop */
+    outline-offset: 0; /* Keeps Safari's outline aligned with the border. */
   }
 
   &.defaultBtn {

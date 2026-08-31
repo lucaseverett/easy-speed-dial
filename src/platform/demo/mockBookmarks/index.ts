@@ -343,10 +343,6 @@ const topDiningUS: MockBookmarkLink[] = [
   { url: "bk.com", title: "Burger King" },
 ];
 
-// ==========================
-// LOAD MOCK BOOKMARKS
-// ==========================
-
 mockPopularSitePresetKeys.forEach((key) => {
   const preset = sitePresets[key];
   browser.bookmarks.create({

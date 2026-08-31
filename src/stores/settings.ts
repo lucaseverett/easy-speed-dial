@@ -26,13 +26,10 @@ import { initializeSettingsStorage } from "#lib/init";
 import { removeFaviconPermission } from "#lib/optionalPermissions";
 import { removeStorage, setStorage, storageKeys } from "#lib/storage";
 import { getColorScheme, resolveWallpaper } from "#lib/wallpaper";
-
-// ==================================================================
-// SETUP
-// ==================================================================
+import { hasUnseenWhatsNewFeatures } from "#lib/whatsNew";
 
 const appVersion = __APP_VERSION__;
-const { lastVersion, showNewBadges, storage } =
+const { lastVersion, whatsNewSeenThrough, storage } =
   await initializeSettingsStorage(appVersion);
 const themeOption =
   (storage[storageKeys.themeOption] as string) || "System Theme";
@@ -49,10 +46,6 @@ const bc = new BroadcastChannel("easy-settings");
 bc.onmessage = (e) => {
   runInAction(() => set(settings, e.data));
 };
-
-// ==================================================================
-// SETTINGS STORE
-// ==================================================================
 
 function resolveDialImageSize(value: unknown): DialImageSize {
   return value === "contain" ? "contain" : "cover";
@@ -106,13 +99,14 @@ const defaultSettings = {
   newTab: false,
   showDialBorders: true,
   showSearchBar: false,
-  showUpgradeIndicator: false,
+  settingsIconHidden: false,
   showTitle: true,
   squareDials: false,
   switchTitle: false,
   themeOption: "System Theme",
   transparentDials: false,
   wallpaper: "",
+  whatsNewSeenThrough,
 };
 
 export const settings = makeAutoObservable({
@@ -141,8 +135,6 @@ export const settings = makeAutoObservable({
   dialSize: storage[storageKeys.dialSize] || defaultSettings.dialSize,
   dragAndDrop: storage[storageKeys.dragAndDrop] ?? defaultSettings.dragAndDrop,
   firstRun: defaultSettings.firstRun,
-  // Runtime-only: gates "New" feature badges to upgraders (see init.ts).
-  showNewBadges,
   gridSpacing: storage[storageKeys.gridSpacing] || defaultSettings.gridSpacing,
   maxColumns: storage[storageKeys.maxColumns] || defaultSettings.maxColumns,
   newTab: storage[storageKeys.newTab] ?? defaultSettings.newTab,
@@ -150,9 +142,12 @@ export const settings = makeAutoObservable({
     storage[storageKeys.showDialBorders] ?? defaultSettings.showDialBorders,
   showSearchBar:
     storage[storageKeys.showSearchBar] ?? defaultSettings.showSearchBar,
-  showUpgradeIndicator:
-    storage[storageKeys.showUpgradeIndicator] ??
-    defaultSettings.showUpgradeIndicator,
+  get showUpgradeIndicator() {
+    return hasUnseenWhatsNewFeatures(settings.whatsNewSeenThrough, appVersion);
+  },
+  settingsIconHidden:
+    storage[storageKeys.settingsIconHidden] ??
+    defaultSettings.settingsIconHidden,
   showTitle: storage[storageKeys.showTitle] ?? defaultSettings.showTitle,
   squareDials: storage[storageKeys.squareDials] ?? defaultSettings.squareDials,
   switchTitle: storage[storageKeys.switchTitle] ?? defaultSettings.switchTitle,
@@ -160,9 +155,8 @@ export const settings = makeAutoObservable({
   transparentDials:
     storage[storageKeys.transparentDials] ?? defaultSettings.transparentDials,
   wallpaper,
-  // Single choke-point for the persist triad: write the patch to storage,
-  // apply it to the store, and broadcast it to other open tabs. Keys without
-  // a matching storage key (e.g. colorScheme) are applied/broadcast only.
+  whatsNewSeenThrough: defaultSettings.whatsNewSeenThrough,
+  // Reactive-only keys still update locally and across tabs without storage.
   _persist(patch: Record<string, unknown>) {
     const storagePatch: Record<string, unknown> = {};
     for (const key of Object.keys(patch)) {
@@ -180,11 +174,8 @@ export const settings = makeAutoObservable({
   },
   handleShowFavicons(value: boolean) {
     settings._persist({ showFavicons: value });
-    // On Firefox, turning the feature off also revokes the DDG host permission
-    // and clears the cache so no further network calls can reach DDG. Chrome's
-    // `favicon` permission is a local API gate with no external side effects,
-    // and a remove-then-re-request cycle on the silent permission has proven
-    // unreliable — leave it held once the user has granted it.
+    // Firefox's permission permits DDG network access, so revoke it when off.
+    // Chrome's local favicon permission is unreliable after revoke/re-request.
     if (__FIREFOX__ && !value) {
       void removeFaviconPermission();
       void faviconCache.clear();
@@ -292,7 +283,6 @@ export const settings = makeAutoObservable({
     settings._persist({ transparentDials: value });
   },
   handleWallpaper(value: string) {
-    // Leaving a custom wallpaper clears its stored custom asset/value.
     if (value !== "custom-image" && settings.wallpaper === "custom-image") {
       settings._clearCustomImage();
     }
@@ -301,16 +291,24 @@ export const settings = makeAutoObservable({
     }
     settings._persist({ wallpaper: value });
   },
+  // Backup restore must preserve the accompanying custom assets.
   _restoreWallpaper(value: string) {
-    // Internal method for restoring wallpaper without clearing custom image/color
     settings._persist({ wallpaper: resolveWallpaper(value) });
   },
   _restoreCustomColor(value: string) {
-    // Internal method for restoring custom color without triggering wallpaper change
     settings._persist({ customColor: value });
   },
-  hideUpgradeIndicator() {
-    settings._persist({ showUpgradeIndicator: false });
+  acknowledgeWhatsNew() {
+    if (settings.whatsNewSeenThrough === appVersion) return;
+    settings._persist({ whatsNewSeenThrough: appVersion });
+  },
+  hideSettingsIcon() {
+    if (settings.settingsIconHidden) return;
+    settings._persist({ settingsIconHidden: true });
+  },
+  showSettingsIcon() {
+    if (!settings.settingsIconHidden) return;
+    settings._persist({ settingsIconHidden: false });
   },
   _clearCustomImage() {
     removeStorage([storageKeys.customImage]);
@@ -360,8 +358,6 @@ export const settings = makeAutoObservable({
   resetWallpaper() {
     settings.handleWallpaper("theme-wallpaper");
   },
-  // Restore a custom image from a backup: the stored value is base64, while
-  // the in-memory value is a blob URL.
   async restoreCustomImage(base64: string) {
     const image = base64ToBlob(base64);
     await setStorage({ [storageKeys.customImage]: base64 });
@@ -402,10 +398,6 @@ export const settings = makeAutoObservable({
 
 export type SettingsStore = typeof settings;
 
-// ==================================================================
-// SYSTEM THEME
-// ==================================================================
-// Listen for system theme changes and update settings accordingly.
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", settings.systemThemeChanged);

@@ -9,10 +9,7 @@ import {
 import { faviconCache } from "#lib/faviconCache";
 import { settings } from "#stores/settings";
 
-// Cap concurrent favicon lookups. Bookmarks come from the user's browser, so a
-// folder can hold an unbounded number of dials — resolving them all at once
-// would spike memory and main-thread time. Dials request favicons as they
-// mount and the queue drains a few at a time.
+// Bound work for arbitrarily large bookmark folders.
 const MAX_CONCURRENT = 12;
 
 const inFlight = new Set<string>();
@@ -22,10 +19,7 @@ let active = 0;
 function getHostname(url: string): string | null {
   try {
     const parsed = new URL(url);
-    // Only http(s) bookmarks resolve to real hostnames we'd want to look up.
-    // chrome://settings, about:blank, file:///foo, javascript:..., etc. either
-    // throw or produce hostnames like "settings" that would have us asking
-    // DDG for "https://icons.duckduckgo.com/ip3/settings.ico".
+    // Non-web schemes can produce misleading hostnames such as "settings".
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
       return null;
     }
@@ -36,9 +30,7 @@ function getHostname(url: string): string | null {
 }
 
 export const favicons = makeAutoObservable({
-  // Chrome only: page URL -> resolved favicon URL, or null when the site has
-  // no favicon. A missing key means the favicon has not been resolved yet.
-  // Firefox reads from faviconCache by hostname instead.
+  // Chrome distinguishes unresolved (missing) from no favicon (null).
   byUrl: new Map<string, string | null>(),
   getFavicon(url: string | undefined) {
     if (!url) return undefined;
@@ -59,7 +51,7 @@ export const favicons = makeAutoObservable({
     return undefined;
   },
   request(url: string) {
-    if (__DEMO__) return; // Demo resolves synchronously in getFavicon.
+    if (__DEMO__) return;
     if (!settings.showFavicons) return;
 
     if (__FIREFOX__) {
@@ -76,8 +68,6 @@ export const favicons = makeAutoObservable({
     pump();
   },
   handlePermissionLost() {
-    // Firefox-only. `byUrl` is the Chrome path and is never populated here,
-    // so no need to clear it.
     settings.handleShowFavicons(false);
   },
 });

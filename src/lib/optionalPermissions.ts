@@ -2,14 +2,10 @@ import type { Permissions } from "webextension-polyfill";
 
 import browser from "#platform/browser";
 
-// Firefox needs the DDG host permission to fetch icons; Chrome needs the
-// `favicon` API permission to read its local cache. Demo has no extension
-// host (browser.permissions is undefined), so the modal's user-facing consent
-// stands in for an actual grant and these calls resolve true without touching
-// the API. "favicon" is a Chrome-only optional permission not present in the
-// polyfill types.
+// Firefox grants DDG network access; Chrome grants its local favicon API.
 function getFaviconPermissions(): Permissions.Permissions {
   if (__CHROME__) {
+    // The polyfill types omit this Chrome-only permission.
     return { permissions: ["favicon"] } as unknown as Permissions.Permissions;
   }
   return { origins: ["https://icons.duckduckgo.com/*"] };

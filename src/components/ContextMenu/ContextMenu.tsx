@@ -17,8 +17,7 @@ export const ContextMenu = observer(function ContextMenu() {
   const menuItemsRef = useRef<HTMLButtonElement[]>([]);
   const contextMenuX = contextMenu.coords.x;
   const contextMenuY = contextMenu.coords.y;
-  // While search results are displayed there is no single target folder, so
-  // "add" actions (which create into the current folder) are hidden.
+  // Search results have no single folder for add actions.
   const searching = search.isShowingResults;
 
   const [currIndex, setCurrIndex] = useState(-1);
@@ -151,7 +150,6 @@ export const ContextMenu = observer(function ContextMenu() {
     );
   }
 
-  // Thumbnails are not rendered at icon size, so the controls are hidden there.
   const thumbnailMenuItems = settings.dialSize !== "icon" && (
     <>
       <Separator />
@@ -188,7 +186,19 @@ export const ContextMenu = observer(function ContextMenu() {
       onMouseLeave={handleMouseLeave}
       role="menu"
     >
-      {contextMenu.focusAfterClosed?.dataset.type === "bookmark" ? (
+      {contextMenu.focusAfterClosed?.dataset.contextMenu === "settings-icon" ? (
+        <ul>
+          <li>
+            <button
+              onClick={handleHideSettingsIcon}
+              role="menuitem"
+              onMouseEnter={handleMouseEnter}
+            >
+              Hide this icon
+            </button>
+          </li>
+        </ul>
+      ) : contextMenu.focusAfterClosed?.dataset.type === "bookmark" ? (
         <ul>
           <li>
             <button
@@ -362,16 +372,20 @@ export const ContextMenu = observer(function ContextMenu() {
             </button>
           </li>
           <Separator />
-          <li>
-            <button
-              role="menuitem"
-              onClick={handleShowWhatsNew}
-              onMouseEnter={handleMouseEnter}
-            >
-              What&apos;s new
-            </button>
-          </li>
-          <Separator />
+          {settings.showUpgradeIndicator ? (
+            <>
+              <li>
+                <button
+                  role="menuitem"
+                  onClick={handleShowWhatsNew}
+                  onMouseEnter={handleMouseEnter}
+                >
+                  What&apos;s new
+                </button>
+              </li>
+              <Separator />
+            </>
+          ) : null}
           <li>
             <button
               role="menuitem"
@@ -463,6 +477,11 @@ function handleOpenBookmarks() {
 function handleOpenHistory() {
   contextMenu.closeContextMenu();
   openTab("chrome://history/");
+}
+
+function handleHideSettingsIcon() {
+  contextMenu.closeContextMenu({ focusAfterClosed: false });
+  settings.hideSettingsIcon();
 }
 
 function handleOpenSettings() {

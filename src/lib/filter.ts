@@ -28,7 +28,6 @@ function getLinkName(url: string): string[] {
       parts = domainParts;
     }
   } else {
-    // For URLs like "mailto:user@example.com", return everything after first ':'
     const colonIndex = url.indexOf(":");
     if (colonIndex !== -1) {
       parts = [url.substring(colonIndex + 1)];

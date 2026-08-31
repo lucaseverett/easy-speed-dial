@@ -14,10 +14,7 @@ export interface SettingsStorageInit {
   devTool: string | null;
   lastVersion: string | false;
   installVersion: string;
-  // True when the user upgraded into the current version (their install
-  // predates it), so "New" feature badges are relevant. False for fresh
-  // installs, where nothing in this release is actually new to them.
-  showNewBadges: boolean;
+  whatsNewSeenThrough: string;
   storage: Record<string, unknown>;
 }
 
@@ -53,11 +50,14 @@ export async function initializeSettingsStorage(
         storageKeys.showDialBorders,
         storageKeys.gridSpacing,
         storageKeys.usePresetThumbnails,
-        // Clear so it backfills from the simulated (older) last-version,
-        // faithfully reproducing an upgrader rather than a fresh install.
+        // Backfill from the simulated old version, as a real upgrader would.
         "install-version",
       ]);
-      await setStorage({ "last-version": upgradeFromVersion });
+      // Treat `v` as both prior version and What's New cutoff.
+      await setStorage({
+        "last-version": upgradeFromVersion,
+        [storageKeys.whatsNewSeenThrough]: upgradeFromVersion,
+      });
     }
   }
 
@@ -82,15 +82,8 @@ export async function initializeSettingsStorage(
   const storagePatch: Record<string, unknown> = {
     "last-version": appVersion,
   };
-  if (isUpgrade) {
-    storage[storageKeys.showUpgradeIndicator] = true;
-    storagePatch[storageKeys.showUpgradeIndicator] = true;
-  }
 
-  // Record the version the user first installed at, once. Fresh installs record
-  // the current version. Existing users predating this tracking are backfilled
-  // with their last-seen version (the best available approximation; their true
-  // install version is unrecoverable). This can only be captured going forward.
+  // Older installs can only approximate install version from last-seen version.
   const storedInstallVersion = semverCoerce(
     storage["install-version"] as string,
   )?.version;
@@ -100,10 +93,23 @@ export async function initializeSettingsStorage(
     storagePatch["install-version"] = installVersion;
   }
 
-  // Only upgraders (install predates the current version) see "New" badges.
-  const showNewBadges = semverLt(installVersion, appVersion);
+  const storedWhatsNewSeenThrough = semverCoerce(
+    storage[storageKeys.whatsNewSeenThrough] as string,
+  )?.version;
+  const whatsNewSeenThrough =
+    storedWhatsNewSeenThrough || lastVersion || appVersion;
+  if (!storedWhatsNewSeenThrough) {
+    storage[storageKeys.whatsNewSeenThrough] = whatsNewSeenThrough;
+    storagePatch[storageKeys.whatsNewSeenThrough] = whatsNewSeenThrough;
+  }
 
   setStorage(storagePatch);
 
-  return { devTool, lastVersion, installVersion, showNewBadges, storage };
+  return {
+    devTool,
+    lastVersion,
+    installVersion,
+    whatsNewSeenThrough,
+    storage,
+  };
 }

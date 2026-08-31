@@ -32,7 +32,7 @@
 }
 
 .popular-sites-notice {
-  /* -4px cancels the grid wrapper's focus-padding offset so spacing reads symmetric. */
+  /* Cancel the grid's focus padding to keep spacing symmetric. */
   margin: 0 0 -4px;
   font-size: 13px;
   text-align: center;

@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 import "./NewTab.css";
 
@@ -14,18 +14,23 @@ import { PopularSitesModal } from "#components/modals/PopularSitesModal/PopularS
 import { SettingsModal } from "#components/modals/SettingsModal/SettingsModal";
 import { WhatsNewModal } from "#components/modals/WhatsNewModal/WhatsNewModal";
 import { focusSafely } from "#lib/focus";
+import {
+  flushScrollPosition,
+  getScrollKey,
+  readScrollTop,
+  saveScrollTop,
+} from "#lib/scrollRestore";
 import { bookmarks } from "#stores/bookmarks";
 import { contextMenu } from "#stores/contextMenu";
 import { modals } from "#stores/modals";
+import { search } from "#stores/search";
 import { settings } from "#stores/settings";
 
 export const NewTab = observer(function NewTab() {
   const focusRef = useRef<HTMLDivElement>(null);
   const isConfirmResetOpen = modals.isOpen?.startsWith("confirm-reset");
   const isConfirmFaviconOpen = modals.isOpen === "confirm-favicon-permission";
-  // A parent modal (onboarding / settings-panel) renders when it's the
-  // active modal *or* when one of its children is on top of it. While a
-  // child is open, the parent stays mounted but goes inactive.
+  // Keep parent modals mounted beneath their child confirmation dialogs.
   const isOnboardingMounted =
     modals.isOpen === "onboarding" || modals.parentModal === "onboarding";
   const isSettingsMounted =
@@ -35,20 +40,38 @@ export const NewTab = observer(function NewTab() {
   const currentFolderId = bookmarks.currentFolder.id;
   const modalOpen = modals.isOpen;
   const bookmarkIds = bookmarks.bookmarks.map(({ id }) => id).join("|");
+  // Each query needs scroll state separate from its folder and other queries.
+  const searchViewId = search.isShowingResults
+    ? `q:${search.query.trim()}`
+    : "folder";
+  const itemCount = search.isShowingResults
+    ? search.results.length
+    : bookmarks.bookmarks.length;
+  const scrollKeyRef = useRef("");
 
   useEffect(() => {
-    // Clear menu/modal focus targets when switching folders.
     contextMenu.clearTarget();
     if (modals.isOpen !== "onboarding") {
       modals.focusAfterClosed = null;
       modals.closeModal();
     }
-    // Scroll to the top of the bookmarks list and move focus to it.
-    if (focusRef.current) {
-      focusRef.current.scrollTop = 0;
-      focusRef.current.focus();
-    }
+    focusRef.current?.focus();
   }, [currentFolderId]);
+
+  // Restore before paint; itemCount reruns this when async search results arrive.
+  useLayoutEffect(() => {
+    const container = focusRef.current;
+    if (!container || !currentFolderId) return;
+    const key = getScrollKey(searchViewId);
+    scrollKeyRef.current = key;
+    container.scrollTop = readScrollTop(key);
+  }, [currentFolderId, searchViewId, itemCount]);
+
+  useEffect(() => {
+    // Flush writes that would otherwise be lost when a bookmark unloads the page.
+    window.addEventListener("pagehide", flushScrollPosition);
+    return () => window.removeEventListener("pagehide", flushScrollPosition);
+  }, []);
 
   useEffect(() => {
     if (settings.firstRun) {
@@ -56,15 +79,13 @@ export const NewTab = observer(function NewTab() {
     }
   }, []);
 
+  // A bookmark may create the requested focus target after the modal closes.
   useEffect(() => {
-    // Restore focus to the appropriate element when the modal closes.
     if (!modalOpen && modals.focusAfterClosed) {
       if (focusSafely(modals.focusAfterClosed)) {
         modals.focusAfterClosed = null;
       }
     }
-    // The bookmarks dependency ensures this effect runs when bookmarks or modal state changes.
-    // This is needed to restore focus to the newly created or updated bookmark after the modal closes.
   }, [bookmarkIds, modalOpen]);
 
   return (
@@ -86,7 +107,10 @@ export const NewTab = observer(function NewTab() {
         className="Bookmarks"
         onClick={() => contextMenu.closeContextMenu()}
         onContextMenu={contextMenu.openContextMenu}
-        onScroll={() => contextMenu.closeContextMenu()}
+        onScroll={(e) => {
+          contextMenu.closeContextMenu();
+          saveScrollTop(scrollKeyRef.current, e.currentTarget.scrollTop);
+        }}
         tabIndex={-1}
         inert={!!modals.isOpen}
         ref={focusRef}

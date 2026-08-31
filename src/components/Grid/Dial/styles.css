@@ -74,8 +74,8 @@
   }
 
   .folder {
-    width: 5em; /* 80px */
-    height: 5em; /* 80px */
+    width: 5em;
+    height: 5em;
     fill: currentColor;
   }
 

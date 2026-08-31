@@ -198,10 +198,6 @@ const Title = observer(function Title(props: TitleProps) {
   );
 });
 
-// Resolves and renders a bookmark's browser favicon. Each dial requests its own
-// favicon on mount, so lookups are scoped to the dials actually rendered and
-// stay bounded by the favicon store's concurrency queue. Falls back to the
-// Globe icon while unresolved, when the site has no favicon, or on image error.
 const BookmarkFavicon = observer(function BookmarkFavicon({
   className = "favicon",
   url,

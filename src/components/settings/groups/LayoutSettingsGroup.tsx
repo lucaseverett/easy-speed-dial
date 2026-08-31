@@ -3,7 +3,6 @@ import type { SettingsGroupProps } from "./settingsGroupUtils";
 import { observer } from "mobx-react-lite";
 
 import { CaretDown } from "#components/icons/CaretDown.tsx";
-import { NewPill } from "#components/NewPill/NewPill";
 import { settings } from "#stores/settings";
 import { getId, gridSpacings, maxColumns } from "./settingsGroupUtils";
 
@@ -48,7 +47,6 @@ export const LayoutSettingsGroup = observer(function LayoutSettingsGroup({
         <div className="setting-label">
           <div className="setting-title" id={gridSpacingTitleId}>
             Grid Spacing
-            <NewPill />
           </div>
           <div className="setting-description" id={gridSpacingDescriptionId}>
             Space between dials. Smaller spacing leaves room for more.

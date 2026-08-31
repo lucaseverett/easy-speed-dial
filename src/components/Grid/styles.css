@@ -129,9 +129,7 @@
 .SearchBar {
   display: flex;
   justify-content: center;
-  /* The gap below the bar is the grid's top padding, which scales with the
-     grid spacing setting. Match it as the bar's top padding so the gap above
-     equals the gap below at every spacing. */
+  /* Match the grid's top padding to keep vertical spacing symmetric. */
   padding: 70px 50px 0;
 
   .grid-spacing-compact & {
@@ -154,7 +152,7 @@
   width: 100%;
   max-width: 480px;
   height: 44px;
-  padding: 0 8px 0 14px;
+  padding: 0 14px;
   border-radius: 22px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -186,10 +184,21 @@
   }
 }
 
+.search-label {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  min-width: 0;
+  height: 100%;
+  cursor: text;
+}
+
 .search-input {
   flex: 1 1 auto;
   min-width: 0;
   height: 100%;
+  padding: 0;
   border: none;
   background: none;
   font-size: 16px;
@@ -242,6 +251,27 @@
   }
 }
 
+.search-shortcut {
+  flex: none;
+  display: flex;
+  align-items: center;
+  column-gap: 6px;
+  font-size: 14px;
+  opacity: 0.65;
+  cursor: text;
+  user-select: none;
+
+  kbd {
+    min-width: 25px;
+    padding: 2px 7px;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    font-family: inherit;
+    line-height: 20px;
+    text-align: center;
+  }
+}
+
 .SearchEmpty {
   width: fit-content;
   max-width: calc(100% - 48px);
@@ -257,22 +287,20 @@
 }
 
 .Grid {
-  --dial-width-value: 12.125; /* 194px */
+  --dial-width-value: 12.125;
   --dial-width: calc(var(--dial-width-value) * 1em);
-  --grid-gap-value: 1.75; /* 28px */
+  --grid-gap-value: 1.75;
   --grid-gap: calc(var(--grid-gap-value) * 1em);
   --grid-padding: 50px;
   --grid-padding-top: 80px;
   --grid-padding-bottom: var(--grid-padding);
-  --max-small-width: calc(
-    var(--dial-width) * 0.92
-  ); /* for <Small> padding when scaling <Domain> */
+  --max-small-width: calc(var(--dial-width) * 0.92);
   --title-height: 1.5em;
-  --dial-height-value: 8.125; /* 130px */
+  --dial-height-value: 8.125;
   --dial-height: calc(var(--dial-height-value) * 1em);
   --dial-height-attached-title: calc(var(--dial-width) - var(--title-height));
   display: grid;
-  grid-template-columns: repeat(auto-fill, var(--dial-width)); /* 194px */
+  grid-template-columns: repeat(auto-fill, var(--dial-width));
   row-gap: var(--grid-gap);
   column-gap: var(--grid-gap);
   justify-content: center;
@@ -304,45 +332,45 @@
   }
 
   .square & {
-    --dial-width-value: 10.25; /* 164px */
+    --dial-width-value: 10.25;
   }
 
   .icon & {
-    --dial-width-value: 5.625; /* 72px */
+    --dial-width-value: 5.625;
     font-size: 0.8em;
   }
 
   .grid-spacing-compact & {
-    --grid-gap-value: 0.75; /* 12px */
+    --grid-gap-value: 0.75;
     --grid-padding: 24px;
     --grid-padding-top: 60px;
     --grid-padding-bottom: var(--grid-padding);
   }
 
   .grid-spacing-default & {
-    --grid-gap-value: 1.25; /* 20px */
+    --grid-gap-value: 1.25;
     --grid-padding: 37px;
     --grid-padding-top: 70px;
     --grid-padding-bottom: var(--grid-padding);
   }
 
   .grid-spacing-spacious & {
-    --grid-gap-value: 1.75; /* 28px */
+    --grid-gap-value: 1.75;
     --grid-padding: 50px;
     --grid-padding-top: 80px;
     --grid-padding-bottom: var(--grid-padding);
   }
 
   .icon.grid-spacing-compact & {
-    --grid-gap-value: 1.25; /* 16px */
+    --grid-gap-value: 1.25;
   }
 
   .icon.grid-spacing-default & {
-    --grid-gap-value: 2.1875; /* 28px */
+    --grid-gap-value: 2.1875;
   }
 
   .icon.grid-spacing-spacious & {
-    --grid-gap-value: 3.125; /* 40px */
+    --grid-gap-value: 3.125;
   }
 
   .tiny & {
@@ -409,7 +437,6 @@
   }
 }
 
-/* Drag and drop styles */
 .folder-drop-target {
   outline: 4px dashed var(--blue-400) !important;
   border-radius: 6px;

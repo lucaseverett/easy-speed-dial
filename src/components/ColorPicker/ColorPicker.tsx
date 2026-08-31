@@ -33,7 +33,6 @@ export const ColorPicker = observer(function ColorPicker({
   const canSampleScreenColor = "EyeDropper" in window;
 
   useLayoutEffect(() => {
-    // Set focus to color picker.
     pickerRef.current
       ?.querySelector<HTMLElement>(".react-colorful__interactive")
       ?.focus();

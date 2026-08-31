@@ -83,7 +83,6 @@ function Domain(props: DomainProps) {
       const boxWidth = boxElement.offsetWidth;
       const boxHeight = boxElement.offsetHeight;
 
-      // Scale relative to Box size.
       const maxWidth = boxWidth * 0.92;
       const maxHeight = boxHeight * 0.92;
 

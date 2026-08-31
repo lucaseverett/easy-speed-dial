@@ -37,7 +37,6 @@ export function downloadBackup(obj: Record<string, unknown>) {
   a.click();
 }
 
-// Collect the current settings into a plain object for export.
 export async function buildBackup(settings: SettingsStore) {
   const backup: Record<string, unknown> = {
     usePresetThumbnails: settings.usePresetThumbnails,
@@ -76,10 +75,8 @@ function hasKey(backup: object, key: string) {
   return Object.prototype.hasOwnProperty.call(backup, key);
 }
 
-// Apply an exported backup to the settings store. Missing keys that predate a
-// setting fall back to their legacy values rather than the current defaults.
-// `focusAfterClosed` is propagated to any modal opened during import (Firefox
-// favicon permission prompt) so focus returns to the originating control.
+// Older backups use the defaults that existed when each missing setting was
+// introduced. Forward the focus target through any permission prompt.
 export async function applyBackup(
   settings: SettingsStore,
   contents: string,
@@ -100,16 +97,12 @@ export async function applyBackup(
         ? backup.usePresetThumbnails
         : false,
     );
-    // resetSettings has already turned favicons off and revoked any held
-    // favicon permission via handleShowFavicons(false). If the backup wanted
-    // favicons on, queue the confirm modal after import so the user can opt
-    // back in (re-granting the permission) or dismiss it to stay off.
+    // Import resets and revokes favicon access first, so restoring an enabled
+    // value requires fresh consent after the other settings are applied.
     let shouldOfferFaviconPermission = false;
     if (hasKey(backup, "showFavicons")) {
       if (backup.showFavicons) {
         shouldOfferFaviconPermission = true;
-        // Leave showFavicons at false; the modal's Continue path will flip it
-        // on after the permission grant.
       } else {
         settings.handleShowFavicons(false);
       }

@@ -4,7 +4,6 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 
 import { CaretDown } from "#components/icons/CaretDown.tsx";
-import { NewPill } from "#components/NewPill/NewPill";
 import { Switch } from "#components/Switch";
 import { bookmarks } from "#stores/bookmarks";
 import { settings } from "#stores/settings";
@@ -84,7 +83,6 @@ export const BookmarkSettingsGroup = observer(function BookmarkSettingsGroup({
         <div className="setting-label">
           <div className="setting-title" id={dragAndDropTitleId}>
             Drag and Drop
-            <NewPill />
           </div>
           <div className="setting-description" id={dragAndDropDescriptionId}>
             Drag dials to reorder them or move them into folders.
@@ -107,10 +105,9 @@ export const BookmarkSettingsGroup = observer(function BookmarkSettingsGroup({
         <div className="setting-label">
           <div className="setting-title" id={showSearchBarTitleId}>
             Show Search Bar
-            <NewPill />
           </div>
           <div className="setting-description" id={showSearchBarDescriptionId}>
-            Show a search bar to filter your bookmarks.
+            Filter bookmarks and press / to search from anywhere on the page.
           </div>
         </div>
         <div className="setting-option toggle">

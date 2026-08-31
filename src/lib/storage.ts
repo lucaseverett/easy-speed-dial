@@ -18,7 +18,7 @@ export const storageKeys = {
   showDialBorders: `${apiVersion}-show-dial-borders`,
   showSearchBar: `${apiVersion}-show-search-bar`,
   showTitle: `${apiVersion}-show-title`,
-  showUpgradeIndicator: `${apiVersion}-show-upgrade-indicator`,
+  settingsIconHidden: `${apiVersion}-settings-icon-hidden`,
   squareDials: `${apiVersion}-square-dials`,
   switchTitle: `${apiVersion}-switch-title`,
   themeOption: `${apiVersion}-theme-option`,
@@ -27,6 +27,7 @@ export const storageKeys = {
   showFavicons: `${apiVersion}-show-favicons`,
   faviconCache: `${apiVersion}-favicon-cache`,
   wallpaper: `${apiVersion}-wallpaper`,
+  whatsNewSeenThrough: `${apiVersion}-whats-new-seen-through`,
 };
 
 export function getAllSettingsStorage() {

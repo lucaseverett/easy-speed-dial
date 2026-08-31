@@ -9,10 +9,7 @@ import { bookmarks } from "#stores/bookmarks";
 import { search, SEARCH_DEBOUNCE_MS } from "#stores/search";
 import { settings } from "#stores/settings";
 
-// The URL hash encodes the current folder and, while searching, the active query
-// as `#<folderId>&q=<query>`. This lets returning to the page (back / reload)
-// restore both the origin folder and the search results, while a fresh tab (no
-// hash) stays clean.
+// Preserve folder and search state across reloads as `#<folderId>&q=<query>`.
 function parseHash() {
   const raw = location.hash.slice(1);
   const separator = raw.indexOf("&");
@@ -43,11 +40,8 @@ async function initializeApp() {
     const currentRoute = ++routeSeq;
     const isCurrentRoute = () => currentRoute === routeSeq;
     const { folderId, query } = parseHash();
-    // Folder validation and global search are independent browser API calls.
-    // Start routing first, then restore search before waiting for it to finish.
+    // Start independent folder and search requests together.
     const folderPromise = setFolder(folderId, isCurrentRoute);
-    // A query in the hash restores the search; its absence (e.g. navigating into
-    // a folder) exits search mode.
     if (query && settings.showSearchBar) {
       search.restoreQuery(query);
       await folderPromise;
@@ -61,21 +55,18 @@ async function initializeApp() {
     search.clear();
   };
 
-  // Update folder/search when the URL hash changes (e.g. browser back/forward).
   window.addEventListener("hashchange", applyRoute);
 
-  // Capture the persisted folder/search before anything (the autorun below)
-  // can overwrite them. These restore on a fresh same-tab load with no hash,
-  // e.g. the browser's Home button, mirroring how `last-folder` already works.
+  // The app restores its nested scroller; browser restoration would compete.
+  history.scrollRestoration = "manual";
+
+  // Read persisted state before the autorun below can overwrite it.
   const { folderId, query } = parseHash();
   const storedFolder = sessionStorage.getItem("last-folder");
   const storedSearch = sessionStorage.getItem("last-search") || "";
 
-  // Reflect the current folder and active query back into the URL hash, and
-  // persist the active query to sessionStorage alongside `last-folder`.
-  // replaceState avoids polluting history while typing and never fires
-  // hashchange, so it won't loop with applyRoute. The scheduler delay batches
-  // per-keystroke writes and stays under Firefox's History API rate limiter.
+  // replaceState avoids history entries and hashchange loops. Delaying the
+  // autorun also keeps typing below Firefox's History API rate limit.
   autorun(
     () => {
       const currentFolderId = bookmarks.currentFolder.id;
@@ -85,7 +76,8 @@ async function initializeApp() {
         settings.showSearchBar && search.isActive && trimmed !== "";
       const desired = `#${currentFolderId}${active ? `&q=${encodeURIComponent(trimmed)}` : ""}`;
       if (location.hash !== desired) {
-        history.replaceState(null, "", desired);
+        // Carry the existing state across: it holds the entry's scroll key.
+        history.replaceState(history.state, "", desired);
       }
       if (active) {
         sessionStorage.setItem("last-search", trimmed);
@@ -96,13 +88,10 @@ async function initializeApp() {
     { delay: SEARCH_DEBOUNCE_MS },
   );
 
-  // Select and set the initial folder + query to display. A query in the hash
-  // wins; otherwise (no hash, e.g. Home button) fall back to the last search.
   const initialFolder =
     folderId || storedFolder || (settings.defaultFolder as string);
   const initialQuery = query || (folderId ? "" : storedSearch);
-  // Start folder validation before restoring search, but do not make the
-  // independent bookmark search wait for that validation to finish.
+  // Start independent folder and search requests together.
   const initialRoute = ++routeSeq;
   const isCurrentRoute = () => initialRoute === routeSeq;
   const folderPromise = setFolder(initialFolder, isCurrentRoute);
